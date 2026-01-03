@@ -12,7 +12,6 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: '🤖 AI Agents',
-    Svg: () => null,
     description: (
       <>
         Create intelligent AI agents with custom personalities, knowledge bases, and monetization options.
@@ -22,7 +21,6 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: '📹 Livestreaming',
-    Svg: () => null,
     description: (
       <>
         Broadcast live video streams to your friends. Streams are automatically recorded
@@ -32,7 +30,6 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: '💬 Decentralized Messaging',
-    Svg: () => null,
     description: (
       <>
         Peer-to-peer messaging powered by Waku. No central server required.
