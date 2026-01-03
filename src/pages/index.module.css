@@ -4,15 +4,27 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 6rem 0 4rem;
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #fff0e0 50%, #ffffff 100%);
+}
+
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255, 85, 0, 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 2rem;
+    padding: 4rem 1rem 2rem;
   }
 }
 
@@ -21,13 +33,28 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.buttons a {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 85, 0, 0.2);
+}
+
+.buttons a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
 }
 
 @media screen and (max-width: 996px) {
   .buttons {
     flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
   }
 
   .buttons a {

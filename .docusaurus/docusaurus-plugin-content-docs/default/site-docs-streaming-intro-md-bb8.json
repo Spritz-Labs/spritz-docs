@@ -1,7 +1,7 @@
 {
   "id": "streaming/intro",
-  "title": "Livestreaming",
-  "description": "Spritz includes built-in livestreaming capabilities powered by Livepeer, allowing you to broadcast live video to your friends.",
+  "title": "intro",
+  "description": "",
   "source": "@site/docs/streaming/intro.md",
   "sourceDirName": "streaming",
   "slug": "/streaming/intro",

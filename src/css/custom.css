@@ -80,13 +80,33 @@
 }
 
 /* Custom Spritz Branding */
+.navbar {
+    border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
 .navbar__brand {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
 }
 
 .navbar__logo {
     height: 32px;
     margin-right: 8px;
+}
+
+.navbar__item {
+    font-weight: 500;
+}
+
+.navbar__link {
+    transition: color 0.2s ease;
+}
+
+.navbar__link:hover {
+    color: var(--ifm-color-primary) !important;
 }
 
 /* Selection color */
@@ -101,14 +121,79 @@
 }
 
 /* Button hover effects */
+.button {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.button--primary {
+    background: linear-gradient(135deg, #ff5500 0%, #fb8d22 100%);
+    box-shadow: 0 2px 8px rgba(255, 85, 0, 0.3);
+}
+
 .button--primary:hover {
-    background: #e04d00;
-    border-color: #e04d00;
+    background: linear-gradient(135deg, #e04d00 0%, #ff5500 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 85, 0, 0.4);
+}
+
+.button--secondary {
+    background: var(--ifm-background-surface-color);
+    color: var(--ifm-color-primary);
+    border: 2px solid var(--ifm-color-primary);
+}
+
+.button--secondary:hover {
+    background: var(--ifm-color-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.button--outline {
+    border: 2px solid var(--ifm-color-primary);
+    background: transparent;
+}
+
+.button--outline:hover {
+    background: var(--ifm-color-primary);
+    color: white;
 }
 
 /* Spritz accent colors for highlights */
+.markdown > h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(255, 85, 0, 0.2);
+    padding-bottom: 0.5rem;
+}
+
 .markdown > h2 {
-    border-bottom-color: var(--ifm-color-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--ifm-color-primary);
+    padding-bottom: 0.5rem;
+}
+
+.markdown > h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.markdown > h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
 }
 
 [data-theme="dark"] .markdown {
@@ -155,6 +240,16 @@
 .footer {
     background-color: var(--ifm-footer-background-color);
     color: #000000;
+    border-top: 1px solid rgba(255, 85, 0, 0.1);
+    padding: 3rem 0 2rem;
+}
+
+.footer__links {
+    margin-bottom: 2rem;
+}
+
+.footer__link-item {
+    transition: color 0.2s ease;
 }
 
 .footer__title {
@@ -249,10 +344,38 @@
 /* Hero section accent */
 .hero {
     background: linear-gradient(135deg, #ffffff 0%, #fff0e0 100%);
+    border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+}
+
+.hero__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #ff5500 0%, #fb8d22 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero__subtitle {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--ifm-color-content-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
 }
 
 [data-theme="dark"] .hero {
     background: linear-gradient(135deg, #fff0e0 0%, #f5e6d3 100%);
+}
+
+[data-theme="dark"] .hero__title {
+    background: linear-gradient(135deg, #ff5500 0%, #fb8d22 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Badge colors */
@@ -279,16 +402,42 @@
 /* Code block styling */
 .prism-code {
     border-left: 3px solid var(--ifm-color-primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+pre {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+code {
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
 }
 
 /* Sidebar active item */
 .menu__link--active {
     color: var(--ifm-color-primary);
     font-weight: 600;
+    border-left: 3px solid var(--ifm-color-primary);
+    padding-left: calc(1rem - 3px);
 }
 
 .menu__link--active:not(.menu__link--sublist) {
-    background-color: rgba(255, 85, 0, 0.1);
+    background-color: rgba(255, 85, 0, 0.08);
+    border-radius: 0 6px 6px 0;
+}
+
+.menu__link {
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin: 2px 0;
+}
+
+.menu__link:hover {
+    background-color: rgba(255, 85, 0, 0.05);
 }
 
 [data-theme="dark"] .menu__link {

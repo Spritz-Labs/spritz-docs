@@ -12,7 +12,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: '🤖 AI Agents',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: () => null,
     description: (
       <>
         Create intelligent AI agents with custom personalities, knowledge bases, and monetization options.
@@ -22,7 +22,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: '📹 Livestreaming',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    Svg: () => null,
     description: (
       <>
         Broadcast live video streams to your friends. Streams are automatically recorded
@@ -32,7 +32,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: '💬 Decentralized Messaging',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    Svg: () => null,
     description: (
       <>
         Peer-to-peer messaging powered by Waku. No central server required.
@@ -45,12 +45,12 @@ const FeatureList: FeatureItem[] = [
 function Feature({title, Svg, description}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+      <div className={clsx('text--center', styles.featureCard)}>
+        <div className={styles.featureIcon}>{title.split(' ')[0]}</div>
+        <div className="padding-horiz--md">
+          <Heading as="h3" className={styles.featureTitle}>{title.replace(/^[^\s]+\s/, '')}</Heading>
+          <p className={styles.featureDescription}>{description}</p>
+        </div>
       </div>
     </div>
   );
