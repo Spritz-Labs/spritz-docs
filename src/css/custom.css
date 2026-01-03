@@ -292,3 +292,256 @@
   border-color: var(--ifm-color-primary);
   background-color: rgba(255, 85, 0, 0.05);
 }
+
+/* ============================================
+   Mobile Responsiveness
+   ============================================ */
+
+/* Mobile-first: Base styles for mobile */
+@media screen and (max-width: 996px) {
+  /* Navbar mobile improvements */
+  .navbar__items {
+    gap: 0.5rem;
+  }
+
+  .navbar__link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .navbar__brand {
+    font-size: 1.1rem;
+  }
+
+  /* Sidebar mobile */
+  .menu {
+    padding: 0.5rem 0;
+  }
+
+  .menu__link {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  /* Content mobile */
+  .markdown {
+    font-size: 16px; /* Minimum readable font size */
+    line-height: 1.6;
+  }
+
+  .markdown h1 {
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .markdown h2 {
+    font-size: 1.5rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .markdown h3 {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Code blocks mobile */
+  .prism-code {
+    font-size: 0.875rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tables mobile - make scrollable */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem -1rem;
+    padding: 0 1rem;
+  }
+
+  table {
+    min-width: 100%;
+    font-size: 0.9rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+  }
+
+  /* Buttons mobile */
+  .button {
+    min-height: 44px; /* iOS touch target minimum */
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  .button--lg {
+    min-height: 48px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  /* Hero section mobile */
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  .hero__title {
+    font-size: 2rem;
+  }
+
+  .hero__subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Footer mobile */
+  .footer {
+    padding: 2rem 1rem;
+  }
+
+  .footer__links {
+    margin-bottom: 2rem;
+  }
+
+  .footer__col {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Admonitions mobile */
+  .admonition {
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+
+  .admonition-heading {
+    font-size: 1rem;
+  }
+
+  /* Cards mobile */
+  .card {
+    margin: 0.75rem 0;
+  }
+
+  /* Search mobile */
+  .navbar__search {
+    margin-left: 0.5rem;
+  }
+
+  .navbar__search-input {
+    min-height: 40px;
+    font-size: 0.9rem;
+  }
+
+  /* Table of contents mobile */
+  .table-of-contents {
+    display: none; /* Hide TOC on mobile by default */
+  }
+
+  /* Spacing adjustments */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure touch targets are adequate */
+  a,
+  button,
+  .menu__link,
+  .navbar__link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 576px) {
+  .hero__title {
+    font-size: 1.75rem;
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
+  }
+
+  .markdown h1 {
+    font-size: 1.5rem;
+  }
+
+  .markdown h2 {
+    font-size: 1.25rem;
+  }
+
+  .navbar__title {
+    font-size: 1rem;
+  }
+
+  .footer__title {
+    font-size: 0.95rem;
+  }
+
+  .footer__link-item {
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet adjustments */
+@media screen and (min-width: 577px) and (max-width: 996px) {
+  .container {
+    max-width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .markdown {
+    max-width: 100%;
+  }
+}
+
+/* Landscape mobile */
+@media screen and (max-width: 996px) and (orientation: landscape) {
+  .hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero__title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Improve touch interactions */
+  .button:hover {
+    opacity: 1; /* Remove hover effects on touch devices */
+  }
+
+  .menu__link:hover {
+    background-color: transparent;
+  }
+
+  /* Larger touch targets */
+  .navbar__link,
+  .menu__link {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .navbar__logo {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

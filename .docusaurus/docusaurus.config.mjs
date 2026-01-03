@@ -47,7 +47,9 @@ export default {
       {
         "docs": {
           "sidebarPath": "./sidebars.ts",
-          "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/"
+          "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
+          "showLastUpdateAuthor": false,
+          "showLastUpdateTime": false
         },
         "blog": {
           "showReadingTime": true,
