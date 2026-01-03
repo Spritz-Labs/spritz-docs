@@ -306,14 +306,40 @@
 /* Ensure mobile sidebar menu items are visible */
 .navbar-sidebar .menu__link {
   color: var(--ifm-font-color-base) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 [data-theme='dark'] .navbar-sidebar .menu__link {
   color: #000000 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 [data-theme='dark'] .navbar-sidebar {
   background-color: #fff0e0 !important;
+}
+
+[data-theme='dark'] .navbar-sidebar * {
+  color: #000000 !important;
+}
+
+/* Global fix for mobile sidebar visibility */
+.navbar-sidebar {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.navbar-sidebar__items {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.navbar-sidebar__item {
+  display: block !important;
+  visibility: visible !important;
 }
 
 /* Pagination */
