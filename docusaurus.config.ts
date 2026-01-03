@@ -123,6 +123,124 @@ const config: Config = {
                     position: "left",
                     label: "Docs",
                 },
+                {
+                    type: "dropdown",
+                    label: "AI Agents",
+                    position: "left",
+                    items: [
+                        {
+                            type: "doc",
+                            docId: "agents/intro",
+                            label: "Overview",
+                        },
+                        {
+                            type: "doc",
+                            docId: "agents/rag-technical",
+                            label: "RAG Technical",
+                        },
+                        {
+                            type: "doc",
+                            docId: "agents/mcp-servers",
+                            label: "MCP Servers",
+                        },
+                        {
+                            type: "doc",
+                            docId: "agents/x402",
+                            label: "x402 Payments",
+                        },
+                    ],
+                },
+                {
+                    type: "dropdown",
+                    label: "Livestreaming",
+                    position: "left",
+                    items: [
+                        {
+                            type: "doc",
+                            docId: "streaming/intro",
+                            label: "Overview",
+                        },
+                        {
+                            type: "doc",
+                            docId: "streaming/technical",
+                            label: "Technical",
+                        },
+                    ],
+                },
+                {
+                    type: "dropdown",
+                    label: "Guides",
+                    position: "left",
+                    items: [
+                        {
+                            type: "doc",
+                            docId: "guides/messaging",
+                            label: "Messaging",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/video-calls",
+                            label: "Video Calls",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/groups",
+                            label: "Groups",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/channels",
+                            label: "Channels",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/friends",
+                            label: "Friends",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/calendar-scheduling",
+                            label: "Calendar & Scheduling",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/profile-settings",
+                            label: "Profile Settings",
+                        },
+                        {
+                            type: "doc",
+                            docId: "guides/admin",
+                            label: "Admin",
+                        },
+                    ],
+                },
+                {
+                    type: "dropdown",
+                    label: "API",
+                    position: "left",
+                    items: [
+                        {
+                            type: "doc",
+                            docId: "api/intro",
+                            label: "Overview",
+                        },
+                        {
+                            type: "doc",
+                            docId: "api/complete",
+                            label: "Complete Reference",
+                        },
+                        {
+                            type: "doc",
+                            docId: "api/agents-detailed",
+                            label: "Agents API",
+                        },
+                        {
+                            type: "doc",
+                            docId: "api/streaming",
+                            label: "Streaming API",
+                        },
+                    ],
+                },
                 { to: "/blog", label: "Blog", position: "left" },
                 {
                     href: "https://github.com/Spritz-Labs/spritz",
