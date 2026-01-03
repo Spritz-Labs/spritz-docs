@@ -500,6 +500,12 @@
     z-index: 999;
     background-color: var(--ifm-background-color) !important;
     color: var(--ifm-font-color-base) !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .navbar-sidebar * {
+    color: var(--ifm-font-color-base) !important;
   }
 
   .navbar-sidebar__backdrop {
@@ -554,11 +560,32 @@
   .navbar-sidebar .theme-doc-sidebar-container {
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .navbar-sidebar .theme-doc-sidebar-menu {
     display: block !important;
     visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-sidebar .theme-doc-sidebar-menu__list {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-sidebar .theme-doc-sidebar-menu__item {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-sidebar .theme-doc-sidebar-menu__link {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: var(--ifm-font-color-base) !important;
   }
 
   /* Spacing adjustments */
@@ -584,7 +611,48 @@
   }
 
   .navbar-sidebar .navbar__items {
-    display: block;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-sidebar .navbar__items--right,
+  .navbar-sidebar .navbar__items--left {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .navbar-sidebar .navbar__link {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: var(--ifm-font-color-base) !important;
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+
+  .navbar-sidebar .navbar__link:hover {
+    color: var(--ifm-color-primary) !important;
+  }
+
+  /* Ensure all content in mobile sidebar is visible */
+  .navbar-sidebar__items > * {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Fix height and overflow for mobile sidebar */
+  .navbar-sidebar {
+    max-height: 100vh;
+    height: auto;
+  }
+
+  .navbar-sidebar__items {
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
