@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkspritz_docs=globalThis.webpackChunkspritz_docs||[]).push([[8947],{6600(s){s.exports=JSON.parse('{"authors":[{"name":"Anonymous","title":"Spritz Team","page":null,"key":"anonymous","count":1}]}')}}]);

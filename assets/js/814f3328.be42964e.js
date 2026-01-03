@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkspritz_docs=globalThis.webpackChunkspritz_docs||[]).push([[7472],{5513(t){t.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Why We Built Spritz","permalink":"/blog/why-we-built-spritz","unlisted":false,"date":"2024-01-03T00:00:00.000Z"}]}')}}]);
