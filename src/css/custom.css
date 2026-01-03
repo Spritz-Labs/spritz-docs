@@ -303,6 +303,19 @@
   color: #000000;
 }
 
+/* Ensure mobile sidebar menu items are visible */
+.navbar-sidebar .menu__link {
+  color: var(--ifm-font-color-base) !important;
+}
+
+[data-theme='dark'] .navbar-sidebar .menu__link {
+  color: #000000 !important;
+}
+
+[data-theme='dark'] .navbar-sidebar {
+  background-color: #fff0e0 !important;
+}
+
 /* Pagination */
 .pagination-nav__link {
   border-color: rgba(255, 85, 0, 0.2);
@@ -485,7 +498,8 @@
   /* Mobile sidebar menu */
   .navbar-sidebar {
     z-index: 999;
-    background-color: var(--ifm-background-color);
+    background-color: var(--ifm-background-color) !important;
+    color: var(--ifm-font-color-base) !important;
   }
 
   .navbar-sidebar__backdrop {
@@ -494,24 +508,57 @@
 
   .navbar-sidebar__items {
     padding: 1rem 0;
+    display: block !important;
   }
 
   .navbar-sidebar__item {
     padding: 0.5rem 1rem;
+    display: block !important;
   }
 
   .navbar-sidebar__item .menu__link {
     padding: 0.75rem 1rem;
     min-height: 44px;
+    color: var(--ifm-font-color-base) !important;
+    display: block !important;
+  }
+
+  .navbar-sidebar__item .menu__link:hover {
+    color: var(--ifm-color-primary) !important;
   }
 
   /* Ensure sidebar is accessible on mobile */
-  .menu {
+  .navbar-sidebar .menu {
     display: block !important;
+    visibility: visible !important;
   }
 
-  .menu__list {
+  .navbar-sidebar .menu__list {
     display: block !important;
+    visibility: visible !important;
+  }
+
+  .navbar-sidebar .menu__list-item {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .navbar-sidebar .menu__link {
+    display: block !important;
+    visibility: visible !important;
+    color: var(--ifm-font-color-base) !important;
+    opacity: 1 !important;
+  }
+
+  /* Docs sidebar in mobile menu */
+  .navbar-sidebar .theme-doc-sidebar-container {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .navbar-sidebar .theme-doc-sidebar-menu {
+    display: block !important;
+    visibility: visible !important;
   }
 
   /* Spacing adjustments */
