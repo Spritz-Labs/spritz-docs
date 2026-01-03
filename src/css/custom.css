@@ -574,6 +574,13 @@
     .navbar-sidebar:not([hidden]) .navbar__items {
         display: block !important;
         width: 100%;
+        visibility: visible !important;
+    }
+
+    .navbar-sidebar:not([hidden]) .navbar__items--right,
+    .navbar-sidebar:not([hidden]) .navbar__items--left {
+        display: block !important;
+        visibility: visible !important;
     }
 
     .navbar-sidebar:not([hidden]) .navbar__link {
@@ -582,6 +589,8 @@
         min-height: 44px;
         display: block !important;
         width: 100%;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     .navbar-sidebar:not([hidden]) .navbar__link:hover {
