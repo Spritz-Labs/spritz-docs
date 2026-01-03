@@ -17,7 +17,7 @@ Complete guide to all Spritz documentation.
 
 ## 📹 Livestreaming
 
-- **[Livestreaming Guide](/docs/streaming/intro)**: Broadcasting live video
+- **[Livestreaming Guide](/docs/streaming/technical)**: Broadcasting live video
 - **[Technical Deep Dive](/docs/streaming/technical)**: WebRTC, HLS, architecture
 
 ## 📚 User Guides

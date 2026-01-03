@@ -316,5 +316,5 @@ Streams are automatically recorded:
 
 - Learn about [Streaming Technical Details](/docs/streaming/technical)
 - Check out [API Overview](/docs/api/intro)
-- Explore [Livestreaming Guide](/docs/streaming/intro)
+- Explore [Livestreaming Guide](/docs/streaming/technical)
 

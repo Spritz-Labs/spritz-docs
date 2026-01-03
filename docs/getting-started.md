@@ -216,7 +216,7 @@ For detailed schema documentation, see [Database Schema](/docs/database/schema).
 ## Next Steps
 
 - Learn about [AI Agents](/docs/agents/intro)
-- Explore [Livestreaming](/docs/streaming/intro)
+- Explore [Livestreaming](/docs/streaming/technical)
 - Check out the [API Reference](/docs/api/intro)
 - Read about [x402 Monetization](/docs/agents/x402)
 

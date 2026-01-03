@@ -167,5 +167,5 @@ GET /api/calls?userAddress=0x...
 
 - Learn about [Messaging](/docs/guides/messaging)
 - Explore [Groups](/docs/guides/groups)
-- Check out [Livestreaming](/docs/streaming/intro)
+- Check out [Livestreaming](/docs/streaming/technical)
 

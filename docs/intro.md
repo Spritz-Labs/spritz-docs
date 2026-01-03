@@ -121,7 +121,7 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
     -   [RAG Technical Details](/docs/agents/rag-technical): Deep dive into knowledge bases
     -   [MCP Servers](/docs/agents/mcp-servers): Extend agents with external tools
     -   [x402 Monetization](/docs/agents/x402): Monetize your agents
--   **[Livestreaming](/docs/streaming/intro)**: Broadcast live video
+-   **[Livestreaming](/docs/streaming/technical)**: Broadcast live video
     -   [Technical Deep Dive](/docs/streaming/technical): WebRTC, HLS, and architecture
 
 ### User Guides

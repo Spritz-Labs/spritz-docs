@@ -36,7 +36,7 @@ Currently, Spritz uses Google Gemini models. The default is `gemini-2.0-flash`, 
 
 ### How do I go live?
 
-Click the "Go Live" button on your dashboard, allow camera/microphone access, and start streaming. See our [Livestreaming Guide](/docs/streaming/intro) for details.
+Click the "Go Live" button on your dashboard, allow camera/microphone access, and start streaming. See our [Livestreaming Guide](/docs/streaming/technical) for details.
 
 ### Are streams recorded?
 
