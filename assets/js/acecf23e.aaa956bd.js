@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkspritz_docs=globalThis.webpackChunkspritz_docs||[]).push([[1903],{1912(s){s.exports=JSON.parse('{"blogBasePath":"/spritz-docs/blog","blogTitle":"Blog","authorsListPath":"/spritz-docs/blog/authors"}')}}]);

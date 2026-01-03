@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkspritz_docs=globalThis.webpackChunkspritz_docs||[]).push([[224],{5354(s){s.exports=JSON.parse('{"metadata":{"permalink":"/spritz-docs/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":4,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
