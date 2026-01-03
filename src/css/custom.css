@@ -203,6 +203,26 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
+/* Ensure mobile menu toggle is always visible and clickable */
+.navbar__toggle {
+  display: none; /* Hidden on desktop, shown on mobile via media query */
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  z-index: 1001;
+}
+
+@media screen and (max-width: 996px) {
+  .navbar__toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 [data-theme='dark'] .navbar {
   background-color: rgba(255, 240, 224, 0.95);
   backdrop-filter: blur(10px);
@@ -448,6 +468,52 @@
     display: none; /* Hide TOC on mobile by default */
   }
 
+  /* Mobile menu toggle button */
+  .navbar__toggle {
+    display: block !important;
+    min-height: 44px;
+    min-width: 44px;
+    z-index: 1000;
+    position: relative;
+  }
+
+  .navbar__toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Mobile sidebar menu */
+  .navbar-sidebar {
+    z-index: 999;
+    background-color: var(--ifm-background-color);
+  }
+
+  .navbar-sidebar__backdrop {
+    z-index: 998;
+  }
+
+  .navbar-sidebar__items {
+    padding: 1rem 0;
+  }
+
+  .navbar-sidebar__item {
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar-sidebar__item .menu__link {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+
+  /* Ensure sidebar is accessible on mobile */
+  .menu {
+    display: block !important;
+  }
+
+  .menu__list {
+    display: block !important;
+  }
+
   /* Spacing adjustments */
   .container {
     padding-left: 1rem;
@@ -462,6 +528,16 @@
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+  }
+
+  /* Fix navbar items visibility on mobile */
+  .navbar__items--right,
+  .navbar__items--left {
+    display: none;
+  }
+
+  .navbar-sidebar .navbar__items {
+    display: block;
   }
 }
 
@@ -535,6 +611,17 @@
   .navbar__link,
   .menu__link {
     padding: 0.75rem 1rem;
+  }
+
+  /* Ensure mobile menu toggle works */
+  .navbar__toggle {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(255, 85, 0, 0.2);
+    tap-highlight-color: rgba(255, 85, 0, 0.2);
+  }
+
+  .navbar__toggle:active {
+    opacity: 0.7;
   }
 }
 

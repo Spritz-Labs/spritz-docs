@@ -115,6 +115,7 @@ const config: Config = {
                 width: 32,
                 height: 32,
             },
+            hideOnScroll: false,
             items: [
                 {
                     type: "docSidebar",

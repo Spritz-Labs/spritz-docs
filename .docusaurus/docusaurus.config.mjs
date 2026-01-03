@@ -113,6 +113,7 @@ export default {
         "width": 32,
         "height": 32
       },
+      "hideOnScroll": false,
       "items": [
         {
           "type": "docSidebar",
@@ -130,8 +131,7 @@ export default {
           "label": "GitHub",
           "position": "right"
         }
-      ],
-      "hideOnScroll": false
+      ]
     },
     "footer": {
       "style": "light",
