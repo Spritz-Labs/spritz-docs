@@ -31,7 +31,7 @@
     --ifm-heading-color: #1a1a1a;
 
     /* Code */
-    --ifm-code-font-size: 95%;
+  --ifm-code-font-size: 95%;
     --docusaurus-highlighted-code-line-bg: rgba(255, 85, 0, 0.1);
 
     /* Links */
@@ -326,21 +326,8 @@
     color: #000000 !important;
 }
 
-/* Global fix for mobile sidebar visibility */
-.navbar-sidebar {
-    display: block !important;
-    visibility: visible !important;
-}
-
-.navbar-sidebar__items {
-    display: block !important;
-    visibility: visible !important;
-}
-
-.navbar-sidebar__item {
-    display: block !important;
-    visibility: visible !important;
-}
+/* Global fix for mobile sidebar visibility - only apply when sidebar is actually shown by Docusaurus */
+/* Don't force display here - let Docusaurus control visibility */
 
 /* Pagination */
 .pagination-nav__link {
@@ -521,16 +508,21 @@
         height: 24px;
     }
 
-    /* Mobile sidebar menu */
+    /* Mobile sidebar menu - only show when open */
     .navbar-sidebar {
         z-index: 999;
+    }
+
+    .navbar-sidebar[data-open="true"] {
         background-color: var(--ifm-background-color) !important;
         color: var(--ifm-font-color-base) !important;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        display: block !important;
+        visibility: visible !important;
     }
 
-    .navbar-sidebar * {
+    .navbar-sidebar[data-open="true"] * {
         color: var(--ifm-font-color-base) !important;
     }
 
@@ -538,77 +530,67 @@
         z-index: 998;
     }
 
-    .navbar-sidebar__items {
+    /* When sidebar is visible, ensure all content is visible */
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__items {
         padding: 1rem 0;
-        display: block !important;
     }
 
-    .navbar-sidebar__item {
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__item {
         padding: 0.5rem 1rem;
-        display: block !important;
     }
 
-    .navbar-sidebar__item .menu__link {
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__item .menu__link {
         padding: 0.75rem 1rem;
         min-height: 44px;
         color: var(--ifm-font-color-base) !important;
-        display: block !important;
+        opacity: 1 !important;
     }
 
-    .navbar-sidebar__item .menu__link:hover {
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__item .menu__link:hover {
         color: var(--ifm-color-primary) !important;
     }
 
-    /* Ensure sidebar is accessible on mobile */
-    .navbar-sidebar .menu {
-        display: block !important;
+    /* Ensure sidebar content is visible when sidebar is shown */
+    .navbar-sidebar:not([hidden]) .menu {
         visibility: visible !important;
     }
 
-    .navbar-sidebar .menu__list {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .menu__list {
         visibility: visible !important;
     }
 
-    .navbar-sidebar .menu__list-item {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .menu__list-item {
         visibility: visible !important;
     }
 
-    .navbar-sidebar .menu__link {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .menu__link {
         visibility: visible !important;
         color: var(--ifm-font-color-base) !important;
         opacity: 1 !important;
     }
 
     /* Docs sidebar in mobile menu */
-    .navbar-sidebar .theme-doc-sidebar-container {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-container {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .theme-doc-sidebar-menu {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .theme-doc-sidebar-menu__list {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__list {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .theme-doc-sidebar-menu__item {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__item {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .theme-doc-sidebar-menu__link {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__link {
         visibility: visible !important;
         opacity: 1 !important;
         color: var(--ifm-font-color-base) !important;
@@ -636,21 +618,19 @@
         display: none;
     }
 
-    .navbar-sidebar .navbar__items {
-        display: block !important;
+    /* Navbar items in mobile sidebar when visible */
+    .navbar-sidebar:not([hidden]) .navbar__items {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .navbar__items--right,
-    .navbar-sidebar .navbar__items--left {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .navbar__items--right,
+    .navbar-sidebar:not([hidden]) .navbar__items--left {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
-    .navbar-sidebar .navbar__link {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .navbar__link {
         visibility: visible !important;
         opacity: 1 !important;
         color: var(--ifm-font-color-base) !important;
@@ -658,24 +638,23 @@
         min-height: 44px;
     }
 
-    .navbar-sidebar .navbar__link:hover {
+    .navbar-sidebar:not([hidden]) .navbar__link:hover {
         color: var(--ifm-color-primary) !important;
     }
 
     /* Ensure all content in mobile sidebar is visible */
-    .navbar-sidebar__items > * {
-        display: block !important;
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__items > * {
         visibility: visible !important;
         opacity: 1 !important;
     }
 
     /* Fix height and overflow for mobile sidebar */
-    .navbar-sidebar {
+    .navbar-sidebar:not([hidden]) {
         max-height: 100vh;
         height: auto;
     }
 
-    .navbar-sidebar__items {
+    .navbar-sidebar:not([hidden]) .navbar-sidebar__items {
         max-height: calc(100vh - 60px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
