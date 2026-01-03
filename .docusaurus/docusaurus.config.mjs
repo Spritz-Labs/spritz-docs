@@ -262,7 +262,7 @@ export default {
             },
             {
               "label": "Livestreaming",
-              "to": "/docs/streaming/intro"
+              "to": "/docs/streaming/technical"
             },
             {
               "label": "API Reference",
