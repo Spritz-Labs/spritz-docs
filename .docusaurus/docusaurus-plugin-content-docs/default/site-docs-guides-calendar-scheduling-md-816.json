@@ -1,0 +1,24 @@
+{
+  "id": "guides/calendar-scheduling",
+  "title": "Calendar & Scheduling Guide",
+  "description": "Spritz integrates with Google Calendar to enable scheduling, availability management, and shareable scheduling links.",
+  "source": "@site/docs/guides/calendar-scheduling.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/calendar-scheduling",
+  "permalink": "/spritz-docs/docs/guides/calendar-scheduling",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/calendar-scheduling.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Friends Guide",
+    "permalink": "/spritz-docs/docs/guides/friends"
+  },
+  "next": {
+    "title": "Profile & Settings Guide",
+    "permalink": "/spritz-docs/docs/guides/profile-settings"
+  }
+}

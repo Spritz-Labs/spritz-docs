@@ -1,0 +1,24 @@
+{
+  "id": "api/complete",
+  "title": "Complete API Reference",
+  "description": "Comprehensive reference for all Spritz API endpoints.",
+  "source": "@site/docs/api/complete.md",
+  "sourceDirName": "api",
+  "slug": "/api/complete",
+  "permalink": "/spritz-docs/docs/api/complete",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/complete.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "API Reference",
+    "permalink": "/spritz-docs/docs/api/intro"
+  },
+  "next": {
+    "title": "Agents API - Detailed Reference",
+    "permalink": "/spritz-docs/docs/api/agents-detailed"
+  }
+}

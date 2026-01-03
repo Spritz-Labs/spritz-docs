@@ -1,0 +1,325 @@
+{
+  "/spritz-docs/blog-9a5": {
+    "__comp": "a6aa9e1f",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "7661071f"
+      },
+      {
+        "content": "f4f34a3a"
+      },
+      {
+        "content": "8717b14a"
+      },
+      {
+        "content": "925b3f96"
+      }
+    ],
+    "__props": "f47dfbf6"
+  },
+  "/spritz-docs/blog/archive-f37": {
+    "__comp": "9e4087bc",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "__props": "f3fa2652"
+  },
+  "/spritz-docs/blog/authors-a12": {
+    "__comp": "621db11d",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "__props": "da241393"
+  },
+  "/spritz-docs/blog/authors/all-sebastien-lorber-articles-3ba": {
+    "__comp": "33fc5bb8",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "items": [
+      {
+        "content": "7661071f"
+      },
+      {
+        "content": "f4f34a3a"
+      },
+      {
+        "content": "925b3f96"
+      }
+    ],
+    "sidebar": "814f3328",
+    "__props": "d738a955"
+  },
+  "/spritz-docs/blog/authors/yangshun-863": {
+    "__comp": "33fc5bb8",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "items": [
+      {
+        "content": "7661071f"
+      },
+      {
+        "content": "8717b14a"
+      },
+      {
+        "content": "925b3f96"
+      }
+    ],
+    "sidebar": "814f3328",
+    "__props": "7e25320b"
+  },
+  "/spritz-docs/blog/first-blog-post-d6e": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "e273c56f"
+  },
+  "/spritz-docs/blog/long-blog-post-e2b": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "73664a40"
+  },
+  "/spritz-docs/blog/mdx-blog-post-46f": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "59362658"
+  },
+  "/spritz-docs/blog/tags-b87": {
+    "__comp": "01a85c17",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "__props": "e9434f6d"
+  },
+  "/spritz-docs/blog/tags/docusaurus-033": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "7661071f"
+      },
+      {
+        "content": "f4f34a3a"
+      },
+      {
+        "content": "8717b14a"
+      },
+      {
+        "content": "925b3f96"
+      }
+    ],
+    "__props": "a4fc6b40"
+  },
+  "/spritz-docs/blog/tags/facebook-1c1": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "7661071f"
+      }
+    ],
+    "__props": "666f9a70"
+  },
+  "/spritz-docs/blog/tags/hello-e83": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "7661071f"
+      },
+      {
+        "content": "8717b14a"
+      }
+    ],
+    "__props": "b628c78a"
+  },
+  "/spritz-docs/blog/tags/hola-115": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "925b3f96"
+      }
+    ],
+    "__props": "117fe9f2"
+  },
+  "/spritz-docs/blog/welcome-d86": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "d9f32620"
+  },
+  "/spritz-docs/markdown-page-47b": {
+    "__comp": "1f391b9e",
+    "__context": {
+      "plugin": "a7456010"
+    },
+    "content": "393be207"
+  },
+  "/spritz-docs/docs-aea": {
+    "__comp": "5e95c892",
+    "__context": {
+      "plugin": "aba21aa0"
+    }
+  },
+  "/spritz-docs/docs-e1c": {
+    "__comp": "a7bd4aaa",
+    "__props": "851f7e4e"
+  },
+  "/spritz-docs/docs-2c1": {
+    "__comp": "a94703ab"
+  },
+  "/spritz-docs/docs/-834": {
+    "__comp": "17896441",
+    "content": "c377a04b"
+  },
+  "/spritz-docs/docs/agents/intro-ef4": {
+    "__comp": "17896441",
+    "content": "d43b5150"
+  },
+  "/spritz-docs/docs/agents/mcp-servers-536": {
+    "__comp": "17896441",
+    "content": "5664f639"
+  },
+  "/spritz-docs/docs/agents/rag-technical-efc": {
+    "__comp": "17896441",
+    "content": "5a0ea868"
+  },
+  "/spritz-docs/docs/agents/x402-572": {
+    "__comp": "17896441",
+    "content": "e8802323"
+  },
+  "/spritz-docs/docs/api/agents-detailed-108": {
+    "__comp": "17896441",
+    "content": "b487a146"
+  },
+  "/spritz-docs/docs/api/complete-58d": {
+    "__comp": "17896441",
+    "content": "37d28e13"
+  },
+  "/spritz-docs/docs/api/intro-a4a": {
+    "__comp": "17896441",
+    "content": "6262e02f"
+  },
+  "/spritz-docs/docs/api/streaming-41d": {
+    "__comp": "17896441",
+    "content": "0a11e237"
+  },
+  "/spritz-docs/docs/architecture/overview-1bc": {
+    "__comp": "17896441",
+    "content": "0b1ac180"
+  },
+  "/spritz-docs/docs/database/schema-640": {
+    "__comp": "17896441",
+    "content": "a9b4524a"
+  },
+  "/spritz-docs/docs/faq-1dc": {
+    "__comp": "17896441",
+    "content": "0480b142"
+  },
+  "/spritz-docs/docs/getting-started-449": {
+    "__comp": "17896441",
+    "content": "d589d3a7"
+  },
+  "/spritz-docs/docs/guides/admin-a69": {
+    "__comp": "17896441",
+    "content": "407ca5f9"
+  },
+  "/spritz-docs/docs/guides/calendar-scheduling-4fb": {
+    "__comp": "17896441",
+    "content": "816c8c6f"
+  },
+  "/spritz-docs/docs/guides/channels-d5b": {
+    "__comp": "17896441",
+    "content": "ef2d50fc"
+  },
+  "/spritz-docs/docs/guides/friends-4e8": {
+    "__comp": "17896441",
+    "content": "fbad524a"
+  },
+  "/spritz-docs/docs/guides/groups-e1e": {
+    "__comp": "17896441",
+    "content": "8d4f5a56"
+  },
+  "/spritz-docs/docs/guides/messaging-4cb": {
+    "__comp": "17896441",
+    "content": "8df702c2"
+  },
+  "/spritz-docs/docs/guides/profile-settings-546": {
+    "__comp": "17896441",
+    "content": "d952d38f"
+  },
+  "/spritz-docs/docs/guides/video-calls-adb": {
+    "__comp": "17896441",
+    "content": "59b6f2ce"
+  },
+  "/spritz-docs/docs/intro-4fe": {
+    "__comp": "17896441",
+    "content": "0e384e19"
+  },
+  "/spritz-docs/docs/streaming/intro-f14": {
+    "__comp": "17896441",
+    "content": "bb88fcc3"
+  },
+  "/spritz-docs/docs/streaming/technical-9cf": {
+    "__comp": "17896441",
+    "content": "618aa0b3"
+  },
+  "/spritz-docs/-b23": {
+    "__comp": "1df93b7f",
+    "__context": {
+      "plugin": "a7456010"
+    },
+    "config": "5e9f5e1a"
+  }
+}

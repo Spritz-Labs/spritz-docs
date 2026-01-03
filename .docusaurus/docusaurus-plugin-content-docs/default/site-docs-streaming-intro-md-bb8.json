@@ -1,0 +1,24 @@
+{
+  "id": "streaming/intro",
+  "title": "Livestreaming",
+  "description": "Spritz includes built-in livestreaming capabilities powered by Livepeer, allowing you to broadcast live video to your friends.",
+  "source": "@site/docs/streaming/intro.md",
+  "sourceDirName": "streaming",
+  "slug": "/streaming/intro",
+  "permalink": "/spritz-docs/docs/streaming/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/streaming/intro.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "x402 Monetization",
+    "permalink": "/spritz-docs/docs/agents/x402"
+  },
+  "next": {
+    "title": "Livestreaming - Technical Deep Dive",
+    "permalink": "/spritz-docs/docs/streaming/technical"
+  }
+}

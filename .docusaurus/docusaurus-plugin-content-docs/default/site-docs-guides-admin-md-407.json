@@ -1,0 +1,24 @@
+{
+  "id": "guides/admin",
+  "title": "Admin Guide",
+  "description": "Administrative features and tools for managing the Spritz platform.",
+  "source": "@site/docs/guides/admin.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/admin",
+  "permalink": "/spritz-docs/docs/guides/admin",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/admin.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Profile & Settings Guide",
+    "permalink": "/spritz-docs/docs/guides/profile-settings"
+  },
+  "next": {
+    "title": "API Reference",
+    "permalink": "/spritz-docs/docs/api/intro"
+  }
+}

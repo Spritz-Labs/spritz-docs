@@ -1,0 +1,287 @@
+# Architecture Overview
+
+## System Architecture
+
+Spritz is built as a **Next.js 16** application using the App Router, with a **Supabase** backend for data persistence and real-time features.
+
+## High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Client Layer                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │   Next.js    │  │   React 19   │  │  TypeScript  │    │
+│  │  App Router  │  │   Components │  │   Type Safe  │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      API Layer (Next.js)                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │   Agents     │  │  Streaming   │  │  Auth/SIWE  │    │
+│  │   Endpoints  │  │  Endpoints   │  │  Endpoints   │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        ▼                   ▼                   ▼
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│  Supabase    │   │  Livepeer    │   │  Google      │
+│  PostgreSQL  │   │  Streaming   │   │  Gemini AI   │
+│  + pgvector  │   │  + WebRTC    │   │  + Embeddings│
+└──────────────┘   └──────────────┘   └──────────────┘
+        │
+        ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    External Services                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │   Waku       │  │  Huddle01    │  │  x402        │    │
+│  │  Messaging   │  │  Video Calls │  │  Payments    │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Core Components
+
+### Frontend
+
+- **Framework**: Next.js 16 with App Router
+- **UI Library**: React 19
+- **Styling**: Tailwind CSS 4
+- **State Management**: React Context + TanStack Query
+- **3D Graphics**: Three.js with React Three Fiber
+- **Animations**: Motion (Framer Motion)
+
+### Backend
+
+- **Database**: Supabase (PostgreSQL 15+)
+- **Vector Search**: pgvector extension
+- **Realtime**: Supabase Realtime subscriptions
+- **Storage**: Supabase Storage (for file uploads)
+
+### AI & ML
+
+- **LLM**: Google Gemini 2.0 Flash
+- **Embeddings**: Google text-embedding-004 (768 dimensions)
+- **RAG**: Vector similarity search with pgvector
+- **Web Search**: Google Search grounding via Gemini
+
+### Streaming
+
+- **Platform**: Livepeer Studio
+- **Ingestion**: WebRTC via WHIP protocol
+- **Playback**: HLS adaptive streaming
+- **Recording**: Automatic VOD generation
+
+### Video Calls
+
+- **Platform**: Huddle01
+- **Protocol**: WebRTC
+- **Features**: Group calls, screen sharing, recording
+
+### Messaging
+
+- **Protocol**: Waku Protocol
+- **Encryption**: End-to-end encrypted
+- **Transport**: Peer-to-peer relay network
+
+### Payments
+
+- **Protocol**: x402 (Coinbase)
+- **Network**: Base / Base Sepolia
+- **Currency**: USDC
+- **Facilitator**: x402.org/facilitator
+
+### Authentication
+
+- **EVM Chains**: SIWE (Sign-In with Ethereum)
+- **Solana**: SIWS (Sign-In with Solana)
+- **Passkeys**: ERC-4337 account abstraction via Pimlico
+- **Wallet Connection**: Reown AppKit (WalletConnect)
+
+## Data Flow
+
+### Agent Chat Flow
+
+```
+User Message
+    │
+    ▼
+┌─────────────────┐
+│  API Endpoint   │
+│  /agents/:id/chat│
+└─────────────────┘
+    │
+    ├─► Check Authentication
+    ├─► Load Agent Config
+    ├─► Get Chat History (if sessionId)
+    │
+    ├─► RAG Context Retrieval (if enabled)
+    │   │
+    │   ├─► Generate Query Embedding
+    │   ├─► Vector Similarity Search
+    │   └─► Format Context
+    │
+    ├─► MCP Tool Discovery (if configured)
+    │   │
+    │   ├─► Discover Tools
+    │   ├─► Get Tool Context
+    │   └─► Prepare Tool Schemas
+    │
+    ├─► Build Prompt
+    │   ├─► System Instructions
+    │   ├─► Chat History
+    │   ├─► RAG Context
+    │   └─► User Message
+    │
+    ├─► Call Gemini API
+    │   ├─► Web Search (if enabled)
+    │   ├─► MCP Tools (if needed)
+    │   └─► Generate Response
+    │
+    ├─► Store Messages
+    ├─► Update Stats
+    └─► Return Response
+```
+
+### Streaming Flow
+
+```
+Broadcaster
+    │
+    ├─► Create Stream (POST /api/streams)
+    │   └─► Livepeer API: Create Stream
+    │       └─► Returns: streamKey, playbackId
+    │
+    ├─► Start Broadcasting
+    │   ├─► Get User Media (camera/mic)
+    │   ├─► WebRTC Connection
+    │   └─► WHIP to Livepeer
+    │
+    └─► Livepeer Processing
+        ├─► Receive WebRTC Stream
+        ├─► Transcode (720p, 480p, 360p)
+        ├─► Generate HLS Manifest
+        └─► Record for VOD
+
+Viewer
+    │
+    ├─► Get Stream Info (GET /api/streams/:id)
+    │   └─► Returns: playbackId, status
+    │
+    ├─► Load HLS Stream
+    │   └─► hls.js: Load manifest
+    │       └─► Adaptive quality selection
+    │
+    └─► Playback
+        └─► Livepeer CDN: HLS segments
+```
+
+## Database Schema
+
+### Core Tables
+
+- `shout_users` - User accounts
+- `shout_friends` - Friend relationships
+- `shout_friend_requests` - Friend requests
+- `shout_agents` - AI agent configurations
+- `shout_agent_chats` - Agent chat history
+- `shout_agent_knowledge` - Knowledge base URLs
+- `shout_knowledge_chunks` - Vector embeddings
+- `shout_streams` - Livestreaming sessions
+- `shout_stream_assets` - Stream recordings
+- `shout_stream_viewers` - Active viewer tracking
+
+### Indexes
+
+- **Vector Search**: IVFFlat index on `shout_knowledge_chunks.embedding`
+- **User Lookups**: Index on `shout_users.wallet_address`
+- **Agent Queries**: Index on `shout_agents.owner_address`, `visibility`
+- **Stream Queries**: Index on `shout_streams.user_address`, `status`
+
+## Security Architecture
+
+### Authentication
+
+- **SIWE/SIWS**: Cryptographic signature verification
+- **JWT Tokens**: Short-lived session tokens
+- **Passkeys**: ERC-4337 smart accounts via Pimlico
+
+### Authorization
+
+- **Row Level Security (RLS)**: Supabase RLS policies
+- **Ownership Checks**: Verify resource ownership
+- **Visibility Controls**: Private/Friends/Public access
+
+### Data Protection
+
+- **Encryption**: End-to-end for Waku messages
+- **HTTPS**: All API communication
+- **Input Validation**: Sanitize all user inputs
+- **Rate Limiting**: Prevent abuse
+
+## Scalability
+
+### Horizontal Scaling
+
+- **Stateless API**: Next.js API routes are stateless
+- **Database**: Supabase handles connection pooling
+- **CDN**: Livepeer CDN for streaming content
+
+### Caching Strategy
+
+- **MCP Tool Schemas**: 1-hour cache
+- **Agent Configs**: 5-minute cache
+- **Stream Metadata**: 2-minute cache
+- **Vector Embeddings**: Permanent (in database)
+
+### Performance Optimization
+
+- **Vector Search**: IVFFlat approximate nearest neighbor
+- **Batch Operations**: Batch embedding generation
+- **Connection Pooling**: Reuse database connections
+- **Lazy Loading**: Load chat history on demand
+
+## Deployment
+
+### Production Stack
+
+- **Hosting**: Vercel (Next.js)
+- **Database**: Supabase Cloud
+- **CDN**: Vercel Edge Network + Livepeer CDN
+- **Monitoring**: Vercel Analytics + Supabase Logs
+
+### Environment Variables
+
+See [Getting Started - Environment Variables](/docs/getting-started#required-environment-variables) for complete list.
+
+### Build Process
+
+```bash
+npm run build  # Next.js production build
+npm run start # Start production server
+```
+
+## Monitoring & Observability
+
+### Logging
+
+- **API Logs**: Console logging with structured format
+- **Error Tracking**: Error boundaries + logging
+- **Performance**: Vercel Analytics
+
+### Metrics
+
+- **Agent Usage**: Message counts, token usage
+- **Stream Metrics**: Viewer counts, duration
+- **API Performance**: Response times, error rates
+
+## Future Architecture Considerations
+
+- **Microservices**: Split agents into separate service
+- **Message Queue**: Add queue for async processing
+- **Caching Layer**: Redis for frequently accessed data
+- **Search**: Elasticsearch for full-text search
+- **Analytics**: Dedicated analytics service
+

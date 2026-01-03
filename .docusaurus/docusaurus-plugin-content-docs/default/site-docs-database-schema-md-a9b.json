@@ -1,0 +1,24 @@
+{
+  "id": "database/schema",
+  "title": "Database Schema",
+  "description": "Overview",
+  "source": "@site/docs/database/schema.md",
+  "sourceDirName": "database",
+  "slug": "/database/schema",
+  "permalink": "/spritz-docs/docs/database/schema",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/database/schema.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Architecture Overview",
+    "permalink": "/spritz-docs/docs/architecture/overview"
+  },
+  "next": {
+    "title": "Frequently Asked Questions",
+    "permalink": "/spritz-docs/docs/faq"
+  }
+}

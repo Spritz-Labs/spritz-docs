@@ -1,0 +1,24 @@
+{
+  "id": "streaming/technical",
+  "title": "Livestreaming - Technical Deep Dive",
+  "description": "Architecture",
+  "source": "@site/docs/streaming/technical.md",
+  "sourceDirName": "streaming",
+  "slug": "/streaming/technical",
+  "permalink": "/spritz-docs/docs/streaming/technical",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/streaming/technical.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Livestreaming",
+    "permalink": "/spritz-docs/docs/streaming/intro"
+  },
+  "next": {
+    "title": "Messaging Guide",
+    "permalink": "/spritz-docs/docs/guides/messaging"
+  }
+}

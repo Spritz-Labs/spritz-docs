@@ -1,0 +1,24 @@
+{
+  "id": "api/streaming",
+  "title": "Streaming API Reference",
+  "description": "Complete API reference for livestreaming functionality in Spritz.",
+  "source": "@site/docs/api/streaming.md",
+  "sourceDirName": "api",
+  "slug": "/api/streaming",
+  "permalink": "/spritz-docs/docs/api/streaming",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/streaming.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Agents API - Detailed Reference",
+    "permalink": "/spritz-docs/docs/api/agents-detailed"
+  },
+  "next": {
+    "title": "Architecture Overview",
+    "permalink": "/spritz-docs/docs/architecture/overview"
+  }
+}

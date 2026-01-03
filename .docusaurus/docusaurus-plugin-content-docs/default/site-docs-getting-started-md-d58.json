@@ -1,0 +1,24 @@
+{
+  "id": "getting-started",
+  "title": "Getting Started",
+  "description": "This guide will help you get started with Spritz, from installation to your first AI agent.",
+  "source": "@site/docs/getting-started.md",
+  "sourceDirName": ".",
+  "slug": "/getting-started",
+  "permalink": "/spritz-docs/docs/getting-started",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/getting-started.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Welcome to Spritz",
+    "permalink": "/spritz-docs/docs/intro"
+  },
+  "next": {
+    "title": "AI Agents",
+    "permalink": "/spritz-docs/docs/agents/intro"
+  }
+}

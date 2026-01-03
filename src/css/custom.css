@@ -1,0 +1,269 @@
+/**
+ * Spritz Documentation - Custom CSS
+ * Colors match the Spritz app branding
+ */
+
+/* Spritz Brand Colors */
+:root {
+  /* Primary Orange - #FF5500 */
+  --ifm-color-primary: #ff5500;
+  --ifm-color-primary-dark: #e04d00;
+  --ifm-color-primary-darker: #d44800;
+  --ifm-color-primary-darkest: #ae3b00;
+  --ifm-color-primary-light: #ff6619;
+  --ifm-color-primary-lighter: #ff6f26;
+  --ifm-color-primary-lightest: #ff8f4d;
+  
+  /* Secondary Amber - #FB8D22 */
+  --ifm-color-secondary: #fb8d22;
+  
+  /* Accent Colors */
+  --spritz-accent-light: #ffbba7;
+  --spritz-accent-cream: #fff0e0;
+  --spritz-accent-green: #004921;
+  
+  /* Background */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8f9fa;
+  
+  /* Text */
+  --ifm-font-color-base: #1a1a1a;
+  --ifm-heading-color: #1a1a1a;
+  
+  /* Code */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 85, 0, 0.1);
+  
+  /* Links */
+  --ifm-link-color: #ff5500;
+  --ifm-link-hover-color: #e04d00;
+  
+  /* Buttons */
+  --ifm-button-background-color: #ff5500;
+  --ifm-button-color: #ffffff;
+}
+
+/* Dark Mode - Spritz Branding */
+[data-theme='dark'] {
+  /* Primary Orange - #FF5500 */
+  --ifm-color-primary: #ff5500;
+  --ifm-color-primary-dark: #e04d00;
+  --ifm-color-primary-darker: #d44800;
+  --ifm-color-primary-darkest: #ae3b00;
+  --ifm-color-primary-light: #ff6619;
+  --ifm-color-primary-lighter: #ff6f26;
+  --ifm-color-primary-lightest: #ff8f4d;
+  
+  /* Background - Cream #FFF0E0 */
+  --ifm-background-color: #fff0e0;
+  --ifm-background-surface-color: #f5e6d3;
+  
+  /* Text - Black for contrast on cream */
+  --ifm-font-color-base: #000000;
+  --ifm-heading-color: #000000;
+  --ifm-color-content: #000000;
+  --ifm-color-content-secondary: #333333;
+  
+  /* Code */
+  --docusaurus-highlighted-code-line-bg: rgba(255, 85, 0, 0.3);
+  
+  /* Links */
+  --ifm-link-color: #ff5500;
+  --ifm-link-hover-color: #e04d00;
+  
+  /* Navbar */
+  --ifm-navbar-background-color: rgba(255, 240, 224, 0.95);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  
+  /* Footer */
+  --ifm-footer-background-color: #f5e6d3;
+}
+
+/* Custom Spritz Branding */
+.navbar__brand {
+  font-weight: 600;
+}
+
+.navbar__logo {
+  height: 32px;
+  margin-right: 8px;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(255, 85, 0, 0.3);
+  color: inherit;
+}
+
+/* Code blocks with Spritz accent */
+.prism-code {
+  background: var(--ifm-code-background);
+}
+
+/* Button hover effects */
+.button--primary:hover {
+  background: #e04d00;
+  border-color: #e04d00;
+}
+
+/* Spritz accent colors for highlights */
+.markdown > h2 {
+  border-bottom-color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .markdown {
+  color: #000000;
+}
+
+[data-theme='dark'] .markdown h1,
+[data-theme='dark'] .markdown h2,
+[data-theme='dark'] .markdown h3,
+[data-theme='dark'] .markdown h4,
+[data-theme='dark'] .markdown h5,
+[data-theme='dark'] .markdown h6 {
+  color: #000000;
+}
+
+[data-theme='dark'] .markdown p,
+[data-theme='dark'] .markdown li {
+  color: #000000;
+}
+
+[data-theme='dark'] .markdown a {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .markdown a:hover {
+  color: var(--ifm-color-primary-dark);
+}
+
+/* Table of contents active link */
+.table-of-contents__link--active {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+[data-theme='dark'] .table-of-contents__link {
+  color: #333333;
+}
+
+[data-theme='dark'] .table-of-contents__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+/* Footer styling to match Spritz cream */
+.footer {
+  background-color: var(--ifm-footer-background-color);
+  color: #000000;
+}
+
+.footer__title {
+  color: var(--ifm-color-primary);
+}
+
+.footer__link-item {
+  color: #333333;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary);
+}
+
+.footer__copyright {
+  color: #333333;
+}
+
+/* Navbar styling */
+.navbar {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .navbar {
+  background-color: rgba(255, 240, 224, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+  color: #000000;
+}
+
+[data-theme='dark'] .navbar__item {
+  color: #000000;
+}
+
+[data-theme='dark'] .navbar__link {
+  color: #000000;
+}
+
+[data-theme='dark'] .navbar__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .navbar__brand {
+  color: #000000;
+}
+
+/* Hero section accent */
+.hero {
+  background: linear-gradient(135deg, #ffffff 0%, #fff0e0 100%);
+}
+
+[data-theme='dark'] .hero {
+  background: linear-gradient(135deg, #fff0e0 0%, #f5e6d3 100%);
+}
+
+/* Badge colors */
+.badge--primary {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Admonitions with Spritz colors */
+.admonition-icon svg {
+  fill: var(--ifm-color-primary);
+}
+
+/* Search bar styling */
+.navbar__search-input {
+  border-color: rgba(255, 85, 0, 0.2);
+}
+
+.navbar__search-input:focus {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.1);
+}
+
+/* Code block styling */
+.prism-code {
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+/* Sidebar active item */
+.menu__link--active {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(255, 85, 0, 0.1);
+}
+
+[data-theme='dark'] .menu__link {
+  color: #000000;
+}
+
+[data-theme='dark'] .menu__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .menu__list-item {
+  color: #000000;
+}
+
+/* Pagination */
+.pagination-nav__link {
+  border-color: rgba(255, 85, 0, 0.2);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+  background-color: rgba(255, 85, 0, 0.05);
+}

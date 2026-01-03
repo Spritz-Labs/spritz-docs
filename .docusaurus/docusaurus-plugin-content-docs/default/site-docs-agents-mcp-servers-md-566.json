@@ -1,0 +1,24 @@
+{
+  "id": "agents/mcp-servers",
+  "title": "MCP Servers & API Tools",
+  "description": "Overview",
+  "source": "@site/docs/agents/mcp-servers.md",
+  "sourceDirName": "agents",
+  "slug": "/agents/mcp-servers",
+  "permalink": "/spritz-docs/docs/agents/mcp-servers",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/mcp-servers.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Knowledge Base (RAG) - Technical Deep Dive",
+    "permalink": "/spritz-docs/docs/agents/rag-technical"
+  },
+  "next": {
+    "title": "x402 Monetization",
+    "permalink": "/spritz-docs/docs/agents/x402"
+  }
+}

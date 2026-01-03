@@ -1,0 +1,24 @@
+{
+  "id": "agents/intro",
+  "title": "AI Agents",
+  "description": "Spritz allows you to create and interact with customizable AI agents powered by Google Gemini.",
+  "source": "@site/docs/agents/intro.md",
+  "sourceDirName": "agents",
+  "slug": "/agents/intro",
+  "permalink": "/spritz-docs/docs/agents/intro",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/intro.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Getting Started",
+    "permalink": "/spritz-docs/docs/getting-started"
+  },
+  "next": {
+    "title": "Knowledge Base (RAG) - Technical Deep Dive",
+    "permalink": "/spritz-docs/docs/agents/rag-technical"
+  }
+}

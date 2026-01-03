@@ -1,0 +1,24 @@
+{
+  "id": "guides/video-calls",
+  "title": "Video Calls Guide",
+  "description": "Spritz provides high-quality video and voice calls powered by Huddle01, supporting both one-on-one and group calls.",
+  "source": "@site/docs/guides/video-calls.md",
+  "sourceDirName": "guides",
+  "slug": "/guides/video-calls",
+  "permalink": "/spritz-docs/docs/guides/video-calls",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/video-calls.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Messaging Guide",
+    "permalink": "/spritz-docs/docs/guides/messaging"
+  },
+  "next": {
+    "title": "Groups Guide",
+    "permalink": "/spritz-docs/docs/guides/groups"
+  }
+}

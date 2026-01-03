@@ -1,0 +1,24 @@
+{
+  "id": "agents/x402",
+  "title": "x402 Monetization",
+  "description": "Monetize your AI agents using the x402 payment protocol, allowing you to charge users per message.",
+  "source": "@site/docs/agents/x402.md",
+  "sourceDirName": "agents",
+  "slug": "/agents/x402",
+  "permalink": "/spritz-docs/docs/agents/x402",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/x402.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "MCP Servers & API Tools",
+    "permalink": "/spritz-docs/docs/agents/mcp-servers"
+  },
+  "next": {
+    "title": "Livestreaming",
+    "permalink": "/spritz-docs/docs/streaming/intro"
+  }
+}

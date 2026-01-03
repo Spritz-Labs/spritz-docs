@@ -1,0 +1,24 @@
+{
+  "id": "api/agents-detailed",
+  "title": "Agents API - Detailed Reference",
+  "description": "Authentication",
+  "source": "@site/docs/api/agents-detailed.md",
+  "sourceDirName": "api",
+  "slug": "/api/agents-detailed",
+  "permalink": "/spritz-docs/docs/api/agents-detailed",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/agents-detailed.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "docsSidebar",
+  "previous": {
+    "title": "Complete API Reference",
+    "permalink": "/spritz-docs/docs/api/complete"
+  },
+  "next": {
+    "title": "Streaming API Reference",
+    "permalink": "/spritz-docs/docs/api/streaming"
+  }
+}
