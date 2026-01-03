@@ -16,7 +16,7 @@ const config: Config = {
     },
 
     // Set the production url of your site here
-    url: "https://spritz-docs.vercel.app",
+    url: "https://docs.spritz.chat",
     // Set the /<baseUrl>/ pathname under which your site is served
     // For Vercel deployment, use root path
     baseUrl: "/",
@@ -72,6 +72,33 @@ const config: Config = {
     themeConfig: {
         // Replace with your project's social card
         image: "og-image.png",
+        metadata: [
+            {
+                name: "keywords",
+                content:
+                    "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, x402 payments",
+            },
+            {
+                name: "author",
+                content: "Spritz Labs",
+            },
+            {
+                property: "og:type",
+                content: "website",
+            },
+            {
+                property: "og:site_name",
+                content: "Spritz Documentation",
+            },
+            {
+                name: "twitter:card",
+                content: "summary_large_image",
+            },
+            {
+                name: "twitter:site",
+                content: "@SpritzLabs",
+            },
+        ],
         colorMode: {
             respectPrefersColorScheme: true,
             defaultMode: "light",
@@ -102,7 +129,7 @@ const config: Config = {
             ],
         },
         footer: {
-            style: "dark",
+            style: "light",
             links: [
                 {
                     title: "Documentation",

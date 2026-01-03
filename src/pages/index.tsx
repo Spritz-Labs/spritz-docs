@@ -39,8 +39,8 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
       <Layout
-        title={siteConfig.title}
-        description={siteConfig.tagline}>
+        title={`${siteConfig.title} - Decentralized Social Platform Documentation`}
+        description="Complete documentation for Spritz - a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Learn how to build censorship-resistant applications.">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

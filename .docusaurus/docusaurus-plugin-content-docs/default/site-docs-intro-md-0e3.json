@@ -1,7 +1,7 @@
 {
   "id": "intro",
   "title": "Welcome to Spritz",
-  "description": "Spritz is a decentralized social platform that combines Web3 messaging, AI agents, livestreaming, and peer-to-peer communication.",
+  "description": "Spritz is a decentralized social platform that combines Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Learn how to build on Web3 with censorship-resistant messaging, AI agents, and decentralized livestreaming.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/intro",
@@ -11,7 +11,20 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/intro.md",
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "Welcome to Spritz",
+    "description": "Spritz is a decentralized social platform that combines Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Learn how to build on Web3 with censorship-resistant messaging, AI agents, and decentralized livestreaming.",
+    "keywords": [
+      "Spritz",
+      "decentralized social platform",
+      "Web3 messaging",
+      "AI agents",
+      "livestreaming",
+      "censorship resistant",
+      "peer-to-peer",
+      "Waku protocol"
+    ]
+  },
   "sidebar": "docsSidebar",
   "next": {
     "title": "Getting Started",

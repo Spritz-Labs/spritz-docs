@@ -28,7 +28,7 @@ export default {
     },
     "experimental_router": "browser"
   },
-  "url": "https://spritz-docs.vercel.app",
+  "url": "https://docs.spritz.chat",
   "baseUrl": "/",
   "organizationName": "Spritz-Labs",
   "projectName": "spritz-docs",
@@ -71,6 +71,32 @@ export default {
   ],
   "themeConfig": {
     "image": "og-image.png",
+    "metadata": [
+      {
+        "name": "keywords",
+        "content": "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, x402 payments"
+      },
+      {
+        "name": "author",
+        "content": "Spritz Labs"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Spritz Documentation"
+      },
+      {
+        "name": "twitter:card",
+        "content": "summary_large_image"
+      },
+      {
+        "name": "twitter:site",
+        "content": "@SpritzLabs"
+      }
+    ],
     "colorMode": {
       "respectPrefersColorScheme": true,
       "defaultMode": "light",
@@ -106,7 +132,7 @@ export default {
       "hideOnScroll": false
     },
     "footer": {
-      "style": "dark",
+      "style": "light",
       "links": [
         {
           "title": "Documentation",
@@ -374,7 +400,6 @@ export default {
         "groupByYear": true
       }
     },
-    "metadata": [],
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3

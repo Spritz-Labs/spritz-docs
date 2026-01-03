@@ -158,19 +158,44 @@
 }
 
 .footer__title {
-  color: var(--ifm-color-primary);
+  color: #000000;
+  font-weight: 600;
 }
 
 .footer__link-item {
-  color: #333333;
+  color: #1a1a1a;
+  opacity: 0.9;
 }
 
 .footer__link-item:hover {
   color: var(--ifm-color-primary);
+  opacity: 1;
 }
 
 .footer__copyright {
-  color: #333333;
+  color: #1a1a1a;
+  opacity: 0.8;
+}
+
+/* Ensure footer text is readable in both themes */
+[data-theme='dark'] .footer {
+  background-color: #f5e6d3;
+}
+
+[data-theme='dark'] .footer__title {
+  color: #000000;
+}
+
+[data-theme='dark'] .footer__link-item {
+  color: #1a1a1a;
+}
+
+[data-theme='dark'] .footer__link-item:hover {
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .footer__copyright {
+  color: #1a1a1a;
 }
 
 /* Navbar styling */
