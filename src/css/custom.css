@@ -303,26 +303,20 @@
     color: #000000;
 }
 
-/* Ensure mobile sidebar menu items are visible */
-.navbar-sidebar .menu__link {
+/* Mobile sidebar styling - only when visible */
+.navbar-sidebar:not([hidden]) .menu__link {
     color: var(--ifm-font-color-base) !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
 }
 
-[data-theme="dark"] .navbar-sidebar .menu__link {
+[data-theme="dark"] .navbar-sidebar:not([hidden]) .menu__link {
     color: #000000 !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
 }
 
-[data-theme="dark"] .navbar-sidebar {
+[data-theme="dark"] .navbar-sidebar:not([hidden]) {
     background-color: #fff0e0 !important;
 }
 
-[data-theme="dark"] .navbar-sidebar * {
+[data-theme="dark"] .navbar-sidebar:not([hidden]) * {
     color: #000000 !important;
 }
 
@@ -577,10 +571,17 @@
     }
 
     /* Navbar items in mobile sidebar when visible */
+    .navbar-sidebar:not([hidden]) .navbar__items {
+        display: block !important;
+        width: 100%;
+    }
+
     .navbar-sidebar:not([hidden]) .navbar__link {
         color: var(--ifm-font-color-base) !important;
         padding: 0.75rem 1rem;
         min-height: 44px;
+        display: block !important;
+        width: 100%;
     }
 
     .navbar-sidebar:not([hidden]) .navbar__link:hover {
@@ -589,13 +590,19 @@
 
     /* Fix height and overflow for mobile sidebar when shown */
     .navbar-sidebar:not([hidden]) {
+        height: 100vh;
         max-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
 
     .navbar-sidebar:not([hidden]) .navbar-sidebar__items {
-        max-height: calc(100vh - 60px);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        min-height: 100%;
+        padding-bottom: 2rem;
+        width: 100%;
+        display: block !important;
     }
 }
 
