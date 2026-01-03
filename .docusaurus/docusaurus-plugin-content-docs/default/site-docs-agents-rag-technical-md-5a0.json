@@ -5,7 +5,7 @@
   "source": "@site/docs/agents/rag-technical.md",
   "sourceDirName": "agents",
   "slug": "/agents/rag-technical",
-  "permalink": "/spritz-docs/docs/agents/rag-technical",
+  "permalink": "/docs/agents/rag-technical",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/rag-technical.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "AI Agents",
-    "permalink": "/spritz-docs/docs/agents/intro"
+    "permalink": "/docs/agents/intro"
   },
   "next": {
     "title": "MCP Servers & API Tools",
-    "permalink": "/spritz-docs/docs/agents/mcp-servers"
+    "permalink": "/docs/agents/mcp-servers"
   }
 }

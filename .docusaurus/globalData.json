@@ -1,132 +1,132 @@
 {
   "docusaurus-plugin-content-docs": {
     "default": {
-      "path": "/spritz-docs/docs",
+      "path": "/docs",
       "versions": [
         {
           "name": "current",
           "label": "Next",
           "isLast": true,
-          "path": "/spritz-docs/docs",
+          "path": "/docs",
           "mainDocId": "index",
           "docs": [
             {
               "id": "agents/intro",
-              "path": "/spritz-docs/docs/agents/intro",
+              "path": "/docs/agents/intro",
               "sidebar": "docsSidebar"
             },
             {
               "id": "agents/mcp-servers",
-              "path": "/spritz-docs/docs/agents/mcp-servers",
+              "path": "/docs/agents/mcp-servers",
               "sidebar": "docsSidebar"
             },
             {
               "id": "agents/rag-technical",
-              "path": "/spritz-docs/docs/agents/rag-technical",
+              "path": "/docs/agents/rag-technical",
               "sidebar": "docsSidebar"
             },
             {
               "id": "agents/x402",
-              "path": "/spritz-docs/docs/agents/x402",
+              "path": "/docs/agents/x402",
               "sidebar": "docsSidebar"
             },
             {
               "id": "api/agents-detailed",
-              "path": "/spritz-docs/docs/api/agents-detailed",
+              "path": "/docs/api/agents-detailed",
               "sidebar": "docsSidebar"
             },
             {
               "id": "api/complete",
-              "path": "/spritz-docs/docs/api/complete",
+              "path": "/docs/api/complete",
               "sidebar": "docsSidebar"
             },
             {
               "id": "api/intro",
-              "path": "/spritz-docs/docs/api/intro",
+              "path": "/docs/api/intro",
               "sidebar": "docsSidebar"
             },
             {
               "id": "api/streaming",
-              "path": "/spritz-docs/docs/api/streaming",
+              "path": "/docs/api/streaming",
               "sidebar": "docsSidebar"
             },
             {
               "id": "architecture/overview",
-              "path": "/spritz-docs/docs/architecture/overview",
+              "path": "/docs/architecture/overview",
               "sidebar": "docsSidebar"
             },
             {
               "id": "database/schema",
-              "path": "/spritz-docs/docs/database/schema",
+              "path": "/docs/database/schema",
               "sidebar": "docsSidebar"
             },
             {
               "id": "faq",
-              "path": "/spritz-docs/docs/faq",
+              "path": "/docs/faq",
               "sidebar": "docsSidebar"
             },
             {
               "id": "getting-started",
-              "path": "/spritz-docs/docs/getting-started",
+              "path": "/docs/getting-started",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/admin",
-              "path": "/spritz-docs/docs/guides/admin",
+              "path": "/docs/guides/admin",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/calendar-scheduling",
-              "path": "/spritz-docs/docs/guides/calendar-scheduling",
+              "path": "/docs/guides/calendar-scheduling",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/channels",
-              "path": "/spritz-docs/docs/guides/channels",
+              "path": "/docs/guides/channels",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/friends",
-              "path": "/spritz-docs/docs/guides/friends",
+              "path": "/docs/guides/friends",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/groups",
-              "path": "/spritz-docs/docs/guides/groups",
+              "path": "/docs/guides/groups",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/messaging",
-              "path": "/spritz-docs/docs/guides/messaging",
+              "path": "/docs/guides/messaging",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/profile-settings",
-              "path": "/spritz-docs/docs/guides/profile-settings",
+              "path": "/docs/guides/profile-settings",
               "sidebar": "docsSidebar"
             },
             {
               "id": "guides/video-calls",
-              "path": "/spritz-docs/docs/guides/video-calls",
+              "path": "/docs/guides/video-calls",
               "sidebar": "docsSidebar"
             },
             {
               "id": "index",
-              "path": "/spritz-docs/docs/"
+              "path": "/docs/"
             },
             {
               "id": "intro",
-              "path": "/spritz-docs/docs/intro",
+              "path": "/docs/intro",
               "sidebar": "docsSidebar"
             },
             {
               "id": "streaming/intro",
-              "path": "/spritz-docs/docs/streaming/intro",
+              "path": "/docs/streaming/intro",
               "sidebar": "docsSidebar"
             },
             {
               "id": "streaming/technical",
-              "path": "/spritz-docs/docs/streaming/technical",
+              "path": "/docs/streaming/technical",
               "sidebar": "docsSidebar"
             }
           ],
@@ -134,7 +134,7 @@
           "sidebars": {
             "docsSidebar": {
               "link": {
-                "path": "/spritz-docs/docs/intro",
+                "path": "/docs/intro",
                 "label": "intro"
               }
             }

@@ -5,7 +5,7 @@
   "source": "@site/docs/agents/intro.md",
   "sourceDirName": "agents",
   "slug": "/agents/intro",
-  "permalink": "/spritz-docs/docs/agents/intro",
+  "permalink": "/docs/agents/intro",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/intro.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Getting Started",
-    "permalink": "/spritz-docs/docs/getting-started"
+    "permalink": "/docs/getting-started"
   },
   "next": {
     "title": "Knowledge Base (RAG) - Technical Deep Dive",
-    "permalink": "/spritz-docs/docs/agents/rag-technical"
+    "permalink": "/docs/agents/rag-technical"
   }
 }

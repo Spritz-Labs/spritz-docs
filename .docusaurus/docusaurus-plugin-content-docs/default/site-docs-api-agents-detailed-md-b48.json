@@ -5,7 +5,7 @@
   "source": "@site/docs/api/agents-detailed.md",
   "sourceDirName": "api",
   "slug": "/api/agents-detailed",
-  "permalink": "/spritz-docs/docs/api/agents-detailed",
+  "permalink": "/docs/api/agents-detailed",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/agents-detailed.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Complete API Reference",
-    "permalink": "/spritz-docs/docs/api/complete"
+    "permalink": "/docs/api/complete"
   },
   "next": {
     "title": "Streaming API Reference",
-    "permalink": "/spritz-docs/docs/api/streaming"
+    "permalink": "/docs/api/streaming"
   }
 }

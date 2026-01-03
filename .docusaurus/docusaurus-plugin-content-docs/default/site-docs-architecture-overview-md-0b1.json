@@ -5,7 +5,7 @@
   "source": "@site/docs/architecture/overview.md",
   "sourceDirName": "architecture",
   "slug": "/architecture/overview",
-  "permalink": "/spritz-docs/docs/architecture/overview",
+  "permalink": "/docs/architecture/overview",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/architecture/overview.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Streaming API Reference",
-    "permalink": "/spritz-docs/docs/api/streaming"
+    "permalink": "/docs/api/streaming"
   },
   "next": {
     "title": "Database Schema",
-    "permalink": "/spritz-docs/docs/database/schema"
+    "permalink": "/docs/database/schema"
   }
 }

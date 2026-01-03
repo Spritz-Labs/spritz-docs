@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/profile-settings.md",
   "sourceDirName": "guides",
   "slug": "/guides/profile-settings",
-  "permalink": "/spritz-docs/docs/guides/profile-settings",
+  "permalink": "/docs/guides/profile-settings",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/profile-settings.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Calendar & Scheduling Guide",
-    "permalink": "/spritz-docs/docs/guides/calendar-scheduling"
+    "permalink": "/docs/guides/calendar-scheduling"
   },
   "next": {
     "title": "Admin Guide",
-    "permalink": "/spritz-docs/docs/guides/admin"
+    "permalink": "/docs/guides/admin"
   }
 }

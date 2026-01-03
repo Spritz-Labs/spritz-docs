@@ -1,0 +1,65 @@
+{
+  "permalink": "/blog/why-we-built-spritz",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2024-01-03-why-we-built-spritz.md",
+  "source": "@site/blog/2024-01-03-why-we-built-spritz.md",
+  "title": "Why We Built Spritz",
+  "description": "The internet was supposed to be a decentralized network—a place where anyone could communicate freely, share ideas, and build communities without gatekeepers. But somewhere along the way, we lost that vision. Today, a handful of corporations control our digital lives, deciding what we see, who we can talk to, and what we're allowed to say.",
+  "date": "2024-01-03T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Spritz",
+      "permalink": "/blog/tags/spritz",
+      "description": "Posts about Spritz platform and features"
+    },
+    {
+      "inline": false,
+      "label": "Decentralization",
+      "permalink": "/blog/tags/decentralization",
+      "description": "Posts about decentralized technology and architecture"
+    },
+    {
+      "inline": false,
+      "label": "Censorship Resistance",
+      "permalink": "/blog/tags/censorship-resistance",
+      "description": "Posts about building censorship-resistant platforms"
+    },
+    {
+      "inline": false,
+      "label": "Openness",
+      "permalink": "/blog/tags/openness",
+      "description": "Posts about open source and open protocols"
+    },
+    {
+      "inline": false,
+      "label": "Web3",
+      "permalink": "/blog/tags/web3",
+      "description": "Posts about Web3 technologies and principles"
+    }
+  ],
+  "readingTime": 4.69,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Anonymous",
+      "title": "Spritz Team",
+      "page": null,
+      "key": "anonymous"
+    }
+  ],
+  "frontMatter": {
+    "slug": "why-we-built-spritz",
+    "title": "Why We Built Spritz",
+    "authors": [
+      "anonymous"
+    ],
+    "tags": [
+      "spritz",
+      "decentralization",
+      "censorship-resistance",
+      "openness",
+      "web3"
+    ]
+  },
+  "unlisted": false
+}

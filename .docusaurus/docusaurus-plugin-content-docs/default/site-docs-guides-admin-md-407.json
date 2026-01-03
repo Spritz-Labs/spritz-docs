@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/admin.md",
   "sourceDirName": "guides",
   "slug": "/guides/admin",
-  "permalink": "/spritz-docs/docs/guides/admin",
+  "permalink": "/docs/guides/admin",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/admin.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Profile & Settings Guide",
-    "permalink": "/spritz-docs/docs/guides/profile-settings"
+    "permalink": "/docs/guides/profile-settings"
   },
   "next": {
     "title": "API Reference",
-    "permalink": "/spritz-docs/docs/api/intro"
+    "permalink": "/docs/api/intro"
   }
 }

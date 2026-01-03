@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/calendar-scheduling.md",
   "sourceDirName": "guides",
   "slug": "/guides/calendar-scheduling",
-  "permalink": "/spritz-docs/docs/guides/calendar-scheduling",
+  "permalink": "/docs/guides/calendar-scheduling",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/calendar-scheduling.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Friends Guide",
-    "permalink": "/spritz-docs/docs/guides/friends"
+    "permalink": "/docs/guides/friends"
   },
   "next": {
     "title": "Profile & Settings Guide",
-    "permalink": "/spritz-docs/docs/guides/profile-settings"
+    "permalink": "/docs/guides/profile-settings"
   }
 }

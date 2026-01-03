@@ -28,8 +28,8 @@ export default {
     },
     "experimental_router": "browser"
   },
-  "url": "https://spritz-labs.github.io",
-  "baseUrl": "/spritz-docs/",
+  "url": "https://spritz-docs.vercel.app",
+  "baseUrl": "/",
   "organizationName": "Spritz-Labs",
   "projectName": "spritz-docs",
   "onBrokenLinks": "throw",

@@ -5,7 +5,7 @@
   "source": "@site/docs/getting-started.md",
   "sourceDirName": ".",
   "slug": "/getting-started",
-  "permalink": "/spritz-docs/docs/getting-started",
+  "permalink": "/docs/getting-started",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/getting-started.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Welcome to Spritz",
-    "permalink": "/spritz-docs/docs/intro"
+    "permalink": "/docs/intro"
   },
   "next": {
     "title": "AI Agents",
-    "permalink": "/spritz-docs/docs/agents/intro"
+    "permalink": "/docs/agents/intro"
   }
 }

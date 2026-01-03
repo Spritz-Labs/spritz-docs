@@ -5,7 +5,7 @@
   "source": "@site/docs/api/intro.md",
   "sourceDirName": "api",
   "slug": "/api/intro",
-  "permalink": "/spritz-docs/docs/api/intro",
+  "permalink": "/docs/api/intro",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/intro.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Admin Guide",
-    "permalink": "/spritz-docs/docs/guides/admin"
+    "permalink": "/docs/guides/admin"
   },
   "next": {
     "title": "Complete API Reference",
-    "permalink": "/spritz-docs/docs/api/complete"
+    "permalink": "/docs/api/complete"
   }
 }

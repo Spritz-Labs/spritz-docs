@@ -5,7 +5,7 @@
   "source": "@site/docs/api/streaming.md",
   "sourceDirName": "api",
   "slug": "/api/streaming",
-  "permalink": "/spritz-docs/docs/api/streaming",
+  "permalink": "/docs/api/streaming",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/streaming.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Agents API - Detailed Reference",
-    "permalink": "/spritz-docs/docs/api/agents-detailed"
+    "permalink": "/docs/api/agents-detailed"
   },
   "next": {
     "title": "Architecture Overview",
-    "permalink": "/spritz-docs/docs/architecture/overview"
+    "permalink": "/docs/architecture/overview"
   }
 }

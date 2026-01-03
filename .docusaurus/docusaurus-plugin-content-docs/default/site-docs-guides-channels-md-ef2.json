@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/channels.md",
   "sourceDirName": "guides",
   "slug": "/guides/channels",
-  "permalink": "/spritz-docs/docs/guides/channels",
+  "permalink": "/docs/guides/channels",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/channels.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Groups Guide",
-    "permalink": "/spritz-docs/docs/guides/groups"
+    "permalink": "/docs/guides/groups"
   },
   "next": {
     "title": "Friends Guide",
-    "permalink": "/spritz-docs/docs/guides/friends"
+    "permalink": "/docs/guides/friends"
   }
 }

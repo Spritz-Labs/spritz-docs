@@ -5,7 +5,7 @@
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/intro",
-  "permalink": "/spritz-docs/docs/intro",
+  "permalink": "/docs/intro",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/intro.md",
@@ -15,6 +15,6 @@
   "sidebar": "docsSidebar",
   "next": {
     "title": "Getting Started",
-    "permalink": "/spritz-docs/docs/getting-started"
+    "permalink": "/docs/getting-started"
   }
 }

@@ -5,7 +5,7 @@
   "source": "@site/docs/agents/x402.md",
   "sourceDirName": "agents",
   "slug": "/agents/x402",
-  "permalink": "/spritz-docs/docs/agents/x402",
+  "permalink": "/docs/agents/x402",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/x402.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "MCP Servers & API Tools",
-    "permalink": "/spritz-docs/docs/agents/mcp-servers"
+    "permalink": "/docs/agents/mcp-servers"
   },
   "next": {
     "title": "Livestreaming",
-    "permalink": "/spritz-docs/docs/streaming/intro"
+    "permalink": "/docs/streaming/intro"
   }
 }

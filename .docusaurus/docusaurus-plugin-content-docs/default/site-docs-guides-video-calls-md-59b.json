@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/video-calls.md",
   "sourceDirName": "guides",
   "slug": "/guides/video-calls",
-  "permalink": "/spritz-docs/docs/guides/video-calls",
+  "permalink": "/docs/guides/video-calls",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/video-calls.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Messaging Guide",
-    "permalink": "/spritz-docs/docs/guides/messaging"
+    "permalink": "/docs/guides/messaging"
   },
   "next": {
     "title": "Groups Guide",
-    "permalink": "/spritz-docs/docs/guides/groups"
+    "permalink": "/docs/guides/groups"
   }
 }

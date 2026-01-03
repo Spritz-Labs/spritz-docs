@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/groups.md",
   "sourceDirName": "guides",
   "slug": "/guides/groups",
-  "permalink": "/spritz-docs/docs/guides/groups",
+  "permalink": "/docs/guides/groups",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/groups.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Video Calls Guide",
-    "permalink": "/spritz-docs/docs/guides/video-calls"
+    "permalink": "/docs/guides/video-calls"
   },
   "next": {
     "title": "Public Channels Guide",
-    "permalink": "/spritz-docs/docs/guides/channels"
+    "permalink": "/docs/guides/channels"
   }
 }

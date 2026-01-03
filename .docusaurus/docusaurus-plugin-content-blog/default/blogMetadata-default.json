@@ -1,5 +1,5 @@
 {
-  "blogBasePath": "/spritz-docs/blog",
+  "blogBasePath": "/blog",
   "blogTitle": "Blog",
-  "authorsListPath": "/spritz-docs/blog/authors"
+  "authorsListPath": "/blog/authors"
 }

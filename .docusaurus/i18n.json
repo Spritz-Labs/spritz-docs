@@ -13,8 +13,8 @@
       "calendar": "gregory",
       "path": "en",
       "translate": false,
-      "url": "https://spritz-labs.github.io",
-      "baseUrl": "/spritz-docs/"
+      "url": "https://spritz-docs.vercel.app",
+      "baseUrl": "/"
     }
   }
 }

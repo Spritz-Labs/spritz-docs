@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/friends.md",
   "sourceDirName": "guides",
   "slug": "/guides/friends",
-  "permalink": "/spritz-docs/docs/guides/friends",
+  "permalink": "/docs/guides/friends",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/friends.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Public Channels Guide",
-    "permalink": "/spritz-docs/docs/guides/channels"
+    "permalink": "/docs/guides/channels"
   },
   "next": {
     "title": "Calendar & Scheduling Guide",
-    "permalink": "/spritz-docs/docs/guides/calendar-scheduling"
+    "permalink": "/docs/guides/calendar-scheduling"
   }
 }

@@ -5,7 +5,7 @@
   "source": "@site/docs/guides/messaging.md",
   "sourceDirName": "guides",
   "slug": "/guides/messaging",
-  "permalink": "/spritz-docs/docs/guides/messaging",
+  "permalink": "/docs/guides/messaging",
   "draft": false,
   "unlisted": false,
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/guides/messaging.md",
@@ -15,10 +15,10 @@
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Livestreaming - Technical Deep Dive",
-    "permalink": "/spritz-docs/docs/streaming/technical"
+    "permalink": "/docs/streaming/technical"
   },
   "next": {
     "title": "Video Calls Guide",
-    "permalink": "/spritz-docs/docs/guides/video-calls"
+    "permalink": "/docs/guides/video-calls"
   }
 }
