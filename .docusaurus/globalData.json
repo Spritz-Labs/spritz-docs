@@ -120,11 +120,6 @@
               "sidebar": "docsSidebar"
             },
             {
-              "id": "streaming/intro",
-              "path": "/docs/streaming/intro",
-              "sidebar": "docsSidebar"
-            },
-            {
               "id": "streaming/technical",
               "path": "/docs/streaming/technical",
               "sidebar": "docsSidebar"

@@ -155,11 +155,6 @@ export default {
           "items": [
             {
               "type": "doc",
-              "docId": "streaming/intro",
-              "label": "Overview"
-            },
-            {
-              "type": "doc",
               "docId": "streaming/technical",
               "label": "Technical"
             }

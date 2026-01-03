@@ -59,15 +59,15 @@ export default [
   },
   {
     path: '/docs',
-    component: ComponentCreator('/docs', '707'),
+    component: ComponentCreator('/docs', 'c0b'),
     routes: [
       {
         path: '/docs',
-        component: ComponentCreator('/docs', '727'),
+        component: ComponentCreator('/docs', '954'),
         routes: [
           {
             path: '/docs',
-            component: ComponentCreator('/docs', '52c'),
+            component: ComponentCreator('/docs', '9e2'),
             routes: [
               {
                 path: '/docs/',
@@ -197,12 +197,6 @@ export default [
               {
                 path: '/docs/intro',
                 component: ComponentCreator('/docs/intro', '058'),
-                exact: true,
-                sidebar: "docsSidebar"
-              },
-              {
-                path: '/docs/streaming/intro',
-                component: ComponentCreator('/docs/streaming/intro', '817'),
                 exact: true,
                 sidebar: "docsSidebar"
               },

@@ -30,7 +30,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Livestreaming',
       items: [
-        'streaming/intro',
         'streaming/technical',
       ],
     },
