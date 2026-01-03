@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="atom.xsl"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://spritz-docs.vercel.app/blog</id>
+    <id>https://docs.spritz.chat/blog</id>
     <title>Spritz Documentation Blog</title>
     <updated>2024-01-03T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://spritz-docs.vercel.app/blog"/>
+    <link rel="alternate" href="https://docs.spritz.chat/blog"/>
     <subtitle>Spritz Documentation Blog</subtitle>
-    <icon>https://spritz-docs.vercel.app/icons/favicon-32x32.png</icon>
+    <icon>https://docs.spritz.chat/icons/favicon-32x32.png</icon>
     <entry>
         <title type="html"><![CDATA[Why We Built Spritz]]></title>
-        <id>https://spritz-docs.vercel.app/blog/why-we-built-spritz</id>
-        <link href="https://spritz-docs.vercel.app/blog/why-we-built-spritz"/>
+        <id>https://docs.spritz.chat/blog/why-we-built-spritz</id>
+        <link href="https://docs.spritz.chat/blog/why-we-built-spritz"/>
         <updated>2024-01-03T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[The internet was supposed to be a decentralized network—a place where anyone could communicate freely, share ideas, and build communities without gatekeepers. But somewhere along the way, we lost that vision. Today, a handful of corporations control our digital lives, deciding what we see, who we can talk to, and what we're allowed to say.]]></summary>
         <content type="html"><![CDATA[<p>The internet was supposed to be a decentralized network—a place where anyone could communicate freely, share ideas, and build communities without gatekeepers. But somewhere along the way, we lost that vision. Today, a handful of corporations control our digital lives, deciding what we see, who we can talk to, and what we're allowed to say.</p>
 <p>We built Spritz because we believe it's time to take back control.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-problem-with-centralized-platforms">The Problem with Centralized Platforms<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#the-problem-with-centralized-platforms" class="hash-link" aria-label="Direct link to The Problem with Centralized Platforms" title="Direct link to The Problem with Centralized Platforms" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-problem-with-centralized-platforms">The Problem with Centralized Platforms<a href="https://docs.spritz.chat/blog/why-we-built-spritz#the-problem-with-centralized-platforms" class="hash-link" aria-label="Direct link to The Problem with Centralized Platforms" title="Direct link to The Problem with Centralized Platforms" translate="no">​</a></h2>
 <p>Most social platforms today are built on a simple model: you give them your data, your attention, and your content, and in return, they give you a place to connect. But this model has fundamental flaws:</p>
 <ul>
 <li class=""><strong>Single Points of Failure</strong>: When a platform goes down, millions of users lose access to their communities</li>
@@ -25,9 +25,9 @@
 <li class=""><strong>Vendor Lock-in</strong>: Switching platforms means losing your network, your history, and your identity</li>
 </ul>
 <p>We've seen this play out time and time again. Platforms that started with good intentions become gatekeepers. Algorithms designed to connect us end up dividing us. And users who built communities over years can lose everything in an instant.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="our-vision-true-decentralization">Our Vision: True Decentralization<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#our-vision-true-decentralization" class="hash-link" aria-label="Direct link to Our Vision: True Decentralization" title="Direct link to Our Vision: True Decentralization" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="our-vision-true-decentralization">Our Vision: True Decentralization<a href="https://docs.spritz.chat/blog/why-we-built-spritz#our-vision-true-decentralization" class="hash-link" aria-label="Direct link to Our Vision: True Decentralization" title="Direct link to Our Vision: True Decentralization" translate="no">​</a></h2>
 <p>Spritz is built on three core principles that we believe are essential for the future of social platforms:</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-decentralization">1. Decentralization<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#1-decentralization" class="hash-link" aria-label="Direct link to 1. Decentralization" title="Direct link to 1. Decentralization" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-decentralization">1. Decentralization<a href="https://docs.spritz.chat/blog/why-we-built-spritz#1-decentralization" class="hash-link" aria-label="Direct link to 1. Decentralization" title="Direct link to 1. Decentralization" translate="no">​</a></h3>
 <p>Spritz doesn't rely on a single server or company. Instead, we use decentralized protocols:</p>
 <ul>
 <li class=""><strong>Waku Protocol</strong> for peer-to-peer messaging—your messages travel directly between users, not through our servers</li>
@@ -36,7 +36,7 @@
 <li class=""><strong>Distributed Storage</strong> for content and media</li>
 </ul>
 <p>When you use Spritz, you're not dependent on us staying online. The network is resilient because it's distributed across thousands of nodes, not controlled by a single entity.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-censorship-resistance">2. Censorship Resistance<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#2-censorship-resistance" class="hash-link" aria-label="Direct link to 2. Censorship Resistance" title="Direct link to 2. Censorship Resistance" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-censorship-resistance">2. Censorship Resistance<a href="https://docs.spritz.chat/blog/why-we-built-spritz#2-censorship-resistance" class="hash-link" aria-label="Direct link to 2. Censorship Resistance" title="Direct link to 2. Censorship Resistance" translate="no">​</a></h3>
 <p>We believe in free speech and open discourse. Spritz is designed to be censorship-resistant:</p>
 <ul>
 <li class=""><strong>No Central Authority</strong>: We can't remove your content or ban you because we don't control the network</li>
@@ -45,7 +45,7 @@
 <li class=""><strong>User Control</strong>: You decide who you interact with, what content you see, and how you moderate your own communities</li>
 </ul>
 <p>This doesn't mean we're creating a lawless platform. Users can still block, report, and moderate within their own communities. But the platform itself doesn't act as a censor.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-openness">3. Openness<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#3-openness" class="hash-link" aria-label="Direct link to 3. Openness" title="Direct link to 3. Openness" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-openness">3. Openness<a href="https://docs.spritz.chat/blog/why-we-built-spritz#3-openness" class="hash-link" aria-label="Direct link to 3. Openness" title="Direct link to 3. Openness" translate="no">​</a></h3>
 <p>Spritz is built on open principles:</p>
 <ul>
 <li class=""><strong>Open Source</strong>: The entire codebase is open source under the PolyForm Noncommercial License</li>
@@ -54,19 +54,19 @@
 <li class=""><strong>Open Development</strong>: Community contributions, feedback, and improvements are welcome</li>
 </ul>
 <p>We believe that transparency builds trust. When you can see how the platform works, audit the code, and understand the protocols, you can make informed decisions about whether to use it.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-makes-spritz-different">What Makes Spritz Different<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#what-makes-spritz-different" class="hash-link" aria-label="Direct link to What Makes Spritz Different" title="Direct link to What Makes Spritz Different" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-makes-spritz-different">What Makes Spritz Different<a href="https://docs.spritz.chat/blog/why-we-built-spritz#what-makes-spritz-different" class="hash-link" aria-label="Direct link to What Makes Spritz Different" title="Direct link to What Makes Spritz Different" translate="no">​</a></h2>
 <p>Spritz isn't just another social platform. It's a complete reimagining of how social platforms should work:</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ai-agents-with-knowledge-bases">AI Agents with Knowledge Bases<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#ai-agents-with-knowledge-bases" class="hash-link" aria-label="Direct link to AI Agents with Knowledge Bases" title="Direct link to AI Agents with Knowledge Bases" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ai-agents-with-knowledge-bases">AI Agents with Knowledge Bases<a href="https://docs.spritz.chat/blog/why-we-built-spritz#ai-agents-with-knowledge-bases" class="hash-link" aria-label="Direct link to AI Agents with Knowledge Bases" title="Direct link to AI Agents with Knowledge Bases" translate="no">​</a></h3>
 <p>Create AI agents that can access your knowledge base, answer questions, and help users—all while you maintain control. Monetize your expertise with x402 payments, or share it freely with friends.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="decentralized-messaging">Decentralized Messaging<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#decentralized-messaging" class="hash-link" aria-label="Direct link to Decentralized Messaging" title="Direct link to Decentralized Messaging" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="decentralized-messaging">Decentralized Messaging<a href="https://docs.spritz.chat/blog/why-we-built-spritz#decentralized-messaging" class="hash-link" aria-label="Direct link to Decentralized Messaging" title="Direct link to Decentralized Messaging" translate="no">​</a></h3>
 <p>End-to-end encrypted messaging that goes directly between users. No servers storing your conversations. No algorithms reading your messages. Just you and the people you're talking to.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="livestreaming-without-gatekeepers">Livestreaming Without Gatekeepers<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#livestreaming-without-gatekeepers" class="hash-link" aria-label="Direct link to Livestreaming Without Gatekeepers" title="Direct link to Livestreaming Without Gatekeepers" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="livestreaming-without-gatekeepers">Livestreaming Without Gatekeepers<a href="https://docs.spritz.chat/blog/why-we-built-spritz#livestreaming-without-gatekeepers" class="hash-link" aria-label="Direct link to Livestreaming Without Gatekeepers" title="Direct link to Livestreaming Without Gatekeepers" translate="no">​</a></h3>
 <p>Go live and stream to your friends using Livepeer's decentralized infrastructure. Your streams are yours—record them, share them, or delete them. We don't control your content.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="web3-native">Web3 Native<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#web3-native" class="hash-link" aria-label="Direct link to Web3 Native" title="Direct link to Web3 Native" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="web3-native">Web3 Native<a href="https://docs.spritz.chat/blog/why-we-built-spritz#web3-native" class="hash-link" aria-label="Direct link to Web3 Native" title="Direct link to Web3 Native" translate="no">​</a></h3>
 <p>Built from the ground up for Web3 users. Connect with wallets, use crypto payments, and maintain true ownership of your digital identity.</p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="open-and-extensible">Open and Extensible<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#open-and-extensible" class="hash-link" aria-label="Direct link to Open and Extensible" title="Direct link to Open and Extensible" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="open-and-extensible">Open and Extensible<a href="https://docs.spritz.chat/blog/why-we-built-spritz#open-and-extensible" class="hash-link" aria-label="Direct link to Open and Extensible" title="Direct link to Open and Extensible" translate="no">​</a></h3>
 <p>Want to build on top of Spritz? Our APIs are fully documented. Want to fork the code? It's open source. Want to integrate with other platforms? We use open protocols.</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-future-were-building">The Future We're Building<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#the-future-were-building" class="hash-link" aria-label="Direct link to The Future We're Building" title="Direct link to The Future We're Building" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-future-were-building">The Future We're Building<a href="https://docs.spritz.chat/blog/why-we-built-spritz#the-future-were-building" class="hash-link" aria-label="Direct link to The Future We're Building" title="Direct link to The Future We're Building" translate="no">​</a></h2>
 <p>We're not trying to replace existing platforms overnight. We're building something different—a platform that gives you:</p>
 <ul>
 <li class=""><strong>True Ownership</strong>: Your data, your content, your identity</li>
@@ -82,7 +82,7 @@
 <li class=""><strong>Privacy by Design</strong>: Encryption and privacy built in, not bolted on</li>
 <li class=""><strong>Open Development</strong>: Community-driven, transparent development</li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="join-us">Join Us<a href="https://spritz-docs.vercel.app/blog/why-we-built-spritz#join-us" class="hash-link" aria-label="Direct link to Join Us" title="Direct link to Join Us" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="join-us">Join Us<a href="https://docs.spritz.chat/blog/why-we-built-spritz#join-us" class="hash-link" aria-label="Direct link to Join Us" title="Direct link to Join Us" translate="no">​</a></h2>
 <p>If you believe in a decentralized, censorship-resistant, and open future for social platforms, we'd love to have you join us.</p>
 <ul>
 <li class=""><strong>Try Spritz</strong>: <a href="https://app.spritz.chat/" target="_blank" rel="noopener noreferrer" class="">app.spritz.chat</a></li>
