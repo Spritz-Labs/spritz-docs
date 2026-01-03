@@ -526,10 +526,14 @@
     /* When sidebar is visible, ensure all content is visible */
     .navbar-sidebar:not([hidden]) .navbar-sidebar__items {
         padding: 1rem 0;
+        display: block !important;
+        visibility: visible !important;
     }
 
     .navbar-sidebar:not([hidden]) .navbar-sidebar__item {
         padding: 0.5rem 1rem;
+        display: block !important;
+        visibility: visible !important;
     }
 
     .navbar-sidebar:not([hidden]) .navbar-sidebar__item .menu__link {
@@ -537,6 +541,8 @@
         min-height: 44px;
         color: var(--ifm-font-color-base) !important;
         opacity: 1 !important;
+        display: block !important;
+        visibility: visible !important;
     }
 
     .navbar-sidebar:not([hidden]) .navbar-sidebar__item .menu__link:hover {
@@ -544,8 +550,26 @@
     }
 
     /* Ensure sidebar content is visible when sidebar is shown */
+    .navbar-sidebar:not([hidden]) .menu {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    .navbar-sidebar:not([hidden]) .menu__list {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    .navbar-sidebar:not([hidden]) .menu__list-item {
+        display: block !important;
+        visibility: visible !important;
+    }
+
     .navbar-sidebar:not([hidden]) .menu__link {
         color: var(--ifm-font-color-base) !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     /* Spacing adjustments */
