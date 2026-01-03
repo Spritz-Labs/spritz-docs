@@ -508,21 +508,20 @@
         height: 24px;
     }
 
-    /* Mobile sidebar menu - only show when open */
+    /* Mobile sidebar menu - only style when visible, don't force display */
     .navbar-sidebar {
         z-index: 999;
     }
 
-    .navbar-sidebar[data-open="true"] {
+    /* When sidebar is shown (not hidden), apply styles */
+    .navbar-sidebar:not([hidden]) {
         background-color: var(--ifm-background-color) !important;
         color: var(--ifm-font-color-base) !important;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        display: block !important;
-        visibility: visible !important;
     }
 
-    .navbar-sidebar[data-open="true"] * {
+    .navbar-sidebar:not([hidden]) * {
         color: var(--ifm-font-color-base) !important;
     }
 
@@ -551,48 +550,7 @@
     }
 
     /* Ensure sidebar content is visible when sidebar is shown */
-    .navbar-sidebar:not([hidden]) .menu {
-        visibility: visible !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .menu__list {
-        visibility: visible !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .menu__list-item {
-        visibility: visible !important;
-    }
-
     .navbar-sidebar:not([hidden]) .menu__link {
-        visibility: visible !important;
-        color: var(--ifm-font-color-base) !important;
-        opacity: 1 !important;
-    }
-
-    /* Docs sidebar in mobile menu */
-    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-container {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__list {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__item {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .theme-doc-sidebar-menu__link {
-        visibility: visible !important;
-        opacity: 1 !important;
         color: var(--ifm-font-color-base) !important;
     }
 
@@ -619,20 +577,7 @@
     }
 
     /* Navbar items in mobile sidebar when visible */
-    .navbar-sidebar:not([hidden]) .navbar__items {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .navbar-sidebar:not([hidden]) .navbar__items--right,
-    .navbar-sidebar:not([hidden]) .navbar__items--left {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
     .navbar-sidebar:not([hidden]) .navbar__link {
-        visibility: visible !important;
-        opacity: 1 !important;
         color: var(--ifm-font-color-base) !important;
         padding: 0.75rem 1rem;
         min-height: 44px;
@@ -642,16 +587,9 @@
         color: var(--ifm-color-primary) !important;
     }
 
-    /* Ensure all content in mobile sidebar is visible */
-    .navbar-sidebar:not([hidden]) .navbar-sidebar__items > * {
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    /* Fix height and overflow for mobile sidebar */
+    /* Fix height and overflow for mobile sidebar when shown */
     .navbar-sidebar:not([hidden]) {
         max-height: 100vh;
-        height: auto;
     }
 
     .navbar-sidebar:not([hidden]) .navbar-sidebar__items {
