@@ -121,3 +121,4 @@ POST /api/channels/:id/messages
 - Explore [Messaging](/docs/guides/messaging)
 - Check out [Friends](/docs/guides/friends)
 
+

@@ -387,3 +387,4 @@ All migration scripts are located in `/migrations` directory:
 
 See the repository's `/migrations` folder for complete migration scripts.
 
+

@@ -118,3 +118,4 @@ The future of social platforms should be in the hands of users, not corporations
 
 *This post was written by the Spritz team. We're building a platform we believe in—one that puts users first, respects privacy, and enables true freedom of expression.*
 
+

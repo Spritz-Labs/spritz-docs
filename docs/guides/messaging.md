@@ -167,3 +167,4 @@ GET /api/messages/search?query=keyword
 - Explore [Groups](/docs/guides/groups)
 - Check out [Channels](/docs/guides/channels)
 
+

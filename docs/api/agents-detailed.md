@@ -532,3 +532,4 @@ X-Payment: {"from": "0x...", "amount": "10000", ...}
 4. **Retries**: Implement exponential backoff for rate limits
 5. **Monitoring**: Track token usage and costs
 
+
