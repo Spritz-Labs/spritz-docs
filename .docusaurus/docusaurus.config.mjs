@@ -72,7 +72,11 @@ export default {
           "changefreq": "weekly",
           "priority": 0.5,
           "ignorePatterns": [
-            "/tags/**"
+            "/tags/**",
+            "/blog/tags/**",
+            "/blog/authors/**",
+            "/blog/archive",
+            "/markdown-page"
           ],
           "filename": "sitemap.xml"
         }
