@@ -1,7 +1,7 @@
 {
   "id": "getting-started",
-  "title": "Getting Started",
-  "description": "This guide will help you get started with Spritz, from installation to your first AI agent.",
+  "title": "Getting Started with Spritz",
+  "description": "Complete installation and setup guide for Spritz. Learn how to install, configure environment variables, set up the database, and create your first AI agent.",
   "source": "@site/docs/getting-started.md",
   "sourceDirName": ".",
   "slug": "/getting-started",
@@ -11,14 +11,28 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/getting-started.md",
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "Getting Started with Spritz",
+    "description": "Complete installation and setup guide for Spritz. Learn how to install, configure environment variables, set up the database, and create your first AI agent.",
+    "keywords": [
+      "Spritz installation",
+      "Spritz setup",
+      "getting started",
+      "installation guide",
+      "environment variables",
+      "database setup",
+      "Supabase",
+      "AI agents",
+      "Web3 messaging"
+    ]
+  },
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Welcome to Spritz",
     "permalink": "/docs/intro"
   },
   "next": {
-    "title": "AI Agents",
+    "title": "AI Agents - Create and Customize Intelligent Assistants",
     "permalink": "/docs/agents/intro"
   }
 }

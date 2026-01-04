@@ -1,7 +1,7 @@
 {
   "id": "guides/video-calls",
   "title": "Video Calls Guide",
-  "description": "Spritz provides high-quality video and voice calls powered by Huddle01, supporting both one-on-one and group calls.",
+  "description": "Spritz provides high-quality video and voice calls with support for multiple providers. By default, Spritz uses Huddle01 (decentralized), with Agora (centralized) available as an alternative. Users can choose their preferred provider in settings.",
   "source": "@site/docs/guides/video-calls.md",
   "sourceDirName": "guides",
   "slug": "/guides/video-calls",

@@ -1,3 +1,20 @@
+---
+title: API Reference - Complete REST API Documentation
+description: Complete REST API reference for Spritz. Learn how to authenticate, interact with AI agents, manage livestreams, and integrate Spritz into your applications.
+keywords:
+    [
+        Spritz API,
+        REST API,
+        API documentation,
+        API reference,
+        authentication,
+        SIWE,
+        SIWS,
+        Web3 API,
+        decentralized API,
+    ]
+---
+
 # API Reference
 
 Spritz provides a comprehensive REST API for interacting with the platform programmatically.
@@ -80,7 +97,8 @@ All API responses follow a consistent format:
 - `GET /api/agents/favorites` - Get favorite agents
 - `POST /api/agents/favorites` - Add favorite
 - `DELETE /api/agents/favorites` - Remove favorite
-- `GET /api/agents/:id/embed` - Get embed code
+- `GET /api/agents/:id/embed` - Get embed code and SDK examples
+- `POST /api/agents/detect-api` - Detect API type (GraphQL/OpenAPI/REST)
 - `POST /api/public/agents/:id/chat` - Public agent chat (x402)
 - `GET /api/public/agents/:id` - Get public agent info
 
@@ -173,7 +191,11 @@ All API responses follow a consistent format:
 - `GET /api/invites` - Get invite codes
 - `POST /api/invites` - Create invite code
 - `GET /api/public/user` - Get public user info
+- `GET /api/public/user/:address` - Get public user info by address
 - `GET /api/public/schedule/:slug` - Get public schedule
+- `POST /api/bug-reports` - Submit bug report
+- `GET /api/github/issues` - List GitHub issues (admin only)
+- `GET /api/github/issues/:number` - Get GitHub issue (admin only)
 
 ## SDKs
 

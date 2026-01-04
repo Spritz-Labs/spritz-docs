@@ -1,3 +1,20 @@
+---
+title: Getting Started with Spritz
+description: Complete installation and setup guide for Spritz. Learn how to install, configure environment variables, set up the database, and create your first AI agent.
+keywords:
+    [
+        Spritz installation,
+        Spritz setup,
+        getting started,
+        installation guide,
+        environment variables,
+        database setup,
+        Supabase,
+        AI agents,
+        Web3 messaging,
+    ]
+---
+
 # Getting Started
 
 This guide will help you get started with Spritz, from installation to your first AI agent.
@@ -65,11 +82,25 @@ GOOGLE_GEMINI_API_KEY=your_gemini_api_key
 
 ### Video Calls
 
+**Option A: Huddle01 (Recommended - Decentralized)**
+
 ```env
 # Huddle01
 NEXT_PUBLIC_HUDDLE01_PROJECT_ID=your_huddle01_project_id
+NEXT_PUBLIC_HUDDLE01_API_KEY=your_huddle01_api_key
 HUDDLE01_API_KEY=your_huddle01_api_key
 ```
+
+**Option B: Agora (Centralized Alternative)**
+
+```env
+# Agora (alternative to Huddle01)
+NEXT_PUBLIC_AGORA_APP_ID=your_agora_app_id
+# Optional: Token endpoint for production (leave empty for testing mode)
+NEXT_PUBLIC_AGORA_TOKEN_ENDPOINT=https://your-token-server.com/token
+```
+
+**Note:** You can use either Huddle01 or Agora, or both. Users can choose their preferred provider in settings. Huddle01 is decentralized, while Agora is centralized but may offer better reliability.
 
 ### Livestreaming
 
@@ -118,6 +149,11 @@ X402_FACILITATOR_URL=https://x402.org/facilitator
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GOOGLE_REDIRECT_URI=https://app.spritz.chat/api/calendar/callback
+
+# GitHub Integration (Optional - for bug reports)
+GITHUB_OWNER=your_github_username_or_org
+GITHUB_REPO=your_repo_name
+GITHUB_TOKEN=your_github_personal_access_token
 ```
 
 4. Run database migrations:

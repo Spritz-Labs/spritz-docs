@@ -1,8 +1,23 @@
 ---
 slug: why-we-built-spritz
 title: Why We Built Spritz
+description: Discover why we built Spritz - a decentralized, censorship-resistant social platform that puts users in control. Learn about our vision for Web3 messaging, AI agents, and peer-to-peer communication without gatekeepers.
 authors: [anonymous]
 tags: [spritz, decentralization, censorship-resistance, openness, web3]
+keywords:
+    [
+        Spritz,
+        decentralized social platform,
+        Web3 messaging,
+        censorship resistance,
+        open source,
+        peer-to-peer,
+        AI agents,
+        livestreaming,
+        Web3,
+        blockchain,
+        decentralized communication,
+    ]
 ---
 
 # Why We Built Spritz
@@ -117,5 +132,6 @@ The future of social platforms should be in the hands of users, not corporations
 ---
 
 *This post was written by the Spritz team. We're building a platform we believe in—one that puts users first, respects privacy, and enables true freedom of expression.*
+
 
 

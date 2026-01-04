@@ -463,6 +463,101 @@ X-Payment: {"from": "0x...", "amount": "10000", ...}
 }
 ```
 
+## Get Embed Code
+
+Get embed code and SDK examples for an x402-enabled agent.
+
+```http
+GET /api/agents/:id/embed?userAddress=0x...
+```
+
+### Query Parameters
+
+- `userAddress` (required): Owner's wallet address
+
+### Response
+
+```json
+{
+    "agent": {
+        "id": "uuid",
+        "name": "Agent Name",
+        "emoji": "🤖"
+    },
+    "endpoints": {
+        "info": "https://app.spritz.chat/api/public/agents/{id}",
+        "chat": "https://app.spritz.chat/api/public/agents/{id}/chat"
+    },
+    "pricing": {
+        "pricePerMessage": "$0.01",
+        "priceCents": 1,
+        "network": "base-sepolia",
+        "currency": "USDC",
+        "payTo": "0x..."
+    },
+    "code": {
+        "embed": "<iframe src=\"...\" />",
+        "sdk": "import { wrapFetch } from \"x402-fetch\";\n...",
+        "curl": "# Get agent info...\ncurl ..."
+    },
+    "stats": {
+        "totalMessages": 123,
+        "paidMessages": 45,
+        "totalEarnings": "$0.45"
+    }
+}
+```
+
+### Errors
+
+- `400`: x402 not enabled on agent
+- `403`: Access denied (not owner)
+- `404`: Agent not found
+
+## Detect API Type
+
+Detect the type of an external API (GraphQL, OpenAPI, or REST) for use with agent API tools.
+
+```http
+POST /api/agents/detect-api
+```
+
+### Request Body
+
+```json
+{
+    "url": "https://api.example.com/graphql",
+    "apiKey": "optional-api-key",
+    "headers": {
+        "Custom-Header": "value"
+    }
+}
+```
+
+### Response
+
+```json
+{
+    "apiType": "graphql",
+    "confidence": "high",
+    "message": "GraphQL API detected via introspection",
+    "schema": "GraphQL Query Types:\nusers: [User]\nposts: [Post]",
+    "detectedAt": "2024-01-01T00:00:00Z"
+}
+```
+
+### API Types
+
+- `graphql`: GraphQL API (detected via introspection)
+- `openapi`: OpenAPI/Swagger specification
+- `rest`: REST API (default)
+
+### Confidence Levels
+
+- `high`: Confidently detected via introspection or spec
+- `medium`: Detected from URL patterns
+- `low`: Default fallback
+
 ## Error Responses
 
 ### 400 Bad Request
@@ -531,5 +626,6 @@ X-Payment: {"from": "0x...", "amount": "10000", ...}
 3. **Caching**: Cache agent info, not chat responses
 4. **Retries**: Implement exponential backoff for rate limits
 5. **Monitoring**: Track token usage and costs
+
 
 

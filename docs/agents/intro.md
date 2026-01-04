@@ -1,3 +1,20 @@
+---
+title: AI Agents - Create and Customize Intelligent Assistants
+description: Learn how to create, customize, and monetize AI agents in Spritz. Build intelligent assistants with knowledge bases, custom personalities, and x402 payments.
+keywords:
+    [
+        AI agents,
+        Spritz AI,
+        Google Gemini,
+        RAG,
+        knowledge base,
+        x402 payments,
+        MCP servers,
+        AI assistants,
+        custom AI,
+    ]
+---
+
 # AI Agents
 
 Spritz allows you to create and interact with customizable AI agents powered by Google Gemini.

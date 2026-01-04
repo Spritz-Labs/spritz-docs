@@ -67,6 +67,14 @@ export default {
         },
         "theme": {
           "customCss": "./src/css/custom.css"
+        },
+        "sitemap": {
+          "changefreq": "weekly",
+          "priority": 0.5,
+          "ignorePatterns": [
+            "/tags/**"
+          ],
+          "filename": "sitemap.xml"
         }
       }
     ]
@@ -76,11 +84,23 @@ export default {
     "metadata": [
       {
         "name": "keywords",
-        "content": "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, x402 payments"
+        "content": "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, x402 payments, Web3, blockchain, decentralized messaging, P2P communication, Livepeer, Huddle01, Sign-In with Ethereum, SIWE, Sign-In with Solana, SIWS, passkeys, crypto payments, decentralized social network"
       },
       {
         "name": "author",
         "content": "Spritz Labs"
+      },
+      {
+        "name": "description",
+        "content": "Complete documentation for Spritz - a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Learn how to build censorship-resistant applications."
+      },
+      {
+        "name": "robots",
+        "content": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      },
+      {
+        "name": "googlebot",
+        "content": "index, follow"
       },
       {
         "property": "og:type",
@@ -91,12 +111,76 @@ export default {
         "content": "Spritz Documentation"
       },
       {
+        "property": "og:title",
+        "content": "Spritz Documentation - Decentralized Social Platform"
+      },
+      {
+        "property": "og:description",
+        "content": "Complete documentation for Spritz - a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication."
+      },
+      {
+        "property": "og:url",
+        "content": "https://docs.spritz.chat"
+      },
+      {
+        "property": "og:image",
+        "content": "https://docs.spritz.chat/og-image.png"
+      },
+      {
+        "property": "og:image:width",
+        "content": "1200"
+      },
+      {
+        "property": "og:image:height",
+        "content": "630"
+      },
+      {
+        "property": "og:image:alt",
+        "content": "Spritz Documentation - Decentralized Social Platform"
+      },
+      {
+        "property": "og:locale",
+        "content": "en_US"
+      },
+      {
         "name": "twitter:card",
         "content": "summary_large_image"
       },
       {
         "name": "twitter:site",
         "content": "@SpritzLabs"
+      },
+      {
+        "name": "twitter:creator",
+        "content": "@SpritzLabs"
+      },
+      {
+        "name": "twitter:title",
+        "content": "Spritz Documentation - Decentralized Social Platform"
+      },
+      {
+        "name": "twitter:description",
+        "content": "Complete documentation for Spritz - a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication."
+      },
+      {
+        "name": "twitter:image",
+        "content": "https://docs.spritz.chat/og-image.png"
+      },
+      {
+        "name": "twitter:image:alt",
+        "content": "Spritz Documentation - Decentralized Social Platform"
+      },
+      {
+        "name": "application-name",
+        "content": "Spritz Documentation"
+      },
+      {
+        "name": "apple-mobile-web-app-title",
+        "content": "Spritz Docs"
+      },
+      {
+        "name": "theme-color",
+        "content": "#FF5500"
       }
     ],
     "colorMode": {

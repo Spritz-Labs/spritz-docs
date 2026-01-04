@@ -1,6 +1,6 @@
 # Video Calls Guide
 
-Spritz provides high-quality video and voice calls powered by **Huddle01**, supporting both one-on-one and group calls.
+Spritz provides high-quality video and voice calls with support for multiple providers. By default, Spritz uses **Huddle01** (decentralized), with **Agora** (centralized) available as an alternative. Users can choose their preferred provider in settings.
 
 ## Overview
 
@@ -69,13 +69,35 @@ Create persistent rooms for recurring calls:
 
 ## Technical Details
 
-### Huddle01 Integration
+### Video Call Providers
 
-Spritz uses Huddle01 SDK for video calls:
+Spritz supports two video call providers:
+
+#### Huddle01 (Default - Decentralized)
+
 - **WebRTC**: Real-time peer-to-peer connections
 - **SFU Architecture**: Selective Forwarding Unit for scalability
 - **Adaptive Bitrate**: Automatically adjusts quality
 - **Low Latency**: Optimized for real-time communication
+- **Decentralized**: No single point of failure
+
+#### Agora (Alternative - Centralized)
+
+- **High Reliability**: Enterprise-grade infrastructure
+- **Global CDN**: Low latency worldwide
+- **Scalable**: Handles large group calls efficiently
+- **Token-based**: Secure authentication (optional)
+- **Centralized**: Managed service with high uptime
+
+### Provider Selection
+
+Users can choose their preferred provider in Settings:
+1. Go to Settings
+2. Find "Video Calls" section
+3. Toggle "Use Decentralized Calls" (Huddle01) or "Use Centralized Calls" (Agora)
+4. Changes apply to new calls
+
+**Note:** Both callers must use the same provider for a call to connect. If providers don't match, the system will attempt to fall back to the other provider.
 
 ### Network Requirements
 

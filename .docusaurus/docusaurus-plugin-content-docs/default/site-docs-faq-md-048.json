@@ -1,7 +1,7 @@
 {
   "id": "faq",
-  "title": "Frequently Asked Questions",
-  "description": "General",
+  "title": "Frequently Asked Questions (FAQ)",
+  "description": "Find answers to common questions about Spritz, including installation, AI agents, livestreaming, authentication, payments, and more.",
   "source": "@site/docs/faq.md",
   "sourceDirName": ".",
   "slug": "/faq",
@@ -11,7 +11,18 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/faq.md",
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "Frequently Asked Questions (FAQ)",
+    "description": "Find answers to common questions about Spritz, including installation, AI agents, livestreaming, authentication, payments, and more.",
+    "keywords": [
+      "Spritz FAQ",
+      "frequently asked questions",
+      "help",
+      "support",
+      "troubleshooting",
+      "Spritz guide"
+    ]
+  },
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Database Schema",

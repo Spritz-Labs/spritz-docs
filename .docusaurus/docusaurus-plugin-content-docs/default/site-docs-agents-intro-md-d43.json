@@ -1,7 +1,7 @@
 {
   "id": "agents/intro",
-  "title": "AI Agents",
-  "description": "Spritz allows you to create and interact with customizable AI agents powered by Google Gemini.",
+  "title": "AI Agents - Create and Customize Intelligent Assistants",
+  "description": "Learn how to create, customize, and monetize AI agents in Spritz. Build intelligent assistants with knowledge bases, custom personalities, and x402 payments.",
   "source": "@site/docs/agents/intro.md",
   "sourceDirName": "agents",
   "slug": "/agents/intro",
@@ -11,10 +11,24 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/agents/intro.md",
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "AI Agents - Create and Customize Intelligent Assistants",
+    "description": "Learn how to create, customize, and monetize AI agents in Spritz. Build intelligent assistants with knowledge bases, custom personalities, and x402 payments.",
+    "keywords": [
+      "AI agents",
+      "Spritz AI",
+      "Google Gemini",
+      "RAG",
+      "knowledge base",
+      "x402 payments",
+      "MCP servers",
+      "AI assistants",
+      "custom AI"
+    ]
+  },
   "sidebar": "docsSidebar",
   "previous": {
-    "title": "Getting Started",
+    "title": "Getting Started with Spritz",
     "permalink": "/docs/getting-started"
   },
   "next": {

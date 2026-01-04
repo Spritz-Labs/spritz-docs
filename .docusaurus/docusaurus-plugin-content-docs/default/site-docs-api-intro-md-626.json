@@ -1,7 +1,7 @@
 {
   "id": "api/intro",
-  "title": "API Reference",
-  "description": "Spritz provides a comprehensive REST API for interacting with the platform programmatically.",
+  "title": "API Reference - Complete REST API Documentation",
+  "description": "Complete REST API reference for Spritz. Learn how to authenticate, interact with AI agents, manage livestreams, and integrate Spritz into your applications.",
   "source": "@site/docs/api/intro.md",
   "sourceDirName": "api",
   "slug": "/api/intro",
@@ -11,7 +11,21 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/docs/api/intro.md",
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "API Reference - Complete REST API Documentation",
+    "description": "Complete REST API reference for Spritz. Learn how to authenticate, interact with AI agents, manage livestreams, and integrate Spritz into your applications.",
+    "keywords": [
+      "Spritz API",
+      "REST API",
+      "API documentation",
+      "API reference",
+      "authentication",
+      "SIWE",
+      "SIWS",
+      "Web3 API",
+      "decentralized API"
+    ]
+  },
   "sidebar": "docsSidebar",
   "previous": {
     "title": "Admin Guide",

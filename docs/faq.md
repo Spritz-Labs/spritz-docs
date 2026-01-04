@@ -1,3 +1,17 @@
+---
+title: Frequently Asked Questions (FAQ)
+description: Find answers to common questions about Spritz, including installation, AI agents, livestreaming, authentication, payments, and more.
+keywords:
+    [
+        Spritz FAQ,
+        frequently asked questions,
+        help,
+        support,
+        troubleshooting,
+        Spritz guide,
+    ]
+---
+
 # Frequently Asked Questions
 
 ## General

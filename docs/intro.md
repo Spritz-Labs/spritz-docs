@@ -100,7 +100,7 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 | **Web3 (Solana)**       | @solana/wallet-adapter          |
 | **Account Abstraction** | Pimlico, Safe Smart Accounts    |
 | **Wallet Connection**   | Reown AppKit (WalletConnect)    |
-| **Video Calls**         | Huddle01 SDK                    |
+| **Video Calls**         | Huddle01 SDK, Agora RTC (optional) |
 | **Livestreaming**       | Livepeer (WebRTC/WHIP + HLS)    |
 | **Messaging**           | Waku Protocol                   |
 | **AI/LLM**              | Google Gemini API               |
