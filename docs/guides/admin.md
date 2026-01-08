@@ -92,6 +92,63 @@ Grant invite codes to specific users:
 3. Enter number of invites
 4. Grant invites to user
 
+## Bug Reports
+
+Spritz integrates with GitHub for bug report management. Users can submit bug reports in-app, which are automatically synced to GitHub issues.
+
+### Enabling GitHub Integration
+
+1. Create a GitHub personal access token with `repo` permissions
+2. Add to your environment variables:
+   ```env
+   GITHUB_OWNER=your_github_username_or_org
+   GITHUB_REPO=your_repo_name
+   GITHUB_TOKEN=your_github_personal_access_token
+   ```
+
+### Bug Report Features
+
+- **In-App Submission**: Users can report bugs directly from the app
+- **Screenshot Upload**: Users can attach screenshots/media
+- **Auto-Labeling**: Reports are automatically labeled by category
+- **GitHub Sync**: Reports create GitHub issues for tracking
+- **Admin Review**: Admins can view and manage reports
+
+### Managing Bug Reports
+
+1. Go to Admin → Bug Reports
+2. View all submitted reports
+3. Filter by status (open, resolved, closed)
+4. View attached media and details
+5. Update status as issues are resolved
+
+### API Reference
+
+```typescript
+// Submit bug report
+POST /api/bug-reports
+{
+  "title": "Bug title",
+  "description": "Description of the issue",
+  "category": "ui" | "performance" | "feature" | "other",
+  "userAddress": "0x..."
+}
+
+// Upload bug report media
+POST /api/bug-reports/upload
+Content-Type: multipart/form-data
+file: <image/video file>
+
+// Get bug reports (admin)
+GET /api/admin/bug-reports
+
+// Update bug report (admin)
+PATCH /api/admin/bug-reports/:id
+{
+  "status": "open" | "in_progress" | "resolved" | "closed"
+}
+```
+
 ## Beta Access
 
 ### Grant Beta Access

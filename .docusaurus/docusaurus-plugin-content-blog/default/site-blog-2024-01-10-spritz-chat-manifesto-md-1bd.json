@@ -1,10 +1,10 @@
 {
-  "permalink": "/blog/why-we-built-spritz",
-  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2024-01-03-why-we-built-spritz.md",
-  "source": "@site/blog/2024-01-03-why-we-built-spritz.md",
-  "title": "Why We Built Spritz",
-  "description": "Discover why we built Spritz - a decentralized, censorship-resistant social platform that puts users in control. Learn about our vision for Web3 messaging, AI agents, and peer-to-peer communication without gatekeepers.",
-  "date": "2024-01-03T00:00:00.000Z",
+  "permalink": "/blog/spritz-chat-manifesto",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2024-01-10-spritz-chat-manifesto.md",
+  "source": "@site/blog/2024-01-10-spritz-chat-manifesto.md",
+  "title": "Spritz Chat Manifesto",
+  "description": "Communication is a universal human right recognized by the United Nations. Yet billions of people are denied meaningful access to it.",
+  "date": "2024-01-10T00:00:00.000Z",
   "tags": [
     {
       "inline": false,
@@ -35,9 +35,21 @@
       "label": "Web3",
       "permalink": "/blog/tags/web3",
       "description": "Posts about Web3 technologies and principles"
+    },
+    {
+      "inline": false,
+      "label": "Manifesto",
+      "permalink": "/blog/tags/manifesto",
+      "description": "Core beliefs and principles behind Spritz"
+    },
+    {
+      "inline": false,
+      "label": "Privacy",
+      "permalink": "/blog/tags/privacy",
+      "description": "Posts about privacy and data protection"
     }
   ],
-  "readingTime": 4.69,
+  "readingTime": 1.85,
   "hasTruncateMarker": true,
   "authors": [
     {
@@ -48,9 +60,8 @@
     }
   ],
   "frontMatter": {
-    "slug": "why-we-built-spritz",
-    "title": "Why We Built Spritz",
-    "description": "Discover why we built Spritz - a decentralized, censorship-resistant social platform that puts users in control. Learn about our vision for Web3 messaging, AI agents, and peer-to-peer communication without gatekeepers.",
+    "slug": "spritz-chat-manifesto",
+    "title": "Spritz Chat Manifesto",
     "authors": [
       "anonymous"
     ],
@@ -59,25 +70,14 @@
       "decentralization",
       "censorship-resistance",
       "openness",
-      "web3"
-    ],
-    "keywords": [
-      "Spritz",
-      "decentralized social platform",
-      "Web3 messaging",
-      "censorship resistance",
-      "open source",
-      "peer-to-peer",
-      "AI agents",
-      "livestreaming",
-      "Web3",
-      "blockchain",
-      "decentralized communication"
+      "web3",
+      "manifesto",
+      "privacy"
     ]
   },
   "unlisted": false,
-  "prevItem": {
-    "title": "Spritz Chat Manifesto",
-    "permalink": "/blog/spritz-chat-manifesto"
+  "nextItem": {
+    "title": "Why We Built Spritz",
+    "permalink": "/blog/why-we-built-spritz"
   }
 }

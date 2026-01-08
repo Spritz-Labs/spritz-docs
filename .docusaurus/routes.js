@@ -4,7 +4,7 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/blog',
-    component: ComponentCreator('/blog', 'e99'),
+    component: ComponentCreator('/blog', '958'),
     exact: true
   },
   {
@@ -18,33 +18,48 @@ export default [
     exact: true
   },
   {
+    path: '/blog/spritz-chat-manifesto',
+    component: ComponentCreator('/blog/spritz-chat-manifesto', 'c2f'),
+    exact: true
+  },
+  {
     path: '/blog/tags',
     component: ComponentCreator('/blog/tags', '287'),
     exact: true
   },
   {
     path: '/blog/tags/censorship-resistance',
-    component: ComponentCreator('/blog/tags/censorship-resistance', 'cf4'),
+    component: ComponentCreator('/blog/tags/censorship-resistance', '949'),
     exact: true
   },
   {
     path: '/blog/tags/decentralization',
-    component: ComponentCreator('/blog/tags/decentralization', '9a8'),
+    component: ComponentCreator('/blog/tags/decentralization', 'ccd'),
+    exact: true
+  },
+  {
+    path: '/blog/tags/manifesto',
+    component: ComponentCreator('/blog/tags/manifesto', '41c'),
     exact: true
   },
   {
     path: '/blog/tags/openness',
-    component: ComponentCreator('/blog/tags/openness', '8c9'),
+    component: ComponentCreator('/blog/tags/openness', '997'),
+    exact: true
+  },
+  {
+    path: '/blog/tags/privacy',
+    component: ComponentCreator('/blog/tags/privacy', 'ca8'),
     exact: true
   },
   {
     path: '/blog/tags/spritz',
-    component: ComponentCreator('/blog/tags/spritz', 'b2e'),
+    component: ComponentCreator('/blog/tags/spritz', '03e'),
     exact: true
   },
   {
     path: '/blog/tags/web3',
-    component: ComponentCreator('/blog/tags/web3', '867'),
+    component: ComponentCreator('/blog/tags/web3', 'bce'),
     exact: true
   },
   {

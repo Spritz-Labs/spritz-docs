@@ -159,6 +159,32 @@ See [Streaming API Reference](/docs/api/streaming) for complete documentation.
 - `POST /api/email/send-code` - Send email verification code
 - `POST /api/email/verify-code` - Verify email code
 
+### Email Login
+
+Email login allows users to sign in without a wallet or passkey:
+
+- `POST /api/email/login/send-code` - Send email login code
+- `POST /api/email/login/verify` - Verify email login code
+
+**Send Code:**
+```typescript
+POST /api/email/login/send-code
+{
+  "email": "user@example.com"
+}
+// Response: { success: true, message: "Verification code sent" }
+```
+
+**Verify Code:**
+```typescript
+POST /api/email/login/verify
+{
+  "email": "user@example.com",
+  "code": "123456"
+}
+// Response: { success: true, address: "0x...", isNewUser: true/false }
+```
+
 ### Other Endpoints
 
 - `POST /api/pixel-art/upload` - Upload pixel art avatar

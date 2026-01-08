@@ -39,12 +39,19 @@ Create temporary rooms for quick calls:
 
 ### Permanent Rooms
 
-Create persistent rooms for recurring calls:
+Every user gets a permanent meeting room linked to their wallet address:
 
-1. Create a permanent room
-2. Get a permanent room code
-3. Share with team members
-4. Room stays active indefinitely
+1. Go to your Profile or Settings
+2. Click "Get Permanent Room"
+3. Your room URL is: `app.spritz.chat/room/YOUR_ADDRESS`
+4. Share this URL with anyone
+5. Room never expires - perfect for recurring meetings
+
+**Features:**
+- **Unique URL**: Each user has one permanent room tied to their address
+- **Always Available**: Room is created on-demand and never expires
+- **Easy Sharing**: Share your wallet address or direct URL
+- **Host Controls**: You have host privileges in your room
 
 ## Call Features
 
@@ -183,6 +190,24 @@ POST /api/rooms/:code/token
 
 ```typescript
 GET /api/calls?userAddress=0x...
+```
+
+### Get or Create Permanent Room
+
+```typescript
+GET /api/rooms/permanent?wallet_address=0x...
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "room": {
+    "roomId": "abc-defg-hij",
+    "permanentUrl": "https://app.spritz.chat/room/0x...",
+    "walletAddress": "0x..."
+  }
+}
 ```
 
 ## Next Steps

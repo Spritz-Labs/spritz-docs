@@ -22,3 +22,13 @@ spritz:
   label: Spritz
   permalink: /spritz
   description: Posts about Spritz platform and features
+
+manifesto:
+  label: Manifesto
+  permalink: /manifesto
+  description: Core beliefs and principles behind Spritz
+
+privacy:
+  label: Privacy
+  permalink: /privacy
+  description: Posts about privacy and data protection

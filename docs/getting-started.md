@@ -210,17 +210,28 @@ For detailed schema documentation, see [Database Schema](/docs/database/schema).
 
 ## First Steps
 
-### 1. Connect Your Wallet or Use Passkeys
+### 1. Sign In to Spritz
 
-**Option A: Wallet Connection**
+Spritz supports multiple authentication methods:
+
+**Option A: Wallet Connection (Web3)**
 1. Click "Connect Wallet" in the top right
 2. Select your wallet provider (Ethereum, Base, or Solana)
 3. Sign the message to authenticate (SIWE/SIWS)
 
-**Option B: Passkey Authentication**
+**Option B: Passkey Authentication (Passwordless)**
 1. Click "Sign In with Passkey"
 2. Use Face ID, Touch ID, or Windows Hello
 3. A smart account will be created automatically
+
+**Option C: Email Login**
+1. Click "Sign In with Email"
+2. Enter your email address
+3. Check your inbox for a 6-digit verification code
+4. Enter the code to sign in
+5. A secure session will be created for you
+
+**Note:** Email login uses a deterministic key derivation to create a wallet address from your email, allowing you to interact with Web3 features without managing private keys.
 
 ### 2. Create Your First AI Agent
 

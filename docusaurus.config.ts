@@ -10,61 +10,61 @@ const config: Config = {
         "Decentralized social platform with AI agents, livestreaming, and Web3 messaging",
     favicon: "icons/favicon-32x32.png",
 
-    // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
-    future: {
-        v4: true, // Improve compatibility with the upcoming Docusaurus v4
-    },
+  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  future: {
+    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+  },
 
-    // Set the production url of your site here
+  // Set the production url of your site here
     url: "https://docs.spritz.chat",
-    // Set the /<baseUrl>/ pathname under which your site is served
+  // Set the /<baseUrl>/ pathname under which your site is served
     // For Vercel deployment, use root path
     baseUrl: "/",
 
-    // GitHub pages deployment config.
-    // If you aren't using GitHub pages, you don't need these.
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
     organizationName: "Spritz-Labs", // Usually your GitHub org/user name.
     projectName: "spritz-docs", // Usually your repo name.
 
     onBrokenLinks: "throw",
 
-    // Even if you don't use internationalization, you can use this field to set
-    // useful metadata like html lang. For example, if your site is Chinese, you
-    // may want to replace "en" with "zh-Hans".
-    i18n: {
+  // Even if you don't use internationalization, you can use this field to set
+  // useful metadata like html lang. For example, if your site is Chinese, you
+  // may want to replace "en" with "zh-Hans".
+  i18n: {
         defaultLocale: "en",
         locales: ["en"],
-    },
+  },
 
-    presets: [
-        [
+  presets: [
+    [
             "classic",
-            {
-                docs: {
+      {
+        docs: {
                     sidebarPath: "./sidebars.ts",
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
-                    editUrl:
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+          editUrl:
                         "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: false,
-                },
-                blog: {
-                    showReadingTime: true,
-                    feedOptions: {
+        },
+        blog: {
+          showReadingTime: true,
+          feedOptions: {
                         type: ["rss", "atom"],
-                        xslt: true,
-                    },
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
-                    editUrl:
+            xslt: true,
+          },
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+          editUrl:
                         "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
-                    // Useful options to enforce blogging best practices
+          // Useful options to enforce blogging best practices
                     onInlineTags: "warn",
                     onInlineAuthors: "warn",
                     onUntruncatedBlogPosts: "warn",
-                },
-                theme: {
+        },
+        theme: {
                     customCss: "./src/css/custom.css",
                 },
                 sitemap: {
@@ -78,13 +78,13 @@ const config: Config = {
                         "/markdown-page",
                     ],
                     filename: "sitemap.xml",
-                },
-            } satisfies Preset.Options,
-        ],
+        },
+      } satisfies Preset.Options,
     ],
+  ],
 
-    themeConfig: {
-        // Replace with your project's social card
+  themeConfig: {
+    // Replace with your project's social card
         image: "og-image.png",
         metadata: [
             {
@@ -192,14 +192,14 @@ const config: Config = {
                 content: "#FF5500",
             },
         ],
-        colorMode: {
-            respectPrefersColorScheme: true,
+    colorMode: {
+      respectPrefersColorScheme: true,
             defaultMode: "light",
             disableSwitch: false,
-        },
-        navbar: {
+    },
+    navbar: {
             title: "Spritz",
-            logo: {
+      logo: {
                 alt: "Spritz Logo",
                 src: "img/logo.svg",
                 srcDark: "img/logo.svg",
@@ -272,7 +272,7 @@ const config: Config = {
                             type: "doc",
                             docId: "guides/groups",
                             label: "Groups",
-                        },
+      },
                         {
                             type: "doc",
                             docId: "guides/channels",
@@ -304,8 +304,8 @@ const config: Config = {
                     type: "dropdown",
                     label: "API",
                     position: "left",
-                    items: [
-                        {
+      items: [
+        {
                             type: "doc",
                             docId: "api/intro",
                             label: "Overview",
@@ -326,22 +326,22 @@ const config: Config = {
                             label: "Streaming API",
                         },
                     ],
-                },
+        },
                 { to: "/blog", label: "Blog", position: "left" },
-                {
+        {
                     href: "https://github.com/Spritz-Labs/spritz",
                     label: "GitHub",
                     position: "right",
-                },
-            ],
         },
-        footer: {
+      ],
+    },
+    footer: {
             style: "light",
-            links: [
-                {
+      links: [
+        {
                     title: "Documentation",
-                    items: [
-                        {
+          items: [
+            {
                             label: "Getting Started",
                             to: "/docs/intro",
                         },
@@ -356,43 +356,43 @@ const config: Config = {
                         {
                             label: "API Reference",
                             to: "/docs/api/intro",
-                        },
-                    ],
-                },
-                {
+            },
+          ],
+        },
+        {
                     title: "Community",
-                    items: [
-                        {
+          items: [
+            {
                             label: "GitHub",
                             href: "https://github.com/Spritz-Labs/spritz",
-                        },
-                        {
+            },
+            {
                             label: "Issues",
                             href: "https://github.com/Spritz-Labs/spritz/issues",
-                        },
-                    ],
-                },
-                {
+            },
+          ],
+        },
+        {
                     title: "More",
-                    items: [
-                        {
+          items: [
+            {
                             label: "Blog",
                             to: "/blog",
-                        },
-                        {
+            },
+            {
                             label: "App",
                             href: "https://app.spritz.chat",
-                        },
-                    ],
-                },
-            ],
+            },
+          ],
+        },
+      ],
             copyright: `Copyright © ${new Date().getFullYear()} Spritz Labs. Built with Docusaurus.`,
-        },
-        prism: {
-            theme: prismThemes.github,
-            darkTheme: prismThemes.dracula,
-        },
-    } satisfies Preset.ThemeConfig,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+    },
+  } satisfies Preset.ThemeConfig,
 };
 
 export default config;

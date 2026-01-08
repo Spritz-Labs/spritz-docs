@@ -47,7 +47,7 @@ function Feature({title, Svg, description}: FeatureItem) {
         <div className="padding-horiz--md">
           <Heading as="h3" className={styles.featureTitle}>{title.replace(/^[^\s]+\s/, '')}</Heading>
           <p className={styles.featureDescription}>{description}</p>
-        </div>
+      </div>
       </div>
     </div>
   );
