@@ -21,16 +21,16 @@ This guide will help you get started with Spritz, from installation to your firs
 
 ## Prerequisites
 
-- **Node.js** 18+ (recommended: 20+)
-- **npm** or **yarn** package manager
-- **Git** for version control
-- **Supabase Account** (free tier works)
-- **API Keys** for:
-  - Google Gemini (for AI agents)
-  - Huddle01 (for video calls)
-  - Livepeer (for livestreaming)
-  - Reown/WalletConnect (for wallet connections)
-  - Pimlico (for passkey authentication - optional)
+-   **Node.js** 18+ (recommended: 20+)
+-   **npm** or **yarn** package manager
+-   **Git** for version control
+-   **Supabase Account** (free tier works)
+-   **API Keys** for:
+    -   Google Gemini (for AI agents)
+    -   Huddle01 (for video calls)
+    -   Livepeer (for livestreaming)
+    -   Reown/WalletConnect (for wallet connections)
+    -   Pimlico (for passkey authentication - optional)
 
 ## Installation
 
@@ -188,21 +188,21 @@ CREATE EXTENSION IF NOT EXISTS vector;
 1. Go to your Supabase project dashboard
 2. Navigate to SQL Editor
 3. Run each migration file from `/migrations` in order:
-   - `agents.sql` - Core agent tables
-   - `agents_x402.sql` - x402 payment configuration
-   - `agents_mcp.sql` - MCP server support
-   - `embeddings.sql` - Vector search setup
-   - `streams.sql` - Streaming tables
-   - And more...
+    - `agents.sql` - Core agent tables
+    - `agents_x402.sql` - x402 payment configuration
+    - `agents_mcp.sql` - MCP server support
+    - `embeddings.sql` - Vector search setup
+    - `streams.sql` - Streaming tables
+    - And more...
 
 ### Verify Setup
 
 Check that tables were created:
 
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name LIKE 'shout_%';
 ```
 
@@ -215,16 +215,19 @@ For detailed schema documentation, see [Database Schema](/docs/database/schema).
 Spritz supports multiple authentication methods:
 
 **Option A: Wallet Connection (Web3)**
+
 1. Click "Connect Wallet" in the top right
 2. Select your wallet provider (Ethereum, Base, or Solana)
 3. Sign the message to authenticate (SIWE/SIWS)
 
 **Option B: Passkey Authentication (Passwordless)**
+
 1. Click "Sign In with Passkey"
 2. Use Face ID, Touch ID, or Windows Hello
 3. A smart account will be created automatically
 
 **Option C: Email Login**
+
 1. Click "Sign In with Email"
 2. Enter your email address
 3. Check your inbox for a 6-digit verification code
@@ -238,10 +241,10 @@ Spritz supports multiple authentication methods:
 1. Navigate to the Agents section
 2. Click "Create Agent"
 3. Fill in:
-   - **Name**: Your agent's name
-   - **Personality**: Describe how your agent should behave
-   - **System Instructions**: Custom instructions for the agent
-   - **Visibility**: Choose private, friends, or public
+    - **Name**: Your agent's name
+    - **Personality**: Describe how your agent should behave
+    - **System Instructions**: Custom instructions for the agent
+    - **Visibility**: Choose private, friends, or public
 4. Click "Create"
 
 ### 3. Add Knowledge to Your Agent
@@ -262,34 +265,33 @@ Spritz supports multiple authentication methods:
 
 ## Next Steps
 
-- Learn about [AI Agents](/docs/agents/intro)
-- Explore [Livestreaming](/docs/streaming/technical)
-- Check out the [API Reference](/docs/api/intro)
-- Read about [x402 Monetization](/docs/agents/x402)
+-   Learn about [AI Agents](/docs/agents/intro)
+-   Explore [Livestreaming](/docs/streaming/technical)
+-   Check out the [API Reference](/docs/api/intro)
+-   Read about [x402 Monetization](/docs/agents/x402)
 
 ## Troubleshooting
 
 ### Wallet Connection Issues
 
-- Make sure you have a Web3 wallet installed
-- Check that you're on a supported network
-- Try refreshing the page
+-   Make sure you have a Web3 wallet installed
+-   Check that you're on a supported network
+-   Try refreshing the page
 
 ### Agent Not Responding
 
-- Verify your Gemini API key is correct
-- Check the browser console for errors
-- Ensure the agent has proper system instructions
+-   Verify your Gemini API key is correct
+-   Check the browser console for errors
+-   Ensure the agent has proper system instructions
 
 ### Streaming Issues
 
-- Check your camera/microphone permissions
-- Verify your Livepeer API key
-- Ensure you have a stable internet connection
+-   Check your camera/microphone permissions
+-   Verify your Livepeer API key
+-   Ensure you have a stable internet connection
 
 ## Need Help?
 
-- Check our [FAQ](/docs/faq)
-- Open an [issue on GitHub](https://github.com/Spritz-Labs/spritz/issues)
-- Contact support at kevin@kevinjonescreates.com
-
+-   Check our [FAQ](/docs/faq)
+-   Open an [issue on GitHub](https://github.com/Spritz-Labs/spritz/issues)
+-   Contact support at kevin@kevinjonescreates.com

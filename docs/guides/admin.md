@@ -5,11 +5,12 @@ Administrative features and tools for managing the Spritz platform.
 ## Overview
 
 Admin features include:
-- **User Management**: View and manage users
-- **Analytics Dashboard**: Track platform metrics
-- **Invite Codes**: Create and manage invite codes
-- **Beta Access**: Grant beta access to features
-- **Analytics Tracking**: Monitor usage patterns
+
+-   **User Management**: View and manage users
+-   **Analytics Dashboard**: Track platform metrics
+-   **Invite Codes**: Create and manage invite codes
+-   **Beta Access**: Grant beta access to features
+-   **Analytics Tracking**: Monitor usage patterns
 
 ## Accessing Admin Features
 
@@ -32,38 +33,40 @@ Admin features are only available to users with `is_admin: true` in the database
 
 ### User Actions
 
-- **View Profile**: See user's full profile
-- **View Activity**: Check user's recent activity
-- **Grant Beta Access**: Enable beta features
-- **Revoke Access**: Remove user access (if needed)
+-   **View Profile**: See user's full profile
+-   **View Activity**: Check user's recent activity
+-   **Grant Beta Access**: Enable beta features
+-   **Revoke Access**: Remove user access (if needed)
 
 ## Analytics
 
 ### Platform Metrics
 
 Track key metrics:
-- **Total Users**: Registered user count
-- **Active Users**: Users active in last 30 days
-- **Messages Sent**: Total messages across platform
-- **Streams Created**: Total livestreams
-- **Agents Created**: Total AI agents
-- **Video Minutes**: Total video call minutes
+
+-   **Total Users**: Registered user count
+-   **Active Users**: Users active in last 30 days
+-   **Messages Sent**: Total messages across platform
+-   **Streams Created**: Total livestreams
+-   **Agents Created**: Total AI agents
+-   **Video Minutes**: Total video call minutes
 
 ### User Analytics
 
 Individual user metrics:
-- Messages sent
-- Friends count
-- Voice minutes
-- Video minutes
-- Groups joined
+
+-   Messages sent
+-   Friends count
+-   Voice minutes
+-   Video minutes
+-   Groups joined
 
 ### Charts & Visualizations
 
-- Daily active users
-- Feature usage trends
-- Growth metrics
-- Engagement statistics
+-   Daily active users
+-   Feature usage trends
+-   Growth metrics
+-   Engagement statistics
 
 ## Invite Codes
 
@@ -72,21 +75,22 @@ Individual user metrics:
 1. Go to Admin → Invite Codes
 2. Click "Create Invite Code"
 3. Set code details:
-   - **Code**: Custom code or auto-generated
-   - **Uses**: Maximum number of uses
-   - **Expires**: Expiration date (optional)
+    - **Code**: Custom code or auto-generated
+    - **Uses**: Maximum number of uses
+    - **Expires**: Expiration date (optional)
 4. Generate and share code
 
 ### Manage Invite Codes
 
-- **View Usage**: See how many times code was used
-- **Disable Code**: Temporarily disable a code
-- **Delete Code**: Permanently remove a code
-- **Track Usage**: Monitor code usage patterns
+-   **View Usage**: See how many times code was used
+-   **Disable Code**: Temporarily disable a code
+-   **Delete Code**: Permanently remove a code
+-   **Track Usage**: Monitor code usage patterns
 
 ### Grant Invites
 
 Grant invite codes to specific users:
+
 1. Go to Admin → Grant Invites
 2. Select user
 3. Enter number of invites
@@ -100,19 +104,19 @@ Spritz integrates with GitHub for bug report management. Users can submit bug re
 
 1. Create a GitHub personal access token with `repo` permissions
 2. Add to your environment variables:
-   ```env
-   GITHUB_OWNER=your_github_username_or_org
-   GITHUB_REPO=your_repo_name
-   GITHUB_TOKEN=your_github_personal_access_token
-   ```
+    ```env
+    GITHUB_OWNER=your_github_username_or_org
+    GITHUB_REPO=your_repo_name
+    GITHUB_TOKEN=your_github_personal_access_token
+    ```
 
 ### Bug Report Features
 
-- **In-App Submission**: Users can report bugs directly from the app
-- **Screenshot Upload**: Users can attach screenshots/media
-- **Auto-Labeling**: Reports are automatically labeled by category
-- **GitHub Sync**: Reports create GitHub issues for tracking
-- **Admin Review**: Admins can view and manage reports
+-   **In-App Submission**: Users can report bugs directly from the app
+-   **Screenshot Upload**: Users can attach screenshots/media
+-   **Auto-Labeling**: Reports are automatically labeled by category
+-   **GitHub Sync**: Reports create GitHub issues for tracking
+-   **Admin Review**: Admins can view and manage reports
 
 ### Managing Bug Reports
 
@@ -154,6 +158,7 @@ PATCH /api/admin/bug-reports/:id
 ### Grant Beta Access
 
 Enable beta features for users:
+
 1. Go to Admin → Users
 2. Select user
 3. Toggle "Beta Access"
@@ -162,17 +167,18 @@ Enable beta features for users:
 ### Beta Features
 
 Beta features may include:
-- New AI agent capabilities
-- Experimental features
-- Early access to updates
-- Testing new functionality
+
+-   New AI agent capabilities
+-   Experimental features
+-   Early access to updates
+-   Testing new functionality
 
 ## API Reference
 
 ### Get Users
 
 ```typescript
-GET /api/admin/users
+GET / api / admin / users;
 ```
 
 ### Get Analytics
@@ -222,14 +228,13 @@ POST /api/admin/grant-invites
 
 ## Security
 
-- **Admin Verification**: Always verify admin status
-- **Access Control**: Limit admin features to authorized users
-- **Audit Logs**: Track admin actions
-- **Rate Limiting**: Protect admin endpoints
+-   **Admin Verification**: Always verify admin status
+-   **Access Control**: Limit admin features to authorized users
+-   **Audit Logs**: Track admin actions
+-   **Rate Limiting**: Protect admin endpoints
 
 ## Next Steps
 
-- Learn about [API Reference](/docs/api/intro)
-- Explore [Architecture Overview](/docs/architecture/overview)
-- Check out [Database Schema](/docs/database/schema)
-
+-   Learn about [API Reference](/docs/api/intro)
+-   Explore [Architecture Overview](/docs/architecture/overview)
+-   Check out [Database Schema](/docs/database/schema)

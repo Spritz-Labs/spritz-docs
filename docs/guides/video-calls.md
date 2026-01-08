@@ -5,11 +5,12 @@ Spritz provides high-quality video and voice calls with support for multiple pro
 ## Overview
 
 Video calls in Spritz support:
-- **HD Video**: High-quality video streaming
-- **Crystal Clear Audio**: Optimized audio codecs
-- **Group Calls**: Multi-party video conferences
-- **Screen Sharing**: Share your screen during calls
-- **Recording**: Record calls for later review (coming soon)
+
+-   **HD Video**: High-quality video streaming
+-   **Crystal Clear Audio**: Optimized audio codecs
+-   **Group Calls**: Multi-party video conferences
+-   **Screen Sharing**: Share your screen during calls
+-   **Recording**: Record calls for later review (coming soon)
 
 ## Starting a Call
 
@@ -48,31 +49,32 @@ Every user gets a permanent meeting room linked to their wallet address:
 5. Room never expires - perfect for recurring meetings
 
 **Features:**
-- **Unique URL**: Each user has one permanent room tied to their address
-- **Always Available**: Room is created on-demand and never expires
-- **Easy Sharing**: Share your wallet address or direct URL
-- **Host Controls**: You have host privileges in your room
+
+-   **Unique URL**: Each user has one permanent room tied to their address
+-   **Always Available**: Room is created on-demand and never expires
+-   **Easy Sharing**: Share your wallet address or direct URL
+-   **Host Controls**: You have host privileges in your room
 
 ## Call Features
 
 ### Video Controls
 
-- **Mute/Unmute**: Toggle microphone
-- **Video On/Off**: Toggle camera
-- **Screen Share**: Share your screen
-- **Leave Call**: End your participation
+-   **Mute/Unmute**: Toggle microphone
+-   **Video On/Off**: Toggle camera
+-   **Screen Share**: Share your screen
+-   **Leave Call**: End your participation
 
 ### Audio Settings
 
-- **Microphone Selection**: Choose input device
-- **Speaker Selection**: Choose output device
-- **Audio Quality**: Adjust based on connection
+-   **Microphone Selection**: Choose input device
+-   **Speaker Selection**: Choose output device
+-   **Audio Quality**: Adjust based on connection
 
 ### Video Settings
 
-- **Camera Selection**: Choose video input
-- **Video Quality**: Auto-adjusts based on bandwidth
-- **Background Blur**: Blur background (if supported)
+-   **Camera Selection**: Choose video input
+-   **Video Quality**: Auto-adjusts based on bandwidth
+-   **Background Blur**: Blur background (if supported)
 
 ## Technical Details
 
@@ -82,23 +84,24 @@ Spritz supports two video call providers:
 
 #### Huddle01 (Default - Decentralized)
 
-- **WebRTC**: Real-time peer-to-peer connections
-- **SFU Architecture**: Selective Forwarding Unit for scalability
-- **Adaptive Bitrate**: Automatically adjusts quality
-- **Low Latency**: Optimized for real-time communication
-- **Decentralized**: No single point of failure
+-   **WebRTC**: Real-time peer-to-peer connections
+-   **SFU Architecture**: Selective Forwarding Unit for scalability
+-   **Adaptive Bitrate**: Automatically adjusts quality
+-   **Low Latency**: Optimized for real-time communication
+-   **Decentralized**: No single point of failure
 
 #### Agora (Alternative - Centralized)
 
-- **High Reliability**: Enterprise-grade infrastructure
-- **Global CDN**: Low latency worldwide
-- **Scalable**: Handles large group calls efficiently
-- **Token-based**: Secure authentication (optional)
-- **Centralized**: Managed service with high uptime
+-   **High Reliability**: Enterprise-grade infrastructure
+-   **Global CDN**: Low latency worldwide
+-   **Scalable**: Handles large group calls efficiently
+-   **Token-based**: Secure authentication (optional)
+-   **Centralized**: Managed service with high uptime
 
 ### Provider Selection
 
 Users can choose their preferred provider in Settings:
+
 1. Go to Settings
 2. Find "Video Calls" section
 3. Toggle "Use Decentralized Calls" (Huddle01) or "Use Centralized Calls" (Agora)
@@ -108,24 +111,24 @@ Users can choose their preferred provider in Settings:
 
 ### Network Requirements
 
-- **Upload**: Minimum 1 Mbps for video
-- **Download**: Minimum 2 Mbps for receiving
-- **Latency**: < 150ms for best experience
-- **Stability**: Stable connection recommended
+-   **Upload**: Minimum 1 Mbps for video
+-   **Download**: Minimum 2 Mbps for receiving
+-   **Latency**: < 150ms for best experience
+-   **Stability**: Stable connection recommended
 
 ### Codecs
 
-- **Video**: VP8, VP9, H.264
-- **Audio**: Opus
-- **Adaptive**: Automatically selects best codec
+-   **Video**: VP8, VP9, H.264
+-   **Audio**: Opus
+-   **Adaptive**: Automatically selects best codec
 
 ## Call States
 
-- **Idle**: Call not started
-- **Connecting**: Establishing connection
-- **Connected**: Active call
-- **Disconnected**: Call ended
-- **Failed**: Connection error
+-   **Idle**: Call not started
+-   **Connecting**: Establishing connection
+-   **Connected**: Active call
+-   **Disconnected**: Call ended
+-   **Failed**: Connection error
 
 ## Best Practices
 
@@ -139,31 +142,31 @@ Users can choose their preferred provider in Settings:
 
 ### No Video/Audio
 
-- Check browser permissions
-- Verify camera/microphone are not in use elsewhere
-- Try refreshing the page
-- Check device settings
+-   Check browser permissions
+-   Verify camera/microphone are not in use elsewhere
+-   Try refreshing the page
+-   Check device settings
 
 ### Poor Quality
 
-- Check internet connection speed
-- Close other bandwidth-intensive apps
-- Try reducing video quality
-- Move closer to router
+-   Check internet connection speed
+-   Close other bandwidth-intensive apps
+-   Try reducing video quality
+-   Move closer to router
 
 ### Connection Issues
 
-- Check firewall settings
-- Verify WebRTC is not blocked
-- Try different network
-- Check Huddle01 service status
+-   Check firewall settings
+-   Verify WebRTC is not blocked
+-   Try different network
+-   Check Huddle01 service status
 
 ### Can't Join Call
 
-- Verify room code is correct
-- Check if room is still active
-- Ensure you have permissions
-- Try refreshing connection
+-   Verify room code is correct
+-   Check if room is still active
+-   Ensure you have permissions
+-   Try refreshing connection
 
 ## API Reference
 
@@ -199,20 +202,20 @@ GET /api/rooms/permanent?wallet_address=0x...
 ```
 
 **Response:**
+
 ```json
 {
-  "success": true,
-  "room": {
-    "roomId": "abc-defg-hij",
-    "permanentUrl": "https://app.spritz.chat/room/0x...",
-    "walletAddress": "0x..."
-  }
+    "success": true,
+    "room": {
+        "roomId": "abc-defg-hij",
+        "permanentUrl": "https://app.spritz.chat/room/0x...",
+        "walletAddress": "0x..."
+    }
 }
 ```
 
 ## Next Steps
 
-- Learn about [Messaging](/docs/guides/messaging)
-- Explore [Groups](/docs/guides/groups)
-- Check out [Livestreaming](/docs/streaming/technical)
-
+-   Learn about [Messaging](/docs/guides/messaging)
+-   Explore [Groups](/docs/guides/groups)
+-   Check out [Livestreaming](/docs/streaming/technical)
