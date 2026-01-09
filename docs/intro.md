@@ -156,4 +156,4 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 
 PolyForm Noncommercial License 1.0.0
 
-Commercial use requires a separate license. Contact kevin@kevinjonescreates.com for commercial licensing.
+Commercial use requires a separate license. Contact connect@spritz.chat for commercial licensing.

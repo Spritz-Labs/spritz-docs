@@ -166,7 +166,7 @@ Yes! Contributions are welcome. Check out our [GitHub repository](https://github
 
 -   Check our documentation
 -   Open an issue on [GitHub](https://github.com/Spritz-Labs/spritz/issues)
--   Contact support at kevin@kevinjonescreates.com
+-   Contact support at connect@spritz.chat
 
 ### How do I report a bug?
 

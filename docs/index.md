@@ -87,5 +87,5 @@ Complete guide to all Spritz documentation.
 - **Live App**: [app.spritz.chat](https://app.spritz.chat)
 - **GitHub Repository**: [Spritz-Labs/spritz](https://github.com/Spritz-Labs/spritz)
 - **Issues**: [GitHub Issues](https://github.com/Spritz-Labs/spritz/issues)
-- **Support**: kevin@kevinjonescreates.com
+- **Support**: connect@spritz.chat
 

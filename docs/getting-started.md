@@ -294,4 +294,4 @@ Spritz supports multiple authentication methods:
 
 -   Check our [FAQ](/docs/faq)
 -   Open an [issue on GitHub](https://github.com/Spritz-Labs/spritz/issues)
--   Contact support at kevin@kevinjonescreates.com
+-   Contact support at connect@spritz.chat
