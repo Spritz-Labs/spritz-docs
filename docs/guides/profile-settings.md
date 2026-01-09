@@ -7,9 +7,27 @@ Manage your Spritz profile, preferences, and account settings.
 ### Profile Information
 
 - **Username**: Set a unique username (optional)
+- **Bio**: Add a description about yourself (up to 160 characters)
 - **Status**: Share what you're up to
 - **Avatar**: Upload or create pixel art avatar
 - **Social Links**: Connect Twitter, Farcaster, Lens
+- **ENS Name**: Your ENS name is automatically resolved if you have one
+
+### Public Profile
+
+Enable a public landing page for your profile:
+
+1. Go to Settings
+2. Toggle "Enable Public Landing Page"
+3. Your profile is now visible at `spritz.chat/user/YOUR_ADDRESS`
+4. Add a bio to tell visitors about yourself
+5. Visitors can see your username, bio, avatar, and social links
+
+**Features:**
+- **ENS Resolution**: If you have an ENS name, it displays automatically
+- **Public Bio**: Share what you're about with the world
+- **Social Links**: Visitors can find your other profiles
+- **Avatar Display**: Your pixel art avatar is prominently shown
 
 ### Pixel Art Avatars
 

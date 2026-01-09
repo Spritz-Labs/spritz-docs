@@ -154,6 +154,10 @@ GOOGLE_REDIRECT_URI=https://app.spritz.chat/api/calendar/callback
 GITHUB_OWNER=your_github_username_or_org
 GITHUB_REPO=your_repo_name
 GITHUB_TOKEN=your_github_personal_access_token
+
+# World ID (Optional - for Digital ID verification)
+NEXT_PUBLIC_WORLD_ID_APP_ID=app_your_world_id_app_id
+NEXT_PUBLIC_WORLD_ID_ACTION=your_action_name
 ```
 
 4. Run database migrations:
@@ -235,6 +239,29 @@ Spritz supports multiple authentication methods:
 5. A secure session will be created for you
 
 **Note:** Email login uses a deterministic key derivation to create a wallet address from your email, allowing you to interact with Web3 features without managing private keys.
+
+**Option D: Digital ID (World ID or Alien SSO)**
+
+1. Click "Digital ID" tab in Settings
+2. Choose your verification method:
+   - **World ID**: Scan with World App (Orb verification for highest trust)
+   - **Alien SSO**: Sign in with Alien identity
+3. Complete verification flow
+4. Your verified identity is linked to your account
+
+**Note:** Digital ID provides a privacy-preserving way to prove you're a unique human without revealing personal information.
+
+### Cross-Device Passkey Support
+
+Passkey authentication now supports cross-device login:
+
+1. Start passkey sign-in on any device
+2. Choose "Use another device" option
+3. Scan the QR code with your phone (where passkey is stored)
+4. Authenticate on your phone
+5. You're signed in on the new device
+
+This enables seamless authentication across desktop and mobile using WebAuthn hybrid transport.
 
 ### 2. Create Your First AI Agent
 

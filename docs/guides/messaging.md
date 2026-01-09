@@ -48,6 +48,38 @@ Record and send voice notes:
 3. Send the audio file
 4. Recipients can play it back
 
+### Pixel Art
+
+Create and share pixel art directly in chat:
+
+1. Click the pixel art icon in chat
+2. Use the 16x16 or 32x32 pixel editor
+3. Choose colors from the palette
+4. Create your design
+5. Send to the chat
+
+**Features:**
+- Download any image by clicking the download button
+- Share pixel art to social media with OG card previews
+- Images are stored on IPFS via Pinata for decentralized hosting
+
+### Image Sharing
+
+Share images in any chat:
+
+1. Click the image/attachment icon
+2. Select an image from your device
+3. Image is uploaded and shared
+4. All images have a download button for easy saving
+
+**Quick Share Actions:**
+
+When viewing pixel art or images, use quick share buttons:
+- **Share to X/Twitter**: Posts with automatic preview card
+- **Copy Link**: Get a shareable URL with OG tags
+- **More Options**: Share to Facebook, LinkedIn, Reddit, Telegram, WhatsApp
+- **Download**: Save the image to your device
+
 ## Features
 
 ### Link Previews
