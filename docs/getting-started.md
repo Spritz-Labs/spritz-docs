@@ -240,12 +240,12 @@ Spritz supports multiple authentication methods:
 
 **Note:** Email login uses a deterministic key derivation to create a wallet address from your email, allowing you to interact with Web3 features without managing private keys.
 
-**Option D: Digital ID (World ID or Alien SSO)**
+**Option D: Digital ID (World ID or Alien ID)**
 
 1. Click "Digital ID" tab in Settings
 2. Choose your verification method:
    - **World ID**: Scan with World App (Orb verification for highest trust)
-   - **Alien SSO**: Sign in with Alien identity
+   - **Alien ID**: Sign in with your Alien ID identity
 3. Complete verification flow
 4. Your verified identity is linked to your account
 
