@@ -28,7 +28,7 @@ function NavbarMobileSidebarPanel({
         ThemeClassNames.layout.navbar.mobileSidebar.panel,
         'navbar-sidebar__item menu',
       )}
-      {...inertProps(inert)}>
+      style={{ display: 'block', visibility: 'visible' }}>
       {children}
     </div>
   );
@@ -49,12 +49,14 @@ export default function NavbarMobileSidebarLayout({
       className={clsx(
         ThemeClassNames.layout.navbar.mobileSidebar.container,
         'navbar-sidebar',
-      )}>
+      )}
+      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {header}
       <div
         className={clsx('navbar-sidebar__items', {
           'navbar-sidebar__items--show-secondary': showSecondary,
-        })}>
+        })}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         <NavbarMobileSidebarPanel inert={showSecondary}>
           {primaryMenu}
         </NavbarMobileSidebarPanel>
