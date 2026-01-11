@@ -17,7 +17,11 @@ export default function NavbarMobilePrimaryMenu(): ReactNode {
   const items = useNavbarItems();
 
   return (
-    <ul className="menu__list">
+    <ul className="menu__list" style={{ display: 'block', visibility: 'visible', color: 'black' }}>
+      {/* Debug: Show number of items */}
+      <li style={{ padding: '1rem', color: 'black', fontWeight: 'bold' }}>
+        Menu Items ({items.length})
+      </li>
       {items.map((item, i) => (
         <NavbarItem
           mobile
