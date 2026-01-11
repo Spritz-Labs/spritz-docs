@@ -50,18 +50,26 @@ export default function NavbarMobileSidebarLayout({
         ThemeClassNames.layout.navbar.mobileSidebar.container,
         'navbar-sidebar',
       )}
-      style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: '100vh',
+        width: '100%',
+      }}>
       {header}
       <div
         className={clsx('navbar-sidebar__items', {
           'navbar-sidebar__items--show-secondary': showSecondary,
         })}
-        style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        style={{ 
+          flex: 1, 
+          display: 'block', 
+          overflowY: 'auto',
+          paddingTop: '0',
+          marginTop: '0',
+        }}>
         <NavbarMobileSidebarPanel inert={showSecondary}>
           {primaryMenu}
-        </NavbarMobileSidebarPanel>
-        <NavbarMobileSidebarPanel inert={!showSecondary}>
-          {secondaryMenu}
         </NavbarMobileSidebarPanel>
       </div>
     </div>
