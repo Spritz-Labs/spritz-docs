@@ -3,6 +3,11 @@
  * Colors match the Spritz app branding
  */
 
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Spritz Brand Colors */
 :root {
     /* Primary Orange - #FF5500 */
@@ -452,11 +457,61 @@ code {
     color: #000000;
 }
 
-/* Mobile sidebar styling */
+/* Mobile sidebar styling - Fixed with Tailwind utilities */
+.navbar-sidebar {
+    @apply flex flex-col;
+}
+
+.navbar-sidebar .navbar-sidebar__items {
+    @apply flex flex-col flex-1 overflow-y-auto;
+}
+
+.navbar-sidebar .navbar-sidebar__item {
+    @apply block w-full;
+}
+
+/* Ensure primary menu items are always visible */
+.navbar-sidebar .navbar-sidebar__item--primary {
+    @apply block;
+}
+
+/* Secondary items (docs sidebar) visibility */
+.navbar-sidebar .navbar-sidebar__item--secondary {
+    @apply block;
+}
+
+/* Menu styling in sidebar */
+.navbar-sidebar .menu {
+    @apply block w-full;
+}
+
+.navbar-sidebar .menu__list {
+    @apply block w-full p-0 m-0;
+}
+
+.navbar-sidebar .menu__list-item {
+    @apply block w-full;
+}
+
 .navbar-sidebar .menu__link {
+    @apply flex items-center w-full py-3 px-4 min-h-[44px];
     color: var(--ifm-font-color-base) !important;
 }
 
+.navbar-sidebar .menu__link:hover {
+    color: var(--ifm-color-primary) !important;
+}
+
+/* Dropdown items in mobile sidebar */
+.navbar-sidebar .dropdown__menu {
+    @apply block static w-full shadow-none bg-transparent;
+}
+
+.navbar-sidebar .dropdown__link {
+    @apply py-2 px-6;
+}
+
+/* Dark mode */
 [data-theme="dark"] .navbar-sidebar {
     background-color: #fff0e0 !important;
 }
