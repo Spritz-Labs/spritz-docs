@@ -1,5 +1,5 @@
 {
-  "/blog-958": {
+  "/blog-7a7": {
     "__comp": "a6aa9e1f",
     "__context": {
       "plugin": "36994c47"
@@ -7,10 +7,10 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "c15d9823"
@@ -33,7 +33,7 @@
     "sidebar": "814f3328",
     "__props": "ef8b811a"
   },
-  "/blog/spritz-chat-manifesto-c2f": {
+  "/blog/spritz-chat-manifesto-805": {
     "__comp": "ccc49370",
     "__context": {
       "data": {
@@ -42,7 +42,7 @@
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
-    "content": "1bdfb143"
+    "content": "0b58cbe9"
   },
   "/blog/tags-287": {
     "__comp": "01a85c17",
@@ -52,7 +52,7 @@
     "sidebar": "814f3328",
     "__props": "3a2db09e"
   },
-  "/blog/tags/censorship-resistance-949": {
+  "/blog/tags/censorship-resistance-08b": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -60,15 +60,15 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "53276c65"
   },
-  "/blog/tags/decentralization-ccd": {
+  "/blog/tags/decentralization-fd9": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -76,15 +76,15 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "21d2a0db"
   },
-  "/blog/tags/manifesto-41c": {
+  "/blog/tags/manifesto-d87": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -92,12 +92,12 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       }
     ],
     "__props": "4f04cfe8"
   },
-  "/blog/tags/openness-997": {
+  "/blog/tags/openness-8a0": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -105,15 +105,15 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "fe40915d"
   },
-  "/blog/tags/privacy-ca8": {
+  "/blog/tags/privacy-a07": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -121,12 +121,12 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       }
     ],
     "__props": "5b428bcf"
   },
-  "/blog/tags/spritz-03e": {
+  "/blog/tags/spritz-9e7": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -134,15 +134,15 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "a961ffb3"
   },
-  "/blog/tags/web3-bce": {
+  "/blog/tags/web3-5ce": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -150,15 +150,15 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "1c8a66fd"
+        "content": "b387a76f"
       },
       {
-        "content": "3827983c"
+        "content": "c39fc68c"
       }
     ],
     "__props": "8f47e305"
   },
-  "/blog/why-we-built-spritz-cb4": {
+  "/blog/why-we-built-spritz-6d3": {
     "__comp": "ccc49370",
     "__context": {
       "data": {
@@ -167,7 +167,7 @@
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
-    "content": "f9c9a41e"
+    "content": "ae681c21"
   },
   "/markdown-page-3d7": {
     "__comp": "1f391b9e",

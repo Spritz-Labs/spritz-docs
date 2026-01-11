@@ -22,7 +22,7 @@ Spritz is a decentralized social platform that combines Web3 messaging, AI agent
 
 Spritz is a full-stack social platform built on Web3 principles, offering:
 
--   **Decentralized Messaging**: Peer-to-peer messaging powered by Waku
+-   **Decentralized Messaging**: Peer-to-peer messaging powered by Waku (Logos)
 -   **AI Agents**: Create and interact with customizable AI agents with knowledge bases
 -   **Livestreaming**: Go live with friends using Livepeer
 -   **Video Calls**: Real-time video and voice calls via Huddle01
@@ -44,7 +44,7 @@ Broadcast live video streams to your friends. Streams are automatically recorded
 
 ### 💬 Messaging & Communication
 
--   **Decentralized Messaging**: Peer-to-peer messaging powered by Waku
+-   **Decentralized Messaging**: Peer-to-peer messaging powered by Waku (Logos)
 -   **Group Chats**: Create and join group conversations
 -   **Public Channels**: Discover and join public channels
 -   **Voice Messages**: Record and send voice notes
@@ -102,7 +102,7 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 | **Wallet Connection**   | Reown AppKit (WalletConnect)    |
 | **Video Calls**         | Huddle01 SDK, Agora RTC (optional) |
 | **Livestreaming**       | Livepeer (WebRTC/WHIP + HLS)    |
-| **Messaging**           | Waku Protocol                   |
+| **Messaging**           | Waku Protocol (Logos)           |
 | **AI/LLM**              | Google Gemini API               |
 | **Vector Search**       | Supabase pgvector               |
 | **Database**            | Supabase (Postgres + Realtime)  |
@@ -126,7 +126,7 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 
 ### User Guides
 
--   **[Messaging](/docs/guides/messaging)**: Decentralized messaging with Waku
+-   **[Messaging](/docs/guides/messaging)**: Decentralized messaging with Waku (Logos)
 -   **[Video Calls](/docs/guides/video-calls)**: HD video and voice calls
 -   **[Groups](/docs/guides/groups)**: Group chats and calls
 -   **[Channels](/docs/guides/channels)**: Public community channels

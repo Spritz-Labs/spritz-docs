@@ -90,7 +90,7 @@ const config: Config = {
             {
                 name: "keywords",
                 content:
-                    "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, x402 payments, Web3, blockchain, decentralized messaging, P2P communication, Livepeer, Huddle01, Sign-In with Ethereum, SIWE, Sign-In with Solana, SIWS, passkeys, crypto payments, decentralized social network",
+                    "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, Logos, x402 payments, Web3, blockchain, decentralized messaging, P2P communication, Livepeer, Huddle01, Sign-In with Ethereum, SIWE, Sign-In with Solana, SIWS, passkeys, crypto payments, decentralized social network",
             },
             {
                 name: "author",

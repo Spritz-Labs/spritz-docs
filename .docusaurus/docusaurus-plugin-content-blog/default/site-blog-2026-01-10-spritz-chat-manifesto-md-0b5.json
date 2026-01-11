@@ -1,0 +1,83 @@
+{
+  "permalink": "/blog/spritz-chat-manifesto",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2026-01-10-spritz-chat-manifesto.md",
+  "source": "@site/blog/2026-01-10-spritz-chat-manifesto.md",
+  "title": "Spritz Chat Manifesto",
+  "description": "Communication is a universal human right recognized by the United Nations. Yet billions of people are denied meaningful access to it.",
+  "date": "2026-01-10T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Spritz",
+      "permalink": "/blog/tags/spritz",
+      "description": "Posts about Spritz platform and features"
+    },
+    {
+      "inline": false,
+      "label": "Decentralization",
+      "permalink": "/blog/tags/decentralization",
+      "description": "Posts about decentralized technology and architecture"
+    },
+    {
+      "inline": false,
+      "label": "Censorship Resistance",
+      "permalink": "/blog/tags/censorship-resistance",
+      "description": "Posts about building censorship-resistant platforms"
+    },
+    {
+      "inline": false,
+      "label": "Openness",
+      "permalink": "/blog/tags/openness",
+      "description": "Posts about open source and open protocols"
+    },
+    {
+      "inline": false,
+      "label": "Web3",
+      "permalink": "/blog/tags/web3",
+      "description": "Posts about Web3 technologies and principles"
+    },
+    {
+      "inline": false,
+      "label": "Manifesto",
+      "permalink": "/blog/tags/manifesto",
+      "description": "Core beliefs and principles behind Spritz"
+    },
+    {
+      "inline": false,
+      "label": "Privacy",
+      "permalink": "/blog/tags/privacy",
+      "description": "Posts about privacy and data protection"
+    }
+  ],
+  "readingTime": 1.85,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Anonymous",
+      "title": "Spritz Team",
+      "page": null,
+      "key": "anonymous"
+    }
+  ],
+  "frontMatter": {
+    "slug": "spritz-chat-manifesto",
+    "title": "Spritz Chat Manifesto",
+    "authors": [
+      "anonymous"
+    ],
+    "tags": [
+      "spritz",
+      "decentralization",
+      "censorship-resistance",
+      "openness",
+      "web3",
+      "manifesto",
+      "privacy"
+    ]
+  },
+  "unlisted": false,
+  "nextItem": {
+    "title": "Why We Built Spritz",
+    "permalink": "/blog/why-we-built-spritz"
+  }
+}

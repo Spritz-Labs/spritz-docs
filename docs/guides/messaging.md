@@ -106,37 +106,92 @@ Search through your message history:
 
 ## Technical Details
 
-### Waku Protocol
+### Architecture Overview
 
-Waku is a privacy-preserving messaging protocol:
-- **Gossip Protocol**: Messages propagate through the network
-- **Store and Forward**: Messages are stored temporarily for delivery
-- **Encryption**: Uses Noise Protocol Framework
-- **Relay Network**: Distributed relay nodes
+Spritz uses a **bespoke implementation built directly on top of the Waku SDK** - not using any high-level "chat SDK". It's a custom messaging layer built from scratch using the core Waku protocols (part of the [Logos](https://logos.co/) technology stack).
 
-### Message Encryption
+### Waku Packages Used
 
-All messages are encrypted using:
-- **Noise Protocol**: Industry-standard encryption
-- **Key Exchange**: Secure key establishment
-- **Forward Secrecy**: Past messages remain secure
+```json
+{
+  "@waku/sdk": "^0.0.36",
+  "@waku/message-encryption": "^0.0.38",
+  "@waku/utils": "^0.0.27"
+}
+```
+
+### Light Node Architecture
+
+Spritz runs a Waku Light Node in the browser that connects to the Waku network:
+
+```typescript
+const node = await wakuSdk.createLightNode({
+    defaultBootstrap: true,
+    networkConfig: { clusterId: 1 },
+});
+await node.waitForPeers([Protocols.LightPush, Protocols.Filter]);
+```
+
+### Protocols Used
+
+| Protocol | Purpose |
+|----------|---------|
+| **LightPush** | For sending messages to the network |
+| **Filter** | For subscribing to real-time incoming messages |
+| **Store** | For querying historical messages |
 
 ### Message Format
 
-```typescript
-{
-  id: string;
-  from: string;      // Wallet address
-  to: string;        // Wallet address or channel ID
-  content: string;   // Encrypted message content
-  timestamp: number;
-  type: 'text' | 'voice' | 'image';
-  metadata?: {
-    replyTo?: string;
-    reactions?: Record<string, string[]>;
-  };
+Custom Protobuf schema for messages:
+
+```protobuf
+message ChatMessage {
+    uint64 timestamp = 1;
+    string sender = 2;
+    string content = 3;
+    string messageId = 4;
+    string messageType = 5;  // text, pixel_art, system
 }
 ```
+
+### Encryption
+
+Uses **symmetric key encryption (AES-GCM)**:
+
+- **DM keys** are derived deterministically from both wallet addresses using SHA-256
+- **Group keys** are randomly generated and shared with members
+- All messages are encrypted before being sent to Waku
+
+### Content Topics
+
+Deterministic topic naming for routing:
+
+| Type | Topic Format |
+|------|--------------|
+| **DMs** | `/spritz/1/dm/{sorted-addresses}/proto` |
+| **Groups** | `/spritz/1/group/{groupId}/proto` |
+
+### Hybrid Persistence
+
+Since Waku's Store protocol has limited retention, Spritz uses a hybrid approach:
+
+| Layer | Purpose |
+|-------|---------|
+| **Waku Store** | Short-term message history from the P2P network |
+| **Supabase** | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
+| **localStorage** | Offline cache for instant loading |
+
+### Summary
+
+> Spritz uses a bespoke implementation built directly on the Waku SDK (the low-level Logos messaging primitives). It's NOT using the newer "Waku Chat SDK" or any pre-built chat solution.
+>
+> The implementation uses:
+> - Waku Light Node with LightPush, Filter, and Store protocols
+> - Symmetric key encryption for all messages
+> - Custom Protobuf message format
+> - Hybrid persistence (Waku + Supabase) for reliable delivery
+>
+> This gives full control over the UX while leveraging Waku's decentralized, censorship-resistant message relay network.
 
 ## Best Practices
 

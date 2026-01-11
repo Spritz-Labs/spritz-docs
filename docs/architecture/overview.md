@@ -36,7 +36,7 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **S
 ┌─────────────────────────────────────────────────────────────┐
 │                    External Services                       │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│  │   Waku       │  │  Huddle01    │  │  x402        │    │
+│  │Waku (Logos)  │  │  Huddle01    │  │  x402        │    │
 │  │  Messaging   │  │  Video Calls │  │  Payments    │    │
 │  └──────────────┘  └──────────────┘  └──────────────┘    │
 └─────────────────────────────────────────────────────────────┘
@@ -82,9 +82,9 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **S
 
 ### Messaging
 
-- **Protocol**: Waku Protocol
-- **Encryption**: End-to-end encrypted
-- **Transport**: Peer-to-peer relay network
+- **Protocol**: Waku Protocol (Logos)
+- **Encryption**: Symmetric key encryption (AES-GCM)
+- **Transport**: Peer-to-peer relay network via Waku Light Node
 
 ### Payments
 
@@ -216,7 +216,7 @@ Viewer
 
 ### Data Protection
 
-- **Encryption**: End-to-end for Waku messages
+- **Encryption**: Symmetric key (AES-GCM) for Waku messages
 - **HTTPS**: All API communication
 - **Input Validation**: Sanitize all user inputs
 - **Rate Limiting**: Prevent abuse
