@@ -457,9 +457,12 @@ code {
     color: #000000;
 }
 
-/* Mobile sidebar styling - Fixed with Tailwind utilities */
+/* Mobile sidebar styling */
 .navbar-sidebar {
-    @apply flex flex-col;
+    @apply fixed inset-0 z-50 flex flex-col;
+    background-color: var(--ifm-background-color) !important;
+    width: 100% !important;
+    max-width: 100vw !important;
 }
 
 .navbar-sidebar .navbar-sidebar__items {
@@ -468,16 +471,6 @@ code {
 
 .navbar-sidebar .navbar-sidebar__item {
     @apply block w-full;
-}
-
-/* Ensure primary menu items are always visible */
-.navbar-sidebar .navbar-sidebar__item--primary {
-    @apply block;
-}
-
-/* Secondary items (docs sidebar) visibility */
-.navbar-sidebar .navbar-sidebar__item--secondary {
-    @apply block;
 }
 
 /* Menu styling in sidebar */
@@ -500,6 +493,14 @@ code {
 
 .navbar-sidebar .menu__link:hover {
     color: var(--ifm-color-primary) !important;
+    background-color: rgba(255, 85, 0, 0.1);
+}
+
+/* Active menu link */
+.navbar-sidebar .menu__link--active {
+    color: var(--ifm-color-primary) !important;
+    background-color: rgba(255, 85, 0, 0.15);
+    font-weight: 600;
 }
 
 /* Dropdown items in mobile sidebar */
