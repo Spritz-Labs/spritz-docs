@@ -684,79 +684,27 @@ code {
         display: none;
     }
 
-    /* Navbar sidebar structure - ensure all views and content are visible */
-    .navbar-sidebar {
-        display: flex !important;
-        flex-direction: column;
-    }
-
+    /* Navbar sidebar base styling */
     .navbar-sidebar__items {
-        display: flex !important;
-        flex-direction: column;
-        flex: 1;
         overflow-y: auto;
-    }
-
-    .navbar-sidebar__item {
-        display: block !important;
-        visibility: visible !important;
-    }
-
-    /* Primary navigation items in mobile sidebar */
-    .navbar-sidebar__items--show-secondary .navbar-sidebar__item--primary {
-        display: none !important;
-    }
-
-    .navbar-sidebar__items--show-secondary .navbar-sidebar__item--secondary {
-        display: block !important;
-        visibility: visible !important;
     }
 
     /* Back button visibility */
     .navbar-sidebar__back {
         display: block !important;
-        visibility: visible !important;
         padding: 0.75rem 1rem;
         color: var(--ifm-font-color-base) !important;
     }
 
-    /* Menu items in mobile sidebar */
-    .navbar-sidebar .menu {
-        display: block !important;
-        visibility: visible !important;
-        padding: 0;
-    }
-
-    .navbar-sidebar .menu__list {
-        display: block !important;
-        visibility: visible !important;
-        padding: 0;
-        margin: 0;
-    }
-
-    .navbar-sidebar .menu__list-item {
-        display: block !important;
-        visibility: visible !important;
-    }
-
+    /* Menu items in mobile sidebar - ensure they're visible */
     .navbar-sidebar .menu__link {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
         color: var(--ifm-font-color-base) !important;
         padding: 0.75rem 1rem;
         min-height: 44px;
-        align-items: center;
     }
 
     .navbar-sidebar .menu__link:hover {
         color: var(--ifm-color-primary) !important;
-    }
-
-    /* Dropdown toggles in sidebar */
-    .navbar-sidebar .menu__caret {
-        display: flex !important;
-        visibility: visible !important;
     }
 
     /* Navbar links in sidebar */
@@ -764,11 +712,6 @@ code {
         color: var(--ifm-font-color-base) !important;
         padding: 0.75rem 1rem;
         min-height: 44px;
-        display: flex !important;
-        width: 100%;
-        visibility: visible !important;
-        opacity: 1 !important;
-        align-items: center;
     }
 
     .navbar-sidebar .navbar__link:hover {
@@ -777,40 +720,13 @@ code {
 
     /* Fix height and overflow for mobile sidebar */
     .navbar-sidebar {
-        height: 100vh;
-        max-height: 100vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
         background-color: var(--ifm-background-color) !important;
-    }
-
-    .navbar-sidebar .navbar-sidebar__items {
-        min-height: auto;
-        padding-bottom: 2rem;
-        width: 100%;
-    }
-
-    /* Ensure docs sidebar is visible on docs pages */
-    .navbar-sidebar .theme-doc-sidebar-container,
-    .navbar-sidebar .theme-doc-sidebar-menu {
-        display: block !important;
-        visibility: visible !important;
-        width: 100%;
     }
 
     /* Clean sidebar brand header */
     .navbar-sidebar__brand {
-        display: flex !important;
-        align-items: center;
         padding: 0.75rem 1rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-sidebar__close {
-        display: flex !important;
-        visibility: visible !important;
     }
 }
 
