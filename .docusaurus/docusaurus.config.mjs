@@ -84,6 +84,13 @@ export default {
     ]
   ],
   "themeConfig": {
+    "docs": {
+      "sidebar": {
+        "hideable": true,
+        "autoCollapseCategories": false
+      },
+      "versionPersistence": "localStorage"
+    },
     "image": "og-image.png",
     "metadata": [
       {
@@ -590,13 +597,6 @@ export default {
           }
         }
       ]
-    },
-    "docs": {
-      "versionPersistence": "localStorage",
-      "sidebar": {
-        "hideable": false,
-        "autoCollapseCategories": false
-      }
     },
     "blog": {
       "sidebar": {
