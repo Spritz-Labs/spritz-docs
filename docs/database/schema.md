@@ -2,7 +2,7 @@
 
 ## Overview
 
-Spritz uses **Supabase (PostgreSQL)** with the **pgvector** extension for vector similarity search.
+Spritz uses **PostgreSQL** with the **pgvector** extension for vector similarity search.
 
 ## Core Tables
 
@@ -369,8 +369,9 @@ CREATE POLICY "Users can access agent chats" ON shout_agent_chats
 
 ```sql
 -- Enable realtime for agents
-ALTER PUBLICATION supabase_realtime ADD TABLE shout_agents;
-ALTER PUBLICATION supabase_realtime ADD TABLE shout_streams;
+-- Enable realtime for tables
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_agents;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_streams;
 ```
 
 ## Migration Scripts

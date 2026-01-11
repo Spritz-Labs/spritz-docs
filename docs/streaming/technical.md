@@ -194,7 +194,7 @@ DELETE /api/streams/:id/viewers
 
 ```typescript
 // Track viewers in database
-await supabase
+await db
     .from("shout_stream_viewers")
     .upsert({
         stream_id: streamId,
@@ -203,7 +203,7 @@ await supabase
     });
 
 // Count active viewers
-const { count } = await supabase
+const { count } = await db
     .from("shout_stream_viewers")
     .select("*", { count: "exact", head: true })
     .eq("stream_id", streamId)
@@ -295,7 +295,7 @@ const createdAt = new Date(stream.created_at).getTime();
 const oneHourAgo = Date.now() - 60 * 60 * 1000;
 
 if (stream.status === "idle" && createdAt < oneHourAgo) {
-    await supabase
+    await db
         .from("shout_streams")
         .update({ 
             status: "ended", 

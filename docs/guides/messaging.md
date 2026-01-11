@@ -178,7 +178,7 @@ Since Waku's Store protocol has limited retention, Spritz uses a hybrid approach
 | Layer | Purpose |
 |-------|---------|
 | **Waku Store** | Short-term message history from the P2P network |
-| **Supabase** | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
+| **Spritz Database** | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
 | **localStorage** | Offline cache for instant loading |
 
 ### Summary
@@ -189,7 +189,7 @@ Since Waku's Store protocol has limited retention, Spritz uses a hybrid approach
 > - Waku Light Node with LightPush, Filter, and Store protocols
 > - Symmetric key encryption for all messages
 > - Custom Protobuf message format
-> - Hybrid persistence (Waku + Supabase) for reliable delivery
+> - Hybrid persistence (Waku + Spritz Database) for reliable delivery
 >
 > This gives full control over the UX while leveraging Waku's decentralized, censorship-resistant message relay network.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Spritz uses **Retrieval Augmented Generation (RAG)** to enhance AI agent responses with custom knowledge bases. The system uses vector embeddings stored in Supabase with pgvector for semantic search.
+Spritz uses **Retrieval Augmented Generation (RAG)** to enhance AI agent responses with custom knowledge bases. The system uses vector embeddings stored in PostgreSQL with pgvector for semantic search.
 
 ## Architecture
 
@@ -82,7 +82,7 @@ async function generateQueryEmbedding(query: string): Promise<number[] | null> {
 
 ### Similarity Search Function
 
-Supabase uses a PostgreSQL function for vector similarity search:
+The database uses a PostgreSQL function for vector similarity search:
 
 ```sql
 CREATE OR REPLACE FUNCTION match_knowledge_chunks(
@@ -125,7 +125,7 @@ async function getRAGContext(agentId: string, message: string): Promise<string |
     if (!queryEmbedding) return null;
 
     // Search for relevant chunks
-    const { data: chunks, error } = await supabase.rpc("match_knowledge_chunks", {
+    const { data: chunks, error } = await db.rpc("match_knowledge_chunks", {
         p_agent_id: agentId,
         p_query_embedding: `[${queryEmbedding.join(",")}]`,
         p_match_count: 5,
@@ -179,7 +179,7 @@ Each chunk is embedded:
 for (const chunk of chunks) {
     const embedding = await generateEmbedding(chunk.content);
     
-    await supabase.from("shout_knowledge_chunks").insert({
+    await db.from("shout_knowledge_chunks").insert({
         agent_id: agentId,
         knowledge_id: knowledgeId,
         content: chunk.content,
@@ -196,7 +196,7 @@ for (const chunk of chunks) {
 ### Step 5: Status Update
 
 ```typescript
-await supabase
+await db
     .from("shout_agent_knowledge")
     .update({
         status: "indexed",

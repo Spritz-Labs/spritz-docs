@@ -9,7 +9,6 @@ keywords:
         installation guide,
         environment variables,
         database setup,
-        Supabase,
         AI agents,
         Web3 messaging,
     ]
@@ -24,7 +23,7 @@ This guide will help you get started with Spritz, from installation to your firs
 -   **Node.js** 18+ (recommended: 20+)
 -   **npm** or **yarn** package manager
 -   **Git** for version control
--   **Supabase Account** (free tier works)
+-   **PostgreSQL Database** (managed or self-hosted)
 -   **API Keys** for:
     -   Google Gemini (for AI agents)
     -   Huddle01 (for video calls)
@@ -64,10 +63,9 @@ cp .env.example .env.local
 ### Required Environment Variables
 
 ```env
-# Supabase (Database & Realtime)
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+# Database
+DATABASE_URL=your_postgres_connection_string
+NEXT_PUBLIC_DATABASE_URL=your_public_database_url
 
 # WalletConnect / Reown
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
@@ -162,7 +160,7 @@ NEXT_PUBLIC_WORLD_ID_ACTION=your_action_name
 
 4. Run database migrations:
 
-See the [Database Setup](#database-setup) section below for migration scripts. Run these in your Supabase SQL editor.
+See the [Database Setup](#database-setup) section below for migration scripts. Run these in your PostgreSQL database.
 
 5. Start the development server:
 
@@ -176,7 +174,7 @@ Visit `http://localhost:3000` to see the app.
 
 ## Database Setup
 
-Spritz uses Supabase with several tables. Run these migrations in your Supabase SQL editor. See the `/migrations` folder in the repository for complete migration scripts.
+Spritz uses PostgreSQL with several tables. Run these migrations in your database. See the `/migrations` folder in the repository for complete migration scripts.
 
 ### Enable Extensions
 
@@ -189,8 +187,8 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 ### Run Migrations
 
-1. Go to your Supabase project dashboard
-2. Navigate to SQL Editor
+1. Connect to your PostgreSQL database
+2. Open your SQL client or terminal
 3. Run each migration file from `/migrations` in order:
     - `agents.sql` - Core agent tables
     - `agents_x402.sql` - x402 payment configuration

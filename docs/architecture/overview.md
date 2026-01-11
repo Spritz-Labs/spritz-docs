@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-Spritz is built as a **Next.js 16** application using the App Router, with a **Supabase** backend for data persistence and real-time features.
+Spritz is built as a **Next.js 16** application using the App Router, with a **PostgreSQL** backend for data persistence and real-time features.
 
 ## High-Level Architecture
 
@@ -27,8 +27,8 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **S
         ┌───────────────────┼───────────────────┐
         ▼                   ▼                   ▼
 ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│  Supabase    │   │  Livepeer    │   │  Google      │
-│  PostgreSQL  │   │  Streaming   │   │  Gemini AI   │
+│   Spritz     │   │  Livepeer    │   │  Google      │
+│   Database   │   │  Streaming   │   │  Gemini AI   │
 │  + pgvector  │   │  + WebRTC    │   │  + Embeddings│
 └──────────────┘   └──────────────┘   └──────────────┘
         │
@@ -55,10 +55,10 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **S
 
 ### Backend
 
-- **Database**: Supabase (PostgreSQL 15+)
+- **Database**: PostgreSQL 15+ with pgvector
 - **Vector Search**: pgvector extension
-- **Realtime**: Supabase Realtime subscriptions
-- **Storage**: Supabase Storage (for file uploads)
+- **Realtime**: WebSocket subscriptions
+- **Storage**: Cloud storage (for file uploads)
 
 ### AI & ML
 
@@ -210,7 +210,7 @@ Viewer
 
 ### Authorization
 
-- **Row Level Security (RLS)**: Supabase RLS policies
+- **Row Level Security (RLS)**: PostgreSQL RLS policies
 - **Ownership Checks**: Verify resource ownership
 - **Visibility Controls**: Private/Friends/Public access
 
@@ -226,7 +226,7 @@ Viewer
 ### Horizontal Scaling
 
 - **Stateless API**: Next.js API routes are stateless
-- **Database**: Supabase handles connection pooling
+- **Database**: Connection pooling via PgBouncer
 - **CDN**: Livepeer CDN for streaming content
 
 ### Caching Strategy
@@ -248,9 +248,9 @@ Viewer
 ### Production Stack
 
 - **Hosting**: Vercel (Next.js)
-- **Database**: Supabase Cloud
+- **Database**: Managed PostgreSQL
 - **CDN**: Vercel Edge Network + Livepeer CDN
-- **Monitoring**: Vercel Analytics + Supabase Logs
+- **Monitoring**: Vercel Analytics
 
 ### Environment Variables
 

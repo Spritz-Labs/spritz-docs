@@ -104,8 +104,8 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 | **Livestreaming**       | Livepeer (WebRTC/WHIP + HLS)    |
 | **Messaging**           | Waku Protocol (Logos)           |
 | **AI/LLM**              | Google Gemini API               |
-| **Vector Search**       | Supabase pgvector               |
-| **Database**            | Supabase (Postgres + Realtime)  |
+| **Vector Search**       | PostgreSQL pgvector             |
+| **Database**            | PostgreSQL + Realtime           |
 | **Push Notifications**  | Web Push API                    |
 | **Payments**            | x402 Protocol (Coinbase)        |
 
