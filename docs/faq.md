@@ -68,7 +68,7 @@ Yes! Friends who are live show a red "LIVE" badge. Tap their avatar to join the 
 
 ### How does messaging work?
 
-Spritz uses Waku (part of the Logos technology stack) for decentralized peer-to-peer messaging. Messages are sent directly between users without a central server.
+Spritz uses [Logos Messaging](https://logos.co/tech-stack) for decentralized peer-to-peer messaging. Messages are sent directly between users without a central server.
 
 ### Is messaging encrypted?
 
@@ -145,7 +145,7 @@ Yes! Spritz supports both Ethereum (SIWE) and Solana (SIWS) authentication.
 -   **Wallet Connection**: Reown AppKit (WalletConnect)
 -   **Video Calls**: Huddle01 SDK
 -   **Livestreaming**: Livepeer (WebRTC/WHIP + HLS)
--   **Messaging**: Waku Protocol (Logos)
+-   **Messaging**: [Logos Messaging](https://logos.co/tech-stack)
 -   **AI/LLM**: Google Gemini API
 -   **Vector Search**: PostgreSQL pgvector
 -   **Database**: PostgreSQL + Realtime

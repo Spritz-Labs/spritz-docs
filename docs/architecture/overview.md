@@ -36,7 +36,7 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 ┌─────────────────────────────────────────────────────────────┐
 │                    External Services                       │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│  │Waku (Logos)  │  │  Huddle01    │  │  x402        │    │
+│  │Logos         │  │  Huddle01    │  │  x402        │    │
 │  │  Messaging   │  │  Video Calls │  │  Payments    │    │
 │  └──────────────┘  └──────────────┘  └──────────────┘    │
 └─────────────────────────────────────────────────────────────┘
@@ -82,9 +82,9 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 
 ### Messaging
 
-- **Protocol**: Waku Protocol (Logos)
+- **Protocol**: [Logos Messaging](https://logos.co/tech-stack)
 - **Encryption**: Symmetric key encryption (AES-GCM)
-- **Transport**: Peer-to-peer relay network via Waku Light Node
+- **Transport**: Peer-to-peer relay network via Logos Messaging Light Node
 
 ### Payments
 
@@ -216,7 +216,7 @@ Viewer
 
 ### Data Protection
 
-- **Encryption**: Symmetric key (AES-GCM) for Waku messages
+- **Encryption**: Symmetric key (AES-GCM) for Logos Messaging
 - **HTTPS**: All API communication
 - **Input Validation**: Sanitize all user inputs
 - **Rate Limiting**: Prevent abuse

@@ -1,11 +1,11 @@
 # Messaging Guide
 
-Spritz uses the **Waku Protocol** for decentralized, peer-to-peer messaging with end-to-end encryption.
+Spritz uses **[Logos Messaging](https://logos.co/tech-stack)** for decentralized, peer-to-peer messaging with end-to-end encryption.
 
 ## Overview
 
 Messaging in Spritz is fully decentralized:
-- **No Central Server**: Messages are relayed through the Waku network
+- **No Central Server**: Messages are relayed through the Logos Messaging network
 - **End-to-End Encrypted**: All messages are encrypted before transmission
 - **Peer-to-Peer**: Direct communication between users
 - **Censorship Resistant**: No single point of failure
@@ -19,7 +19,7 @@ One-on-one conversations with friends:
 1. Open the chat modal from a friend's profile
 2. Type your message
 3. Press Enter to send
-4. Messages are encrypted and delivered via Waku
+4. Messages are encrypted and delivered via Logos Messaging
 
 ### Group Chats
 
@@ -93,7 +93,7 @@ When you share a URL, Spritz automatically generates a rich preview:
 
 Track message delivery:
 - **Sending**: Message is being encrypted and sent
-- **Sent**: Message delivered to Waku network
+- **Sent**: Message delivered to Logos Messaging network
 - **Delivered**: Message received by recipient
 - **Read**: Message has been read (if enabled)
 
@@ -108,9 +108,9 @@ Search through your message history:
 
 ### Architecture Overview
 
-Spritz uses a **bespoke implementation built directly on top of the Waku SDK** - not using any high-level "chat SDK". It's a custom messaging layer built from scratch using the core Waku protocols (part of the [Logos](https://logos.co/) technology stack).
+Spritz uses a **bespoke implementation built directly on top of the [Logos Messaging](https://logos.co/tech-stack) SDK** - not using any high-level "chat SDK". It's a custom messaging layer built from scratch using the core Logos Messaging protocols.
 
-### Waku Packages Used
+### Logos Messaging Packages Used
 
 ```json
 {
@@ -122,7 +122,7 @@ Spritz uses a **bespoke implementation built directly on top of the Waku SDK** -
 
 ### Light Node Architecture
 
-Spritz runs a Waku Light Node in the browser that connects to the Waku network:
+Spritz runs a Logos Messaging Light Node in the browser that connects to the Logos Messaging network:
 
 ```typescript
 const node = await wakuSdk.createLightNode({
@@ -160,7 +160,7 @@ Uses **symmetric key encryption (AES-GCM)**:
 
 - **DM keys** are derived deterministically from both wallet addresses using SHA-256
 - **Group keys** are randomly generated and shared with members
-- All messages are encrypted before being sent to Waku
+- All messages are encrypted before being sent to Logos Messaging
 
 ### Content Topics
 
@@ -173,25 +173,25 @@ Deterministic topic naming for routing:
 
 ### Hybrid Persistence
 
-Since Waku's Store protocol has limited retention, Spritz uses a hybrid approach:
+Since Logos Messaging's Store protocol has limited retention, Spritz uses a hybrid approach:
 
 | Layer | Purpose |
 |-------|---------|
-| **Waku Store** | Short-term message history from the P2P network |
+| **Logos Messaging Store** | Short-term message history from the P2P network |
 | **Spritz Database** | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
 | **localStorage** | Offline cache for instant loading |
 
 ### Summary
 
-> Spritz uses a bespoke implementation built directly on the Waku SDK (the low-level Logos messaging primitives). It's NOT using the newer "Waku Chat SDK" or any pre-built chat solution.
+> Spritz uses a bespoke implementation built directly on the [Logos Messaging](https://logos.co/tech-stack) SDK. It's NOT using any pre-built chat solution.
 >
 > The implementation uses:
-> - Waku Light Node with LightPush, Filter, and Store protocols
+> - Logos Messaging Light Node with LightPush, Filter, and Store protocols
 > - Symmetric key encryption for all messages
 > - Custom Protobuf message format
-> - Hybrid persistence (Waku + Spritz Database) for reliable delivery
+> - Hybrid persistence (Logos Messaging + Spritz Database) for reliable delivery
 >
-> This gives full control over the UX while leveraging Waku's decentralized, censorship-resistant message relay network.
+> This gives full control over the UX while leveraging Logos Messaging's decentralized, censorship-resistant message relay network.
 
 ## Best Practices
 
@@ -199,20 +199,20 @@ Since Waku's Store protocol has limited retention, Spritz uses a hybrid approach
 2. **Backup Keys**: Keep your encryption keys safe
 3. **Respect Privacy**: Don't share private conversations
 4. **Report Abuse**: Report inappropriate content
-5. **Network Status**: Check Waku connection status
+5. **Network Status**: Check Logos Messaging connection status
 
 ## Troubleshooting
 
 ### Messages Not Sending
 
-- Check Waku connection status
+- Check Logos Messaging connection status
 - Verify recipient is online
 - Check network connectivity
 - Try refreshing the connection
 
 ### Messages Not Receiving
 
-- Verify you're connected to Waku
+- Verify you're connected to Logos Messaging
 - Check if sender is online
 - Wait a few moments (network propagation delay)
 - Refresh the chat

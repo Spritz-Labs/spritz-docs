@@ -127,8 +127,8 @@ All API responses follow a consistent format:
 
 ### Friends
 
-- `GET /api/friends` - List friends (via Waku, not API)
-- Friend requests are handled via Waku messaging
+- `GET /api/friends` - List friends (via Logos Messaging, not API)
+- Friend requests are handled via Logos Messaging
 
 ### Channels
 

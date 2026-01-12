@@ -32,7 +32,7 @@ const FeatureList: FeatureItem[] = [
     title: '💬 Decentralized Messaging',
     description: (
       <>
-        Peer-to-peer messaging powered by Waku. No central server required.
+        Peer-to-peer messaging powered by Logos Messaging. No central server required.
         End-to-end encrypted communication.
       </>
     ),

@@ -23,7 +23,7 @@ Complete guide to all Spritz documentation.
 ## 📚 User Guides
 
 ### Communication
-- **[Messaging](/docs/guides/messaging)**: Decentralized messaging with Waku
+- **[Messaging](/docs/guides/messaging)**: Decentralized messaging with [Logos Messaging](https://logos.co/tech-stack)
 - **[Video Calls](/docs/guides/video-calls)**: HD video and voice calls
 - **[Groups](/docs/guides/groups)**: Group chats and calls
 - **[Channels](/docs/guides/channels)**: Public community channels

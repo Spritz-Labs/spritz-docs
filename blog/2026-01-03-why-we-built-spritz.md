@@ -48,7 +48,7 @@ Spritz is built on three core principles that we believe are essential for the f
 
 Spritz doesn't rely on a single server or company. Instead, we use decentralized protocols:
 
-- **Waku Protocol** for peer-to-peer messaging—your messages travel directly between users, not through our servers
+- **[Logos Messaging](https://logos.co/tech-stack)** for peer-to-peer messaging—your messages travel directly between users, not through our servers
 - **Web3 Authentication** using Sign-In with Ethereum (SIWE) and Sign-In with Solana (SIWS)—you own your identity
 - **Blockchain-based Payments** via x402 protocol—monetize your content without platform fees
 - **Distributed Storage** for content and media
@@ -71,7 +71,7 @@ This doesn't mean we're creating a lawless platform. Users can still block, repo
 Spritz is built on open principles:
 
 - **Open Source**: The entire codebase is open source under the PolyForm Noncommercial License
-- **Open Protocols**: We use open standards like Waku, WebRTC, and x402 that anyone can implement
+- **Open Protocols**: We use open standards like [Logos Messaging](https://logos.co/tech-stack), WebRTC, and x402 that anyone can implement
 - **Open Documentation**: Complete API documentation, architecture guides, and technical deep dives
 - **Open Development**: Community contributions, feedback, and improvements are welcome
 
