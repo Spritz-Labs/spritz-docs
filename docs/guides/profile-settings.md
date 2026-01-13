@@ -61,14 +61,16 @@ Connect your social profiles:
 
 ### View Balances
 
-See your token balances across supported chains:
+See your token balances across 7 supported EVM chains:
 
 1. Go to Settings → Wallet
 2. View balances for:
-   - ETH (Ethereum, Base, Arbitrum, Optimism)
-   - USDC
-   - Other supported tokens
+   - ETH, USDC, and other tokens
+   - Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain
 3. Switch between networks to see chain-specific balances
+4. **Trusted Tokens**: Spam tokens are automatically filtered
+
+**Powered by The Graph** for real-time token data.
 
 ### Transaction History
 
@@ -99,12 +101,25 @@ Purchase crypto directly with fiat currency:
 
 ### Smart Wallet
 
-If you signed in with a passkey, you have a Smart Account powered by Safe:
+Your wallet type depends on how you signed in:
 
-1. **Account Abstraction**: No need to manage gas
-2. **Gasless Transactions**: Sponsored transactions where available
-3. **Recovery**: Recover access via email if passkey is lost
-4. **Multi-chain**: Same address across supported chains
+| Auth Method | Wallet Owner | How to Sign | Passkey Required? |
+|-------------|--------------|-------------|-------------------|
+| **EVM Wallet** | Your wallet EOA | Connected wallet | No |
+| **Passkey** | Passkey signer | Your passkey | Built-in |
+| **Email** | Passkey signer | Your passkey | Must create |
+| **World ID** | Passkey signer | Your passkey | Must create |
+| **Alien ID** | Passkey signer | Your passkey | Must create |
+| **Solana** | Passkey signer | Your passkey | Must create |
+
+**Smart Account Features:**
+
+- **Same Address Everywhere**: One address across all 7 EVM chains
+- **Gas Sponsorship**: Free transactions on L2s (Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain)
+- **ERC-20 Gas**: Pay gas in USDC on Ethereum mainnet (no ETH needed)
+- **Passkey Signing**: Sign with Face ID, Touch ID, or Windows Hello
+
+> ⚠️ **Important for Email/Digital ID users:** Your passkey controls your wallet. If you delete your passkey, you will lose access to any funds. Use a synced passkey (iCloud Keychain, Google Password Manager) for backup.
 
 ## Account Settings
 

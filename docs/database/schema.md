@@ -316,11 +316,18 @@ CREATE TABLE shout_channel_messages (
     sender_address TEXT NOT NULL,
     content TEXT NOT NULL,
     message_type TEXT DEFAULT 'text',
+    
+    -- Pinned messages (admin feature)
+    is_pinned BOOLEAN DEFAULT false,
+    pinned_by TEXT,
+    pinned_at TIMESTAMPTZ,
+    
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_channel_messages_channel ON shout_channel_messages(channel_id);
 CREATE INDEX idx_channel_messages_created ON shout_channel_messages(created_at DESC);
+CREATE INDEX idx_channel_messages_pinned ON shout_channel_messages(channel_id, is_pinned) WHERE is_pinned = true;
 ```
 
 ## Calendar & Scheduling Tables
@@ -665,6 +672,7 @@ All migration scripts are located in `/migrations` directory:
 - `public_channels.sql` - Public channels system
 - `chat_enhancements.sql` - Typing status, read receipts, reactions
 - `channel_chat_enhancements.sql` - Channel reactions
+- `pinned_messages.sql` - Admin pinned messages in channels
 
 ### Streaming & Calls
 - `call_history.sql` - Voice/video call history

@@ -39,8 +39,22 @@ Public channels are:
 
 - Send messages to all channel members
 - Share links and media
-- React to messages
+- React to messages with emojis
 - Reply in threads (coming soon)
+
+### Pinned Messages
+
+Admins can pin important messages to the top of the channel:
+
+- **Pin Messages**: Admins can pin any message for visibility
+- **View Pinned**: Pinned messages appear at the top of the chat
+- **Unpin**: Admins can unpin messages when no longer relevant
+
+Pinned messages are great for:
+- Important announcements
+- Channel rules and guidelines
+- Frequently asked questions
+- Event information
 
 ### Channel Info
 
@@ -112,6 +126,26 @@ POST /api/channels/:id/messages
   "userAddress": "0x...",
   "content": "Message text",
   "type": "text"
+}
+```
+
+### Pin Message (Admin Only)
+
+```typescript
+POST /api/channels/:id/messages/pin
+{
+  "messageId": "uuid",
+  "action": "pin"
+}
+```
+
+### Unpin Message (Admin Only)
+
+```typescript
+POST /api/channels/:id/messages/pin
+{
+  "messageId": "uuid",
+  "action": "unpin"
 }
 ```
 

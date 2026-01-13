@@ -63,7 +63,7 @@ High-quality video and voice calls powered by Huddle01. Support for group calls 
 
 ### 🔐 Authentication
 
--   **Multi-Chain**: Support for Ethereum, Base, and Solana wallets
+-   **Multi-Chain**: Support for 7 EVM chains (Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain) + Solana
 -   **SIWE/SIWS**: Sign-In with Ethereum or Solana
 -   **Passkeys**: Passwordless login with biometrics (creates a Smart Account)
 -   **Email Login**: Sign in with just your email address
@@ -115,6 +115,7 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 | **AI/LLM**              | Google Gemini API               |
 | **Vector Search**       | PostgreSQL pgvector             |
 | **Database**            | PostgreSQL + Realtime           |
+| **Token Data**          | The Graph Token API             |
 | **Push Notifications**  | Web Push API                    |
 | **Payments**            | x402 Protocol (Coinbase)        |
 | **Fiat Onramp**         | Coinbase Pay                    |

@@ -103,7 +103,18 @@ x402 is a protocol for micropayments on APIs. It allows you to charge users per 
 
 ### Which networks are supported?
 
-Currently supported networks are **Base Sepolia** (testnet) and **Base** (mainnet). Ethereum support may be added in the future.
+Spritz supports **7 EVM chains**:
+- Ethereum Mainnet
+- Base
+- Arbitrum
+- Optimism
+- Polygon
+- BNB Chain
+- Unichain
+
+Plus **Solana** for wallet authentication.
+
+For x402 payments, **Base** and **Base Sepolia** (testnet) are currently supported.
 
 ### How do I receive payments?
 

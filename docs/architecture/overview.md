@@ -59,6 +59,7 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 - **Vector Search**: pgvector extension
 - **Realtime**: WebSocket subscriptions
 - **Storage**: Cloud storage (for file uploads)
+- **Token Data**: The Graph Token API (balances, transactions, spam filtering)
 
 ### AI & ML
 
