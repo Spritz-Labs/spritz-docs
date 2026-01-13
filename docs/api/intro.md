@@ -124,6 +124,30 @@ All API responses follow a consistent format:
 - `POST /api/auth/verify` - Verify SIWE signature
 - `GET /api/auth/verify-solana` - Verify SIWS signature
 - `POST /api/auth/verify-solana` - Verify SIWS signature
+- `GET /api/auth/session` - Get current session
+- `POST /api/auth/logout` - Logout and clear session
+- `POST /api/auth/world-id` - Verify World ID proof
+- `POST /api/auth/alien-id` - Verify Alien ID
+
+### Passkey Authentication
+
+- `POST /api/passkey/register/options` - Get registration options
+- `POST /api/passkey/register/verify` - Verify registration
+- `POST /api/passkey/login/options` - Get login options
+- `POST /api/passkey/login/verify` - Verify login
+- `GET /api/passkey/credentials` - List user's passkeys
+- `DELETE /api/passkey/credential` - Remove a passkey
+
+### Wallet
+
+- `GET /api/wallet/balances` - Get token balances
+- `GET /api/wallet/transactions` - Get transaction history
+- `POST /api/wallet/smart-wallet` - Get/create smart wallet address
+
+### Username
+
+- `GET /api/username` - Get current username
+- `POST /api/username` - Claim or update username
 
 ### Friends
 

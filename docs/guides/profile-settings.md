@@ -57,6 +57,55 @@ Connect your social profiles:
    - Lens Protocol
 4. Links appear on your profile
 
+## Wallet Features
+
+### View Balances
+
+See your token balances across supported chains:
+
+1. Go to Settings → Wallet
+2. View balances for:
+   - ETH (Ethereum, Base, Arbitrum, Optimism)
+   - USDC
+   - Other supported tokens
+3. Switch between networks to see chain-specific balances
+
+### Transaction History
+
+View your past transactions:
+
+1. Go to Settings → Wallet → Transactions
+2. See all transactions including:
+   - Sent/received transfers
+   - x402 payments
+   - Smart account operations
+3. Click any transaction for details on block explorer
+
+### Buy Crypto (Coinbase Onramp)
+
+Purchase crypto directly with fiat currency:
+
+1. Go to Settings → Wallet → Buy Crypto
+2. Click "Buy with Card"
+3. Select asset (ETH, USDC, etc.)
+4. Enter amount in USD
+5. Complete purchase via Coinbase Pay
+6. Funds arrive in your wallet
+
+**Supported:**
+- Credit/debit cards
+- Bank transfers (ACH)
+- Apple Pay / Google Pay
+
+### Smart Wallet
+
+If you signed in with a passkey, you have a Smart Account powered by Safe:
+
+1. **Account Abstraction**: No need to manage gas
+2. **Gasless Transactions**: Sponsored transactions where available
+3. **Recovery**: Recover access via email if passkey is lost
+4. **Multi-chain**: Same address across supported chains
+
 ## Account Settings
 
 ### Verification
@@ -124,6 +173,19 @@ Enable browser push notifications:
 5. Username updated
 
 ## API Reference
+
+### Wallet Endpoints
+
+```typescript
+// Get token balances
+GET /api/wallet/balances
+
+// Get transaction history
+GET /api/wallet/transactions
+
+// Get/create smart wallet address
+POST /api/wallet/smart-wallet
+```
 
 ### Get User Profile
 

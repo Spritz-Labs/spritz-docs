@@ -65,8 +65,17 @@ High-quality video and voice calls powered by Huddle01. Support for group calls 
 
 -   **Multi-Chain**: Support for Ethereum, Base, and Solana wallets
 -   **SIWE/SIWS**: Sign-In with Ethereum or Solana
--   **Passkeys**: Passwordless login with biometrics
+-   **Passkeys**: Passwordless login with biometrics (creates a Smart Account)
+-   **Email Login**: Sign in with just your email address
+-   **Digital ID**: Verify with World ID or Alien ID
 -   **Multi-Wallet**: Support for 300+ wallets via Reown
+
+### 💳 Wallet Features
+
+-   **Token Balances**: View balances across supported chains
+-   **Transaction History**: See all your past transactions
+-   **Buy Crypto**: Purchase crypto with fiat via Coinbase Onramp
+-   **Smart Accounts**: ERC-4337 account abstraction with Safe
 
 ### 👥 Social Features
 
@@ -108,6 +117,8 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 | **Database**            | PostgreSQL + Realtime           |
 | **Push Notifications**  | Web Push API                    |
 | **Payments**            | x402 Protocol (Coinbase)        |
+| **Fiat Onramp**         | Coinbase Pay                    |
+| **Digital Identity**    | World ID, Alien ID              |
 
 ## Documentation Structure
 

@@ -224,6 +224,277 @@ CREATE INDEX idx_favorites_user ON shout_agent_favorites(user_address);
 CREATE INDEX idx_favorites_agent ON shout_agent_favorites(agent_id);
 ```
 
+## Group Chat Tables
+
+### `shout_groups`
+
+Group configurations.
+
+```sql
+CREATE TABLE shout_groups (
+    id TEXT PRIMARY KEY,  -- Group ID (uuid-like string)
+    name TEXT NOT NULL,
+    created_by TEXT NOT NULL,  -- Creator's wallet address
+    symmetric_key TEXT NOT NULL,  -- Encrypted symmetric key for the group
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_groups_created_by ON shout_groups(created_by);
+```
+
+### `shout_group_members`
+
+Group membership.
+
+```sql
+CREATE TABLE shout_group_members (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    group_id TEXT NOT NULL REFERENCES shout_groups(id) ON DELETE CASCADE,
+    member_address TEXT NOT NULL,  -- Member's wallet address (lowercase)
+    joined_at TIMESTAMPTZ DEFAULT NOW(),
+    role TEXT DEFAULT 'member',  -- 'admin' or 'member'
+    UNIQUE(group_id, member_address)
+);
+
+CREATE INDEX idx_group_members_group ON shout_group_members(group_id);
+CREATE INDEX idx_group_members_member ON shout_group_members(member_address);
+```
+
+## Public Channel Tables
+
+### `shout_public_channels`
+
+Public channel configurations.
+
+```sql
+CREATE TABLE shout_public_channels (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    emoji TEXT DEFAULT '💬',
+    category TEXT DEFAULT 'general',
+    creator_address TEXT,
+    is_official BOOLEAN DEFAULT false,
+    member_count INTEGER DEFAULT 0,
+    message_count INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_public_channels_category ON shout_public_channels(category);
+```
+
+### `shout_channel_members`
+
+Channel membership.
+
+```sql
+CREATE TABLE shout_channel_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    channel_id UUID NOT NULL REFERENCES shout_public_channels(id) ON DELETE CASCADE,
+    user_address TEXT NOT NULL,
+    joined_at TIMESTAMPTZ DEFAULT NOW(),
+    notifications_muted BOOLEAN DEFAULT false,
+    last_read_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(channel_id, user_address)
+);
+
+CREATE INDEX idx_channel_members_user ON shout_channel_members(user_address);
+CREATE INDEX idx_channel_members_channel ON shout_channel_members(channel_id);
+```
+
+### `shout_channel_messages`
+
+Public channel messages (unencrypted).
+
+```sql
+CREATE TABLE shout_channel_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    channel_id UUID NOT NULL REFERENCES shout_public_channels(id) ON DELETE CASCADE,
+    sender_address TEXT NOT NULL,
+    content TEXT NOT NULL,
+    message_type TEXT DEFAULT 'text',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_channel_messages_channel ON shout_channel_messages(channel_id);
+CREATE INDEX idx_channel_messages_created ON shout_channel_messages(created_at DESC);
+```
+
+## Calendar & Scheduling Tables
+
+### `shout_calendar_connections`
+
+OAuth connections to calendar providers.
+
+```sql
+CREATE TABLE shout_calendar_connections (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    wallet_address TEXT NOT NULL,
+    provider TEXT NOT NULL DEFAULT 'google',
+    access_token TEXT NOT NULL,
+    refresh_token TEXT,
+    token_expires_at TIMESTAMPTZ,
+    calendar_id TEXT,
+    calendar_email TEXT,
+    is_active BOOLEAN DEFAULT true,
+    last_sync_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(wallet_address, provider)
+);
+
+CREATE INDEX idx_calendar_connections_wallet ON shout_calendar_connections(wallet_address);
+```
+
+### `shout_availability_windows`
+
+User-defined availability windows for scheduling.
+
+```sql
+CREATE TABLE shout_availability_windows (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    wallet_address TEXT NOT NULL,
+    name TEXT NOT NULL,
+    day_of_week INTEGER NOT NULL CHECK (day_of_week >= 0 AND day_of_week <= 6),
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    timezone TEXT NOT NULL DEFAULT 'UTC',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_availability_windows_wallet ON shout_availability_windows(wallet_address);
+CREATE INDEX idx_availability_windows_day ON shout_availability_windows(day_of_week);
+```
+
+### `shout_scheduled_calls`
+
+Scheduled calls/meetings between users.
+
+```sql
+CREATE TABLE shout_scheduled_calls (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    scheduler_wallet_address TEXT NOT NULL,
+    recipient_wallet_address TEXT NOT NULL,
+    scheduled_at TIMESTAMPTZ NOT NULL,
+    duration_minutes INTEGER DEFAULT 30,
+    title TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    payment_required BOOLEAN DEFAULT false,
+    payment_amount TEXT,
+    payment_token TEXT,
+    payment_status TEXT DEFAULT 'pending',
+    calendar_event_id TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_scheduled_calls_scheduler ON shout_scheduled_calls(scheduler_wallet_address);
+CREATE INDEX idx_scheduled_calls_recipient ON shout_scheduled_calls(recipient_wallet_address);
+CREATE INDEX idx_scheduled_calls_scheduled_at ON shout_scheduled_calls(scheduled_at);
+```
+
+## Call History
+
+### `shout_call_history`
+
+Voice and video call history.
+
+```sql
+CREATE TABLE shout_call_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    caller_address TEXT NOT NULL,
+    callee_address TEXT NOT NULL,
+    call_type TEXT NOT NULL CHECK (call_type IN ('audio', 'video')),
+    status TEXT NOT NULL CHECK (status IN ('completed', 'missed', 'declined', 'failed')),
+    started_at TIMESTAMPTZ DEFAULT NOW(),
+    ended_at TIMESTAMPTZ,
+    duration_seconds INTEGER DEFAULT 0,
+    channel_name TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_call_history_caller ON shout_call_history(caller_address);
+CREATE INDEX idx_call_history_callee ON shout_call_history(callee_address);
+CREATE INDEX idx_call_history_created ON shout_call_history(created_at DESC);
+```
+
+## Authentication Tables
+
+### `passkey_credentials`
+
+WebAuthn/passkey credential storage.
+
+```sql
+CREATE TABLE passkey_credentials (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    credential_id TEXT NOT NULL UNIQUE,
+    public_key TEXT NOT NULL,
+    counter BIGINT NOT NULL DEFAULT 0,
+    user_address TEXT NOT NULL,
+    display_name TEXT,
+    aaguid TEXT,
+    transports TEXT[],
+    backed_up BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    last_used_at TIMESTAMPTZ,
+    device_info JSONB
+);
+
+CREATE INDEX idx_passkey_credentials_user_address ON passkey_credentials(user_address);
+CREATE INDEX idx_passkey_credentials_credential_id ON passkey_credentials(credential_id);
+```
+
+### `passkey_challenges`
+
+Active WebAuthn challenges (short-lived).
+
+```sql
+CREATE TABLE passkey_challenges (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    challenge TEXT NOT NULL UNIQUE,
+    ceremony_type TEXT NOT NULL CHECK (ceremony_type IN ('registration', 'authentication')),
+    user_address TEXT,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_passkey_challenges_challenge ON passkey_challenges(challenge);
+```
+
+## Bug Reports
+
+### `shout_bug_reports`
+
+User-submitted bug reports.
+
+```sql
+CREATE TABLE shout_bug_reports (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('Agents', 'Friends', 'Calls', 'Chats', 'Rooms', 'Livestream', 'Settings', 'Configuration', 'Other')),
+    description TEXT NOT NULL,
+    replication_steps TEXT,
+    status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
+    admin_notes TEXT,
+    resolved_by TEXT,
+    resolved_at TIMESTAMPTZ,
+    github_issue_url TEXT,
+    github_issue_number INTEGER,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_bug_reports_user_address ON shout_bug_reports(user_address);
+CREATE INDEX idx_bug_reports_category ON shout_bug_reports(category);
+CREATE INDEX idx_bug_reports_status ON shout_bug_reports(status);
+```
+
 ## Streaming Tables
 
 ### `shout_streams`
@@ -368,23 +639,52 @@ CREATE POLICY "Users can access agent chats" ON shout_agent_chats
 ## Realtime Subscriptions
 
 ```sql
--- Enable realtime for agents
--- Enable realtime for tables
+-- Enable realtime for key tables
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_agents;
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_streams;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_groups;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_group_members;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_channel_messages;
 ```
 
 ## Migration Scripts
 
 All migration scripts are located in `/migrations` directory:
 
-- `agents.sql` - Agent tables
+### Core Tables
+- `agents.sql` - Agent configurations and chat history
 - `agents_x402.sql` - x402 payment fields
 - `agents_mcp.sql` - MCP server configuration
 - `agents_tags.sql` - Tags for discovery
-- `embeddings.sql` - Vector search setup
-- `streams.sql` - Streaming tables
-- And more...
+- `agents_api_tools.sql` - Custom API tools
+- `embeddings.sql` - Vector search setup (pgvector)
+- `favorite_agents.sql` - Agent favorites
+
+### Communication
+- `group_chats.sql` - Group chat tables
+- `public_channels.sql` - Public channels system
+- `chat_enhancements.sql` - Typing status, read receipts, reactions
+- `channel_chat_enhancements.sql` - Channel reactions
+
+### Streaming & Calls
+- `call_history.sql` - Voice/video call history
+- `permanent_rooms.sql` - Permanent meeting rooms
+- `instant_rooms.sql` - Instant meeting rooms
+
+### Authentication
+- `passkey_credentials.sql` - WebAuthn/passkey storage
+- `email_login.sql` - Email login verification
+
+### Scheduling
+- `google_calendar.sql` - Calendar connections and availability
+- `scheduling_links.sql` - Shareable scheduling links
+- `scheduling_settings.sql` - User scheduling preferences
+
+### User Management
+- `user_analytics.sql` - User activity tracking
+- `friend_tags.sql` - Friend organization tags
+- `bug_reports.sql` - Bug report system
+- `admin_system.sql` - Admin functionality
 
 See the repository's `/migrations` folder for complete migration scripts.
 

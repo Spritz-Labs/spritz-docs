@@ -113,7 +113,38 @@ Configure your wallet address in your agent's x402 settings. Payments will be se
 
 ### Does Spritz support passkeys?
 
-Yes! You can sign in using Face ID, Touch ID, or Windows Hello. A smart account will be created automatically using Pimlico.
+Yes! You can sign in using Face ID, Touch ID, or Windows Hello. A smart account (Safe) will be created automatically using Pimlico for account abstraction. Passkeys support:
+
+- **Cross-device login**: Sign in on any device by scanning a QR code
+- **Email recovery**: Recover access if you lose your passkey
+- **Multiple passkeys**: Register multiple devices
+
+### What is a Smart Wallet?
+
+When you sign in with a passkey, Spritz creates a Safe Smart Account for you. This provides:
+
+- **No seed phrase**: Your passkey (biometrics) is your key
+- **Gasless transactions**: Sponsored where available
+- **Same address across chains**: Works on Base, Ethereum, etc.
+- **Account recovery**: Recover via verified email
+
+### Can I buy crypto in Spritz?
+
+Yes! Use the Coinbase Onramp feature to buy crypto with fiat:
+
+1. Go to Settings → Wallet → Buy Crypto
+2. Purchase with credit card, debit card, or bank transfer
+3. Supports Apple Pay and Google Pay
+4. Funds arrive directly in your wallet
+
+### What is World ID / Alien ID?
+
+These are privacy-preserving digital identity verification options:
+
+- **World ID**: Verify you're a unique human using World App (Orb verification)
+- **Alien ID**: Sign in with your Alien identity
+
+Both provide sybil resistance without revealing personal information.
 
 ### Can I connect my Google Calendar?
 

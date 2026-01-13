@@ -93,6 +93,18 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 - **Currency**: USDC
 - **Facilitator**: x402.org/facilitator
 
+### Fiat Onramp
+
+- **Provider**: Coinbase Pay
+- **Methods**: Credit/debit cards, bank transfers, Apple Pay, Google Pay
+- **Assets**: ETH, USDC, and more
+- **Chains**: Base, Ethereum, Polygon, Arbitrum, Optimism
+
+### Digital Identity
+
+- **World ID**: Privacy-preserving human verification via World App
+- **Alien ID**: SSO-based identity verification
+
 ### Authentication
 
 - **EVM Chains**: SIWE (Sign-In with Ethereum)
@@ -185,6 +197,11 @@ Viewer
 - `shout_users` - User accounts
 - `shout_friends` - Friend relationships
 - `shout_friend_requests` - Friend requests
+- `shout_groups` - Group chat configurations
+- `shout_group_members` - Group membership
+- `shout_public_channels` - Public channel configurations
+- `shout_channel_members` - Channel membership
+- `shout_channel_messages` - Channel messages
 - `shout_agents` - AI agent configurations
 - `shout_agent_chats` - Agent chat history
 - `shout_agent_knowledge` - Knowledge base URLs
@@ -192,6 +209,10 @@ Viewer
 - `shout_streams` - Livestreaming sessions
 - `shout_stream_assets` - Stream recordings
 - `shout_stream_viewers` - Active viewer tracking
+- `shout_call_history` - Voice/video call history
+- `shout_calendar_connections` - Calendar OAuth connections
+- `shout_scheduled_calls` - Scheduled meetings
+- `passkey_credentials` - WebAuthn/passkey storage
 
 ### Indexes
 
