@@ -34,9 +34,9 @@ privacy:
     description: Posts about privacy and data protection
 
 alien:
-    label: Alien.org
+    label: Alien
     permalink: /alien
-    description: Posts about Alien.org and proof of personhood
+    description: Posts about Alien and proof of personhood
 
 partnership:
     label: Partnership

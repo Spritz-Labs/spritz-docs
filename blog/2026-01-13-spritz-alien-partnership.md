@@ -1,6 +1,6 @@
 ---
 slug: spritz-alien-partnership
-title: "Spritz Chat × Alien.org: Enabling Censorship-Resistant Human Communication"
+title: "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication"
 authors: [anonymous]
 tags: [spritz, alien, partnership, censorship-resistance, privacy, decentralization, proof-of-personhood]
 ---
@@ -50,36 +50,36 @@ Spritz Chat enables peer-to-peer messaging and video calls over blockchain, remo
 
 Ethereum is maintained by thousands of nodes and over a million validators worldwide, meaning no single government or company controls the network.
 
-## Alien.org: Privacy-Preserving Proof of Personhood
+## Alien: Privacy-Preserving Proof of Personhood
 
-[Alien.org](https://alien.org) addresses the problem of human verification without compromising privacy. Its Continuous Human Verification Protocol (CHVP) allows users to prove they are human without phone numbers, government IDs, or biometric databases.
+[Alien](https://alien.org) addresses the problem of human verification without compromising privacy. Its Continuous Human Verification Protocol (CHVP) allows users to prove they are human without phone numbers, government IDs, or biometric databases.
 
-| Alien.org Capability | Benefit |
-|---------------------|---------|
+| Capability | Benefit |
+|------------|---------|
 | Proof of personhood | Distinguishes humans from bots and AI |
 | No phone numbers or IDs | Eliminates location-based blocking |
 | Continuous verification | Prevents identity reuse or spoofing |
 | Encrypted and decentralized | No central database to exploit |
 
-Alien.org prevents Sybil attacks, spam, and automated manipulation while preserving anonymity.
+Alien prevents Sybil attacks, spam, and automated manipulation while preserving anonymity.
 
 ## Why This Partnership Matters
 
-Individually, Spritz Chat and Alien.org address different parts of the problem. Together, they solve the full stack of issues that enable censorship and surveillance.
+Individually, Spritz Chat and Alien address different parts of the problem. Together, they solve the full stack of issues that enable censorship and surveillance.
 
-| Problem | Traditional Apps | Spritz Chat + Alien.org |
-|---------|-----------------|------------------------|
+| Problem | Traditional Apps | Spritz Chat + Alien |
+|---------|-----------------|---------------------|
 | Phone number dependency | Required | Not needed |
 | Central servers | Yes | No |
 | Government shutdown risk | High | Low |
 | Bot and AI abuse | Common | Prevented |
 | Privacy protection | Limited | Built-in |
 
-Alien.org ensures that only real humans participate, while Spritz Chat ensures those humans can communicate without centralized control.
+Alien ensures that only real humans participate, while Spritz Chat ensures those humans can communicate without centralized control.
 
 ## Result: Human-to-Human Communication Without Control Points
 
-By combining decentralized communication with privacy-preserving human verification, Spritz Chat and Alien.org enable users to chat and video call without exposing personal information or geographic identity.
+By combining decentralized communication with privacy-preserving human verification, Spritz Chat and Alien enable users to chat and video call without exposing personal information or geographic identity.
 
 **There is no phone number to block, no server to seize, and no centralized identity system to exploit.**
 

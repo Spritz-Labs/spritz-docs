@@ -556,6 +556,66 @@ code {
     color: var(--ifm-color-primary) !important;
 }
 
+/* ============================================
+   Tables - Enhanced Styling
+   ============================================ */
+
+.markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.markdown table th {
+    background: linear-gradient(135deg, rgba(255, 85, 0, 0.15) 0%, rgba(251, 141, 34, 0.1) 100%);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.875rem 1rem;
+    border-bottom: 2px solid var(--ifm-color-primary);
+    color: var(--ifm-heading-color);
+}
+
+.markdown table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    vertical-align: top;
+}
+
+.markdown table tr:last-child td {
+    border-bottom: none;
+}
+
+.markdown table tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.markdown table tr:hover td {
+    background: rgba(255, 85, 0, 0.05);
+}
+
+[data-theme="dark"] .markdown table {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .markdown table th {
+    background: linear-gradient(135deg, rgba(255, 85, 0, 0.2) 0%, rgba(251, 141, 34, 0.15) 100%);
+}
+
+[data-theme="dark"] .markdown table td {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .markdown table tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .markdown table tr:hover td {
+    background: rgba(255, 85, 0, 0.1);
+}
+
 /* Pagination */
 .pagination-nav__link {
     border-color: rgba(255, 85, 0, 0.2);
@@ -632,23 +692,51 @@ code {
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Tables mobile - make scrollable */
-    .table-wrapper {
+    /* Tables mobile - responsive and scrollable */
+    .markdown table {
+        display: block;
+        width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        margin: 1rem -1rem;
-        padding: 0 1rem;
+        font-size: 0.85rem;
+        border-collapse: collapse;
     }
 
-    table {
-        min-width: 100%;
-        font-size: 0.9rem;
+    .markdown table thead,
+    .markdown table tbody,
+    .markdown table tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
     }
 
-    table th,
-    table td {
-        padding: 0.5rem 0.75rem;
-        white-space: nowrap;
+    .markdown table th,
+    .markdown table td {
+        padding: 0.6rem 0.75rem;
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: top;
+        line-height: 1.4;
+    }
+
+    .markdown table th {
+        background: rgba(255, 85, 0, 0.1);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .markdown table td {
+        background: var(--ifm-background-color);
+    }
+
+    .markdown table tr:nth-child(even) td {
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    [data-theme="dark"] .markdown table tr:nth-child(even) td {
+        background: rgba(0, 0, 0, 0.05);
     }
 
     /* Buttons mobile */
