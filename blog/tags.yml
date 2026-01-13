@@ -32,3 +32,18 @@ privacy:
     label: Privacy
     permalink: /privacy
     description: Posts about privacy and data protection
+
+alien:
+    label: Alien.org
+    permalink: /alien
+    description: Posts about Alien.org and proof of personhood
+
+partnership:
+    label: Partnership
+    permalink: /partnership
+    description: Posts about Spritz partnerships and collaborations
+
+proof-of-personhood:
+    label: Proof of Personhood
+    permalink: /proof-of-personhood
+    description: Posts about human verification and anti-sybil mechanisms
