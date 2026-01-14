@@ -5,11 +5,31 @@ authors: [anonymous]
 tags: [spritz, decentralization, privacy, logos-messaging, ethereum, vitalik, censorship-resistance]
 ---
 
+Just hours ago, Vitalik Buterin declared ["The decentralized renaissance is coming"](https://x.com/VitalikButerin/status/2011325527567544393) — and called on developers to buidl decentralized. This is exactly what Spritz has been doing.
+
+<!-- truncate -->
+
+## "The Decentralized Renaissance Is Coming"
+
+In a [viral thread on X](https://x.com/VitalikButerin/status/2011325527567544393), Vitalik reflected on the original 2014 vision for Web3: permissionless, decentralized applications for finance, social media, ride sharing, and more — all built on three pillars:
+
+| Technology | Purpose |
+|------------|---------|
+| **Ethereum** | The blockchain — shared memory for applications |
+| **Whisper** | The data layer — messages that don't need consensus |
+| **Swarm** | The storage layer — long-term file access |
+
+His key message: **all of these technologies are now production-ready**.
+
+> *"Ethereum is now proof of stake. Ethereum is now scaling, it is now cheap... Whisper is now Waku (docs.waku.org), and already powers many applications... All of the prerequisites for the original web3 vision are here, in full force. Hence, it's time to buidl, and buidl decentralized."*
+
+Vitalik specifically called out that **Whisper evolved into Waku** — the protocol that Spritz is built on (now part of the [Logos](https://logos.co) technology stack).
+
+## A History of Advocacy
+
 Vitalik Buterin has been vocal about the importance of decentralized communication infrastructure. From recognizing [Waku as the successor to Whisper](https://vitalik.eth.limo/general/2023/12/28/cypherpunk.html) to donating hundreds of thousands of dollars to privacy-focused messaging projects, Ethereum's co-founder continues to champion the cypherpunk ideals that Web3 was built to realize.
 
 This vision is exactly why Spritz chose to build on [Logos Messaging](https://logos.co/tech-stack).
-
-<!-- truncate -->
 
 ## "Make Ethereum Cypherpunk Again"
 
@@ -71,6 +91,7 @@ No gatekeepers. No surveillance. No single point of failure.
 ---
 
 *References:*
+- ["The Decentralized Renaissance is Coming"](https://x.com/VitalikButerin/status/2011325527567544393) - Vitalik Buterin (Jan 2026)
 - [Make Ethereum Cypherpunk Again](https://vitalik.eth.limo/general/2023/12/28/cypherpunk.html) - Vitalik Buterin
 - [Vitalik donates to privacy messaging](https://cointelegraph.com/news/vitalik-buterin-donates-session-simplex-privacy-messaging) - Cointelegraph
 - [Logos Technology Stack](https://logos.co/tech-stack)
