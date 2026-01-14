@@ -54,7 +54,7 @@ As we highlighted in our [Spritz × Alien partnership](/blog/spritz-alien-partne
 By combining:
 - **Logos Messaging** for censorship-resistant communication
 - **Wallet-based identity** for phone number-free authentication
-- **Proof of personhood** (via [Alien](https://alien.org)) for human verification
+- **Proof of personhood** (via [World ID](https://world.org) and [Alien](https://alien.org)) for human verification
 
 ...we're building the communication infrastructure that Vitalik has been advocating for.
 
