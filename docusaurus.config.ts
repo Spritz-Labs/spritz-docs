@@ -121,7 +121,7 @@ const config: Config = {
             },
             {
                 property: "og:site_name",
-                content: "Spritz Documentation",
+                content: "Spritz",
             },
             {
                 property: "og:title",
