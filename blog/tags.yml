@@ -47,3 +47,18 @@ proof-of-personhood:
     label: Proof of Personhood
     permalink: /proof-of-personhood
     description: Posts about human verification and anti-sybil mechanisms
+
+logos-messaging:
+    label: Logos Messaging
+    permalink: /logos-messaging
+    description: Posts about Logos Messaging protocol and decentralized communication
+
+ethereum:
+    label: Ethereum
+    permalink: /ethereum
+    description: Posts about Ethereum ecosystem and technology
+
+vitalik:
+    label: Vitalik Buterin
+    permalink: /vitalik
+    description: Posts referencing Vitalik Buterin's ideas and vision
