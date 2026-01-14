@@ -150,7 +150,7 @@ const config: Config = {
             },
             {
                 property: "og:image:alt",
-                content: "Spritz Documentation - Decentralized Social Platform",
+                content: "Spritz - Censorship-Resistant Chat for Web3",
             },
             {
                 property: "og:locale",
@@ -183,7 +183,7 @@ const config: Config = {
             },
             {
                 name: "twitter:image:alt",
-                content: "Spritz Documentation - Decentralized Social Platform",
+                content: "Spritz - Censorship-Resistant Chat for Web3",
             },
             {
                 name: "application-name",
