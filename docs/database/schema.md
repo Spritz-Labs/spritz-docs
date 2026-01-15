@@ -330,6 +330,100 @@ CREATE INDEX idx_channel_messages_created ON shout_channel_messages(created_at D
 CREATE INDEX idx_channel_messages_pinned ON shout_channel_messages(channel_id, is_pinned) WHERE is_pinned = true;
 ```
 
+## Moderation System Tables
+
+### `shout_moderators`
+
+Moderators for global chat and specific channels.
+
+```sql
+CREATE TABLE shout_moderators (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL = global chat
+    granted_by TEXT NOT NULL,
+    granted_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    -- Granular permissions
+    can_pin BOOLEAN DEFAULT true,
+    can_delete BOOLEAN DEFAULT true,
+    can_mute BOOLEAN DEFAULT true,
+    can_manage_mods BOOLEAN DEFAULT false,
+    notes TEXT,
+    
+    UNIQUE(user_address, channel_id)
+);
+
+CREATE INDEX idx_moderators_user ON shout_moderators(user_address);
+CREATE INDEX idx_moderators_channel ON shout_moderators(channel_id);
+CREATE INDEX idx_moderators_global ON shout_moderators(channel_id) WHERE channel_id IS NULL;
+```
+
+### `shout_muted_users`
+
+Users muted from channels or global chat.
+
+```sql
+CREATE TABLE shout_muted_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL = global chat
+    muted_by TEXT NOT NULL,
+    muted_at TIMESTAMPTZ DEFAULT NOW(),
+    muted_until TIMESTAMPTZ, -- NULL = permanent mute
+    reason TEXT,
+    is_active BOOLEAN DEFAULT true,
+    unmuted_by TEXT,
+    unmuted_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_muted_users_address ON shout_muted_users(user_address);
+CREATE INDEX idx_muted_users_channel ON shout_muted_users(channel_id);
+CREATE INDEX idx_muted_users_active ON shout_muted_users(is_active, muted_until);
+```
+
+### `shout_moderation_log`
+
+Audit trail for all moderation actions.
+
+```sql
+CREATE TABLE shout_moderation_log (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    action_type TEXT NOT NULL, -- 'pin', 'unpin', 'delete', 'mute', 'unmute', 'promote_mod', 'demote_mod'
+    moderator_address TEXT NOT NULL,
+    target_user_address TEXT,
+    target_message_id UUID,
+    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE SET NULL,
+    reason TEXT,
+    metadata JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_mod_log_moderator ON shout_moderation_log(moderator_address);
+CREATE INDEX idx_mod_log_target_user ON shout_moderation_log(target_user_address);
+CREATE INDEX idx_mod_log_action ON shout_moderation_log(action_type);
+CREATE INDEX idx_mod_log_created ON shout_moderation_log(created_at DESC);
+```
+
+### Message Soft Delete
+
+Messages support soft deletion for moderation:
+
+```sql
+-- Added to shout_alpha_messages and shout_channel_messages
+ALTER TABLE shout_alpha_messages 
+ADD COLUMN is_deleted BOOLEAN DEFAULT false,
+ADD COLUMN deleted_by TEXT,
+ADD COLUMN deleted_at TIMESTAMPTZ,
+ADD COLUMN delete_reason TEXT;
+
+ALTER TABLE shout_channel_messages 
+ADD COLUMN is_deleted BOOLEAN DEFAULT false,
+ADD COLUMN deleted_by TEXT,
+ADD COLUMN deleted_at TIMESTAMPTZ,
+ADD COLUMN delete_reason TEXT;
+```
+
 ## Calendar & Scheduling Tables
 
 ### `shout_calendar_connections`
@@ -621,6 +715,50 @@ END;
 $$ LANGUAGE plpgsql;
 ```
 
+### Check If User Is Muted
+
+```sql
+CREATE OR REPLACE FUNCTION is_user_muted(
+    p_user_address TEXT,
+    p_channel_id UUID DEFAULT NULL
+)
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM shout_muted_users
+        WHERE user_address = LOWER(p_user_address)
+        AND (channel_id = p_channel_id OR (p_channel_id IS NULL AND channel_id IS NULL))
+        AND is_active = true
+        AND (muted_until IS NULL OR muted_until > NOW())
+    );
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### Check If User Is Moderator
+
+```sql
+CREATE OR REPLACE FUNCTION is_user_moderator(
+    p_user_address TEXT,
+    p_channel_id UUID DEFAULT NULL
+)
+RETURNS BOOLEAN AS $$
+BEGIN
+    -- Check if global admin first
+    IF EXISTS (SELECT 1 FROM shout_admins WHERE wallet_address = LOWER(p_user_address)) THEN
+        RETURN true;
+    END IF;
+    
+    -- Check moderator table
+    RETURN EXISTS (
+        SELECT 1 FROM shout_moderators
+        WHERE user_address = LOWER(p_user_address)
+        AND (channel_id = p_channel_id OR (p_channel_id IS NULL AND channel_id IS NULL))
+    );
+END;
+$$ LANGUAGE plpgsql;
+```
+
 ## Row Level Security (RLS)
 
 ### Enable RLS
@@ -652,6 +790,8 @@ ALTER PUBLICATION spritz_realtime ADD TABLE shout_streams;
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_groups;
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_group_members;
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_channel_messages;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_moderators;
+ALTER PUBLICATION spritz_realtime ADD TABLE shout_muted_users;
 ```
 
 ## Migration Scripts
@@ -693,6 +833,9 @@ All migration scripts are located in `/migrations` directory:
 - `friend_tags.sql` - Friend organization tags
 - `bug_reports.sql` - Bug report system
 - `admin_system.sql` - Admin functionality
+
+### Moderation
+- `041_moderation_system.sql` - Moderators, muted users, and audit log
 
 See the repository's `/migrations` folder for complete migration scripts.
 

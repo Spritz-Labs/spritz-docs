@@ -103,7 +103,7 @@ x402 is a protocol for micropayments on APIs. It allows you to charge users per 
 
 ### Which networks are supported?
 
-Spritz supports **7 EVM chains**:
+Spritz supports **8 EVM chains**:
 - Ethereum Mainnet
 - Base
 - Arbitrum
@@ -111,6 +111,7 @@ Spritz supports **7 EVM chains**:
 - Polygon
 - BNB Chain
 - Unichain
+- Avalanche
 
 Plus **Solana** for wallet authentication.
 

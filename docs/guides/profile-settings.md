@@ -61,12 +61,12 @@ Connect your social profiles:
 
 ### View Balances
 
-See your token balances across 7 supported EVM chains:
+See your token balances across 8 supported EVM chains:
 
 1. Go to Settings → Wallet
 2. View balances for:
    - ETH, USDC, and other tokens
-   - Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain
+   - Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche
 3. Switch between networks to see chain-specific balances
 4. **Trusted Tokens**: Spam tokens are automatically filtered
 
@@ -114,12 +114,42 @@ Your wallet type depends on how you signed in:
 
 **Smart Account Features:**
 
-- **Same Address Everywhere**: One address across all 7 EVM chains
-- **Gas Sponsorship**: Free transactions on L2s (Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain)
+- **Same Address Everywhere**: One address across all 8 EVM chains
+- **Gas Sponsorship**: Free transactions on L2s (Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche)
 - **ERC-20 Gas**: Pay gas in USDC on Ethereum mainnet (no ETH needed)
 - **Passkey Signing**: Sign with Face ID, Touch ID, or Windows Hello
 
 > ⚠️ **Important for Email/Digital ID users:** Your passkey controls your wallet. If you delete your passkey, you will lose access to any funds. Use a synced passkey (iCloud Keychain, Google Password Manager) for backup.
+
+### Recovery Signer
+
+Add a backup recovery address to your Smart Wallet for extra security. This allows you to recover funds if you lose access to your passkey.
+
+**How it works:**
+
+1. Go to Settings → Wallet → Security
+2. View your Safe deployment status across all chains
+3. Click "Add Recovery Signer"
+4. Enter a recovery address (another wallet you control)
+5. Sign the transaction with your passkey
+6. Recovery signer is added as a Safe owner
+
+**Multi-Chain Security:**
+
+Your Safe wallet may be deployed on multiple chains. The security dashboard shows:
+
+| Status | Meaning |
+|--------|---------|
+| **Deployed** | Safe is active on this chain |
+| **Has Recovery** | Recovery signer already added |
+| **Needs Recovery** | Has funds but no recovery signer |
+| **Not Deployed** | Safe not yet created on this chain |
+
+**Important:**
+- Add recovery to chains where you have funds
+- Recovery signer can help you recover funds if passkey is lost
+- Safe uses 1-of-N threshold, so either signer can approve transactions
+- You can manage your Safe directly at [app.safe.global](https://app.safe.global)
 
 ## Account Settings
 
@@ -200,6 +230,18 @@ GET /api/wallet/transactions
 
 // Get/create smart wallet address
 POST /api/wallet/smart-wallet
+
+// Get recovery signer status
+GET /api/wallet/recovery-signer
+
+// Validate recovery address
+POST /api/wallet/recovery-signer
+{
+  "recoveryAddress": "0x..."
+}
+
+// Get Safe status across all chains
+GET /api/wallet/safe-status?address=0x...&primarySigner=0x...
 ```
 
 ### Get User Profile

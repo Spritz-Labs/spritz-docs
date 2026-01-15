@@ -96,6 +96,117 @@ Grant invite codes to specific users:
 3. Enter number of invites
 4. Grant invites to user
 
+## Moderation System
+
+Spritz includes a comprehensive moderation system for managing chat in both global (alpha) chat and public channels.
+
+### Moderator Roles
+
+| Role | Permissions |
+|------|-------------|
+| **Super Admin** | All permissions + manage other admins |
+| **Admin** | All moderation permissions |
+| **Channel Owner** | Full permissions within their channel |
+| **Moderator** | Configurable permissions (pin, delete, mute) |
+
+### Moderator Permissions
+
+Moderators can have granular permissions:
+
+- **can_pin**: Pin/unpin messages
+- **can_delete**: Soft delete messages (preserves audit trail)
+- **can_mute**: Mute/unmute users
+- **can_manage_mods**: Promote/demote other moderators
+
+### Managing Moderators
+
+**Promote a Moderator:**
+
+```typescript
+POST /api/moderation
+{
+  "action": "promote-mod",
+  "moderatorAddress": "0x...", // Your address
+  "targetAddress": "0x...",    // New moderator
+  "channelId": null,           // null for global chat
+  "canPin": true,
+  "canDelete": true,
+  "canMute": true,
+  "canManageMods": false
+}
+```
+
+**Demote a Moderator:**
+
+```typescript
+POST /api/moderation
+{
+  "action": "demote-mod",
+  "moderatorAddress": "0x...",
+  "targetAddress": "0x...",
+  "channelId": null
+}
+```
+
+### Muting Users
+
+Mute problematic users temporarily or permanently:
+
+```typescript
+POST /api/moderation
+{
+  "action": "mute-user",
+  "moderatorAddress": "0x...",
+  "targetAddress": "0x...",
+  "channelId": null,
+  "duration": "24h",  // "1h", "24h", "7d", "permanent"
+  "reason": "Spamming chat"
+}
+```
+
+**Duration formats:**
+- `1m`, `5m`, `30m` - Minutes
+- `1h`, `6h`, `24h` - Hours
+- `1d`, `7d`, `30d` - Days
+- `1w`, `2w` - Weeks
+- `permanent` - No expiration
+
+### Deleting Messages
+
+Soft delete messages (preserves for audit):
+
+```typescript
+POST /api/moderation
+{
+  "action": "delete-message",
+  "moderatorAddress": "0x...",
+  "messageId": "uuid",
+  "messageType": "alpha", // or "channel"
+  "reason": "Inappropriate content"
+}
+```
+
+### Moderation Log
+
+View the audit trail of all moderation actions:
+
+```typescript
+GET /api/moderation?action=mod-log&requestingUser=0x...&channelId=null
+```
+
+Returns recent actions including:
+- Who performed the action
+- What action was taken
+- Who was affected
+- Timestamp and reason
+
+### Protection Rules
+
+- Cannot mute admins (unless you're a super admin)
+- Cannot mute moderators (unless you're an admin)
+- Channel owners have full permissions in their channels
+- All actions are logged for accountability
+
 ## Bug Reports
 
 Spritz integrates with GitHub for bug report management. Users can submit bug reports in-app, which are automatically synced to GitHub issues.

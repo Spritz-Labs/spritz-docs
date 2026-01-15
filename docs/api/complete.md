@@ -121,6 +121,10 @@ WebAuthn/passkey-based authentication for passwordless login:
 -   `GET /api/wallet/balances` - Get token balances
 -   `GET /api/wallet/transactions` - Get transaction history
 -   `POST /api/wallet/smart-wallet` - Get/create smart wallet address
+-   `GET /api/wallet/recovery-signer` - Get recovery signer status
+-   `POST /api/wallet/recovery-signer` - Validate recovery address
+-   `GET /api/wallet/safe-status` - Get Safe status across all chains
+-   `POST /api/wallet/onramp/session` - Create Coinbase Onramp session
 
 ### Username
 
@@ -140,6 +144,24 @@ WebAuthn/passkey-based authentication for passwordless login:
 -   `POST /api/channels/:id/leave` - Leave channel
 -   `GET /api/channels/:id/messages` - Get messages
 -   `POST /api/channels/:id/messages` - Send message
+-   `POST /api/channels/:id/messages/pin` - Pin/unpin message
+
+### Moderation
+
+Comprehensive moderation system for global chat and channels:
+
+-   `GET /api/moderation?action=permissions` - Get user's mod permissions
+-   `GET /api/moderation?action=moderators` - List moderators
+-   `GET /api/moderation?action=muted` - List muted users
+-   `GET /api/moderation?action=check-muted` - Check if user is muted
+-   `GET /api/moderation?action=mod-log` - Get moderation audit log
+-   `POST /api/moderation` - Perform moderation actions:
+    - `promote-mod` - Promote user to moderator
+    - `demote-mod` - Demote moderator
+    - `mute-user` - Mute a user (timed or permanent)
+    - `unmute-user` - Unmute a user
+    - `delete-message` - Soft delete a message
+    - `pin-message` - Pin/unpin a message
 
 ### Rooms & Calls
 

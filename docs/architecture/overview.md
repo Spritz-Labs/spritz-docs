@@ -99,7 +99,7 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 - **Provider**: Coinbase Pay
 - **Methods**: Credit/debit cards, bank transfers, Apple Pay, Google Pay
 - **Assets**: ETH, USDC, and more
-- **Chains**: Base, Ethereum, Polygon, Arbitrum, Optimism
+- **Chains**: Base, Ethereum, Polygon, Arbitrum, Optimism, BNB Chain, Unichain, Avalanche
 
 ### Digital Identity
 

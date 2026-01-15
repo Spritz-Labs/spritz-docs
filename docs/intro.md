@@ -63,7 +63,7 @@ High-quality video and voice calls powered by Huddle01. Support for group calls 
 
 ### 🔐 Authentication
 
--   **Multi-Chain**: Support for 7 EVM chains (Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain) + Solana
+-   **Multi-Chain**: Support for 8 EVM chains (Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche) + Solana
 -   **SIWE/SIWS**: Sign-In with Ethereum or Solana
 -   **Passkeys**: Passwordless login with biometrics (creates a Smart Account)
 -   **Email Login**: Sign in with just your email address
