@@ -73,7 +73,7 @@ const config: Config = {
           editUrl:
                         "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: true,  // Show last update for freshness signals
+                    showLastUpdateTime: false,
         },
         blog: {
           showReadingTime: true,
