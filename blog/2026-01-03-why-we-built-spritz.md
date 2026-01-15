@@ -18,6 +18,7 @@ keywords:
         blockchain,
         decentralized communication,
     ]
+image: /og-image.png
 ---
 
 # Why We Built Spritz

@@ -1,8 +1,22 @@
 ---
 slug: spritz-chat-manifesto
 title: Spritz Chat Manifesto
+description: "The Spritz Chat Manifesto: Communication is a universal human right. Learn why we built a fully decentralized peer-to-peer communication network with no centralized servers, no gatekeepers, and full encryption by design."
 authors: [anonymous]
 tags: [spritz, decentralization, censorship-resistance, openness, web3, manifesto, privacy]
+keywords:
+    [
+        Spritz manifesto,
+        decentralized communication,
+        peer-to-peer messaging,
+        censorship-resistant chat,
+        encrypted messaging,
+        Web3 communication,
+        privacy-first messaging,
+        decentralized social network,
+        human rights communication,
+    ]
+image: /og-image.png
 ---
 
 Communication is a universal human right recognized by the United Nations. Yet billions of people are denied meaningful access to it.

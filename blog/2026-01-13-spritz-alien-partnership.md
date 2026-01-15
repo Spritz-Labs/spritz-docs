@@ -1,8 +1,23 @@
 ---
 slug: spritz-alien-partnership
 title: "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication"
+description: "Spritz Chat partners with Alien for privacy-preserving proof of personhood. Learn how decentralized messaging combined with human verification enables censorship-resistant communication for 2.3 billion people affected by restrictions."
 authors: [anonymous]
 tags: [spritz, alien, partnership, censorship-resistance, privacy, decentralization, proof-of-personhood]
+keywords:
+    [
+        Spritz Alien partnership,
+        proof of personhood,
+        censorship-resistant messaging,
+        decentralized communication,
+        human verification,
+        privacy-preserving identity,
+        VoIP restrictions,
+        global communication,
+        Web3 messaging,
+        anti-censorship,
+    ]
+image: /og-image.png
 ---
 
 Around 2.3 billion people in 17 countries are affected by full bans, partial bans, throttling, or interference with popular messaging and calling applications. These restrictions impact text messaging, voice calls, and video calls, often across national borders. As a result, families, friends, and communities are unable to communicate freely.

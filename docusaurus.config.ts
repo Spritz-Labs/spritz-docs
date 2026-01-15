@@ -36,6 +36,32 @@ const config: Config = {
         locales: ["en"],
   },
 
+    headTags: [
+        // Preconnect to external domains for performance
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'preconnect',
+                href: 'https://app.spritz.chat',
+            },
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'dns-prefetch',
+                href: 'https://app.spritz.chat',
+            },
+        },
+        // Canonical base
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'canonical',
+                href: 'https://docs.spritz.chat',
+            },
+        },
+    ],
+
   presets: [
     [
             "classic",
@@ -47,13 +73,21 @@ const config: Config = {
           editUrl:
                         "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
                     showLastUpdateAuthor: false,
-                    showLastUpdateTime: false,
+                    showLastUpdateTime: true,  // Show last update for freshness signals
         },
         blog: {
           showReadingTime: true,
+          blogTitle: 'Spritz Blog',
+          blogDescription: 'Latest updates, announcements, and insights from Spritz - the decentralized social platform for Web3 messaging, AI agents, and censorship-resistant communication.',
+          blogSidebarTitle: 'Recent posts',
+          blogSidebarCount: 10,
           feedOptions: {
-                        type: ["rss", "atom"],
+                        type: ["rss", "atom", "json"],
             xslt: true,
+            title: 'Spritz Blog',
+            description: 'Latest updates from Spritz - decentralized social platform',
+            copyright: `Copyright © ${new Date().getFullYear()} Spritz Labs`,
+            language: 'en',
           },
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -68,6 +102,7 @@ const config: Config = {
                     customCss: "./src/css/custom.css",
                 },
                 sitemap: {
+                    lastmod: 'date',
                     changefreq: "weekly",
                     priority: 0.5,
                     ignorePatterns: [
@@ -76,6 +111,7 @@ const config: Config = {
                         "/blog/authors/**",
                         "/blog/archive",
                         "/markdown-page",
+                        "/search",
                     ],
                     filename: "sitemap.xml",
         },

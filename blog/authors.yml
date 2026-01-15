@@ -1,4 +1,9 @@
 anonymous:
   name: Anonymous
   title: Spritz Team
+  url: https://app.spritz.chat
+  image_url: /og-image.png
+  socials:
+    x: SpritzLabs
+    github: Spritz-Labs
   page: false

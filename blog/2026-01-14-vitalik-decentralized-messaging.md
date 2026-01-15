@@ -1,8 +1,23 @@
 ---
 slug: vitalik-decentralized-messaging-vision
 title: "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos"
+description: "Vitalik Buterin declares 'The decentralized renaissance is coming.' Learn why Spritz built on Logos Messaging (Waku) to align with Ethereum's original cypherpunk vision for censorship-resistant, privacy-preserving communication."
 authors: [anonymous]
 tags: [spritz, decentralization, privacy, logos-messaging, ethereum, vitalik, censorship-resistance]
+keywords:
+    [
+        Vitalik Buterin,
+        decentralized messaging,
+        Logos Messaging,
+        Waku protocol,
+        Ethereum cypherpunk,
+        Web3 messaging,
+        Whisper protocol,
+        decentralized renaissance,
+        privacy messaging,
+        censorship-resistant communication,
+    ]
+image: /og-image.png
 ---
 
 Just hours ago, Vitalik Buterin declared ["The decentralized renaissance is coming"](https://x.com/VitalikButerin/status/2011325527567544393) — and called on developers to buidl decentralized. This is exactly what Spritz has been doing.

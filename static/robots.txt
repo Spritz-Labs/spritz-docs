@@ -1,0 +1,42 @@
+# Spritz Documentation - robots.txt
+# https://docs.spritz.chat
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://docs.spritz.chat/sitemap.xml
+
+# Crawl delay (optional, be nice to servers)
+Crawl-delay: 1
+
+# Block unnecessary paths
+Disallow: /search
+Disallow: /search/
+Disallow: /_*
+
+# Allow important content
+Allow: /docs/
+Allow: /blog/
+Allow: /img/
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
