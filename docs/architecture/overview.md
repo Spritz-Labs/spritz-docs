@@ -278,7 +278,7 @@ Viewer
 
 ### Environment Variables
 
-See [Getting Started - Environment Variables](/docs/getting-started#required-environment-variables) for complete list.
+See [Developer Installation - Environment Variables](/docs/developers/installation#environment-variables) for complete list.
 
 ### Build Process
 
