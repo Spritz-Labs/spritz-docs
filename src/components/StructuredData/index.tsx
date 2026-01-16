@@ -18,7 +18,7 @@ export default function StructuredData(): JSX.Element {
         sameAs: [
             'https://github.com/Spritz-Labs/spritz',
             'https://app.spritz.chat',
-            'https://x.com/SpritzLabs',
+            'https://x.com/spritzchat',
         ],
         description: 'Spritz is a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication.',
         foundingDate: '2024',

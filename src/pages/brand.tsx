@@ -206,16 +206,19 @@ export default function BrandKit(): JSX.Element {
                 <li><strong>Website:</strong> <a href="https://spritz.chat">spritz.chat</a></li>
                 <li><strong>App:</strong> <a href="https://app.spritz.chat">app.spritz.chat</a></li>
                 <li><strong>Docs:</strong> <a href="https://docs.spritz.chat">docs.spritz.chat</a></li>
-                <li><strong>Twitter/X:</strong> <a href="https://x.com/SpritzLabs">@SpritzLabs</a></li>
+                <li><strong>Twitter/X:</strong> <a href="https://x.com/spritzchat">@spritzchat</a></li>
                 <li><strong>GitHub:</strong> <a href="https://github.com/Spritz-Labs">Spritz-Labs</a></li>
               </ul>
             </div>
             <div className={styles.socialCard}>
               <h3>Press Contact</h3>
               <p>
-                For press inquiries, partnerships, or media requests, please reach out via 
-                Twitter/X DM to <a href="https://x.com/SpritzLabs">@SpritzLabs</a>.
+                For press inquiries, partnerships, or media requests:
               </p>
+              <ul>
+                <li><strong>Email:</strong> <a href="mailto:contact@spritz.chat">contact@spritz.chat</a></li>
+                <li><strong>Twitter/X:</strong> <a href="https://x.com/spritzchat">@spritzchat</a></li>
+              </ul>
             </div>
             <div className={styles.socialCard}>
               <h3>Attribution</h3>

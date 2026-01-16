@@ -197,11 +197,11 @@ const config: Config = {
             },
             {
                 name: "twitter:site",
-                content: "@SpritzLabs",
+                content: "@spritzchat",
             },
             {
                 name: "twitter:creator",
-                content: "@SpritzLabs",
+                content: "@spritzchat",
             },
             {
                 name: "twitter:title",

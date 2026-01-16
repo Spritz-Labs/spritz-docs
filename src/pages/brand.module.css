@@ -220,19 +220,21 @@
 .colorInfo h4 {
   margin: 0 0 0.25rem;
   font-size: 1rem;
+  color: var(--ifm-color-emphasis-900);
 }
 
 .colorInfo code {
   font-size: 0.875rem;
-  background: var(--ifm-color-emphasis-100);
+  background: var(--ifm-color-emphasis-200);
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
+  color: var(--ifm-color-emphasis-900);
 }
 
 .colorInfo p {
   margin: 0.5rem 0 0;
   font-size: 0.75rem;
-  color: var(--ifm-color-emphasis-600);
+  color: var(--ifm-color-emphasis-700);
 }
 
 .colorUsage {
@@ -265,6 +267,7 @@
   padding: 1rem;
   background: var(--ifm-color-emphasis-100);
   border-radius: 8px;
+  color: var(--ifm-color-emphasis-900);
 }
 
 .typeCard a {
