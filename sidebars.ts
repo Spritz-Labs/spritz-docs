@@ -52,9 +52,27 @@ const sidebars: SidebarsConfig = {
       label: 'Developers',
       items: [
         'developers/installation',
-        'api/intro',
-        'api/agents-detailed',
-        'api/streaming',
+        {
+          type: 'category',
+          label: 'Technical Deep Dives',
+          collapsed: false,
+          items: [
+            'developers/authentication',
+            'developers/smart-wallets',
+            'developers/messaging',
+            'developers/video-calls',
+            'developers/livestreaming',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'API Reference',
+          items: [
+            'api/intro',
+            'api/agents-detailed',
+            'api/streaming',
+          ],
+        },
         'architecture/overview',
         'database/schema',
         'guides/admin',
