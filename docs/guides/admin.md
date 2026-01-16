@@ -68,6 +68,34 @@ Individual user metrics:
 -   Growth metrics
 -   Engagement statistics
 
+### Wallet Analytics
+
+Track wallet usage across the platform:
+
+**Transaction Metrics:**
+-   Total transactions
+-   Transaction volume (USD)
+-   Transactions by network
+-   Transaction types (send, receive, swap)
+
+**Network Usage:**
+
+| Network | Chain ID | Metrics Tracked |
+|---------|----------|-----------------|
+| Ethereum | 1 | Transactions, Volume, Users |
+| Base | 8453 | Transactions, Volume, Users |
+| Polygon | 137 | Transactions, Volume, Users |
+| Arbitrum | 42161 | Transactions, Volume, Users |
+| Optimism | 10 | Transactions, Volume, Users |
+| Avalanche | 43114 | Transactions, Volume, Users |
+| BNB Chain | 56 | Transactions, Volume, Users |
+
+**User Wallet Stats:**
+-   `wallet_tx_count` - Total transactions per user
+-   `wallet_volume_usd` - Total volume per user
+-   `last_wallet_tx_at` - Last transaction timestamp
+-   `preferred_chain_id` - Most used network
+
 ## Invite Codes
 
 ### Create Invite Code

@@ -261,6 +261,46 @@ CREATE INDEX idx_group_members_group ON shout_group_members(group_id);
 CREATE INDEX idx_group_members_member ON shout_group_members(member_address);
 ```
 
+## Chat Folders Tables
+
+### `shout_chat_folders`
+
+User-defined folders for organizing chats (Telegram-style).
+
+```sql
+CREATE TABLE shout_chat_folders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    emoji TEXT NOT NULL,
+    label TEXT NOT NULL DEFAULT '',
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_address, emoji)
+);
+
+CREATE INDEX idx_chat_folders_user ON shout_chat_folders(user_address);
+```
+
+### `shout_chat_folder_assignments`
+
+Maps chats to folders.
+
+```sql
+CREATE TABLE shout_chat_folder_assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    chat_id TEXT NOT NULL,
+    chat_type TEXT NOT NULL CHECK (chat_type IN ('dm', 'group', 'channel', 'global')),
+    folder_emoji TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_address, chat_id)
+);
+
+CREATE INDEX idx_chat_folder_assignments_user ON shout_chat_folder_assignments(user_address);
+CREATE INDEX idx_chat_folder_assignments_folder ON shout_chat_folder_assignments(user_address, folder_emoji);
+```
+
 ## Public Channel Tables
 
 ### `shout_public_channels`
@@ -596,6 +636,70 @@ CREATE INDEX idx_bug_reports_category ON shout_bug_reports(category);
 CREATE INDEX idx_bug_reports_status ON shout_bug_reports(status);
 ```
 
+## Wallet Analytics Tables
+
+### `shout_wallet_transactions`
+
+Tracks all wallet transactions for analytics.
+
+```sql
+CREATE TABLE shout_wallet_transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address VARCHAR(66) NOT NULL,
+    smart_wallet_address VARCHAR(42) NOT NULL,
+    tx_hash VARCHAR(66) NOT NULL,
+    chain_id INTEGER NOT NULL,
+    chain_name VARCHAR(50) NOT NULL,
+    from_address VARCHAR(42) NOT NULL,
+    to_address VARCHAR(42) NOT NULL,
+    token_symbol VARCHAR(20) NOT NULL,
+    token_address VARCHAR(42),
+    amount VARCHAR(78) NOT NULL,
+    amount_formatted DECIMAL(38, 18),
+    amount_usd DECIMAL(18, 2),
+    tx_type VARCHAR(20) NOT NULL DEFAULT 'send',
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    gas_used VARCHAR(78),
+    gas_price VARCHAR(78),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    confirmed_at TIMESTAMPTZ,
+    CONSTRAINT unique_tx_hash_chain UNIQUE(tx_hash, chain_id)
+);
+
+CREATE INDEX idx_wallet_tx_user ON shout_wallet_transactions(user_address);
+CREATE INDEX idx_wallet_tx_smart_wallet ON shout_wallet_transactions(smart_wallet_address);
+CREATE INDEX idx_wallet_tx_chain ON shout_wallet_transactions(chain_id);
+CREATE INDEX idx_wallet_tx_created ON shout_wallet_transactions(created_at);
+```
+
+### `shout_wallet_network_stats`
+
+Aggregated network usage statistics.
+
+```sql
+CREATE TABLE shout_wallet_network_stats (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chain_id INTEGER NOT NULL UNIQUE,
+    chain_name VARCHAR(50) NOT NULL,
+    total_transactions INTEGER DEFAULT 0,
+    total_volume_usd DECIMAL(24, 2) DEFAULT 0,
+    unique_users INTEGER DEFAULT 0,
+    last_updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### User Wallet Analytics Columns
+
+Additional columns on `shout_users` for wallet analytics:
+
+```sql
+ALTER TABLE shout_users
+ADD COLUMN wallet_tx_count INTEGER DEFAULT 0,
+ADD COLUMN wallet_volume_usd DECIMAL(24, 2) DEFAULT 0,
+ADD COLUMN last_wallet_tx_at TIMESTAMPTZ,
+ADD COLUMN preferred_chain_id INTEGER;
+```
+
 ## Streaming Tables
 
 ### `shout_streams`
@@ -813,6 +917,7 @@ All migration scripts are located in `/migrations` directory:
 - `chat_enhancements.sql` - Typing status, read receipts, reactions
 - `channel_chat_enhancements.sql` - Channel reactions
 - `pinned_messages.sql` - Admin pinned messages in channels
+- `043_chat_folders.sql` - Chat folder organization
 
 ### Streaming & Calls
 - `call_history.sql` - Voice/video call history
@@ -833,6 +938,9 @@ All migration scripts are located in `/migrations` directory:
 - `friend_tags.sql` - Friend organization tags
 - `bug_reports.sql` - Bug report system
 - `admin_system.sql` - Admin functionality
+
+### Wallet & Analytics
+- `042_wallet_analytics.sql` - Wallet transaction tracking
 
 ### Moderation
 - `041_moderation_system.sql` - Moderators, muted users, and audit log

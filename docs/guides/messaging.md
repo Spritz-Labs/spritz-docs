@@ -80,6 +80,47 @@ When viewing pixel art or images, use quick share buttons:
 - **More Options**: Share to Facebook, LinkedIn, Reddit, Telegram, WhatsApp
 - **Download**: Save the image to your device
 
+## Chat Folders
+
+Organize your conversations with Telegram-style emoji folders.
+
+### Creating Folders
+
+1. Click the folder icon in the chat header
+2. Select an emoji for your folder (e.g., ⭐ for favorites, 💼 for work)
+3. Optionally add a label
+4. Your folder appears in the folder bar
+
+### Assigning Chats to Folders
+
+**Quick assign:**
+1. Long-press or right-click any chat
+2. Select "Add to folder"
+3. Choose the target folder
+
+**From folder menu:**
+1. Click the folder button in the header
+2. Select the folder to manage
+3. Toggle chats on/off for that folder
+
+### Default Folders
+
+| Emoji | Suggested Use |
+|-------|---------------|
+| 📥 | All chats (default view) |
+| ⭐ | Favorites / Important |
+| 💼 | Work |
+| 👨‍👩‍👧‍👦 | Family |
+| 🎮 | Gaming |
+| 🔔 | Unread |
+
+### Folder Behavior
+
+- Chats can belong to multiple folders
+- Folders sync across devices via your account
+- Removing a chat from a folder doesn't delete the chat
+- Delete a folder by long-pressing it
+
 ## Features
 
 ### Link Previews
