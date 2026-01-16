@@ -18,6 +18,19 @@ const sidebars: SidebarsConfig = {
     'getting-started',
     {
       type: 'category',
+      label: 'User Guides',
+      items: [
+        'guides/messaging',
+        'guides/video-calls',
+        'guides/groups',
+        'guides/channels',
+        'guides/friends',
+        'guides/calendar-scheduling',
+        'guides/profile-settings',
+      ],
+    },
+    {
+      type: 'category',
       label: 'AI Agents',
       items: [
         'agents/intro',
@@ -33,45 +46,20 @@ const sidebars: SidebarsConfig = {
         'streaming/technical',
       ],
     },
+    'faq',
     {
       type: 'category',
-      label: 'User Guides',
+      label: 'Developers',
       items: [
-        'guides/messaging',
-        'guides/video-calls',
-        'guides/groups',
-        'guides/channels',
-        'guides/friends',
-        'guides/calendar-scheduling',
-        'guides/profile-settings',
+        'developers/installation',
+        'api/intro',
+        'api/agents-detailed',
+        'api/streaming',
+        'architecture/overview',
+        'database/schema',
         'guides/admin',
       ],
     },
-    {
-      type: 'category',
-      label: 'API Reference',
-      items: [
-        'api/intro',
-        'api/complete',
-        'api/agents-detailed',
-        'api/streaming',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Architecture',
-      items: [
-        'architecture/overview',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Database',
-      items: [
-        'database/schema',
-      ],
-    },
-    'faq',
   ],
 };
 

@@ -125,7 +125,8 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 
 ### Getting Started
 
--   **[Getting Started](/docs/getting-started)**: Installation and setup guide
+-   **[Getting Started](/docs/getting-started)**: How to use Spritz (for users)
+-   **[Developer Installation](/docs/developers/installation)**: Technical setup guide (for developers)
 
 ### Core Features
 

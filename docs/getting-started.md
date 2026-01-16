@@ -1,322 +1,243 @@
 ---
 title: Getting Started with Spritz
-description: Complete installation and setup guide for Spritz. Learn how to install, configure environment variables, set up the database, and create your first AI agent.
+description: Learn how to use Spritz - the censorship-resistant messaging app for Web3. Sign in, add friends, chat, make video calls, and explore AI agents.
 keywords:
     [
-        Spritz installation,
-        Spritz setup,
+        Spritz,
         getting started,
-        installation guide,
-        environment variables,
-        database setup,
-        AI agents,
         Web3 messaging,
+        how to use,
+        sign in,
+        wallet,
+        passkey,
+        chat app,
     ]
 ---
 
 # Getting Started
 
-This guide will help you get started with Spritz, from installation to your first AI agent.
+Welcome to Spritz! This guide will help you get up and running in just a few minutes.
 
-## Prerequisites
+## What is Spritz?
 
--   **Node.js** 18+ (recommended: 20+)
--   **npm** or **yarn** package manager
--   **Git** for version control
--   **PostgreSQL Database** (managed or self-hosted)
--   **API Keys** for:
-    -   Google Gemini (for AI agents)
-    -   Huddle01 (for video calls)
-    -   Livepeer (for livestreaming)
-    -   Reown/WalletConnect (for wallet connections)
-    -   Pimlico (for passkey authentication - optional)
+Spritz is a messaging app built for Web3. You can:
 
-## Installation
+- **Chat** with friends using end-to-end encryption
+- **Video call** with crystal-clear quality
+- **Go live** and stream to your friends
+- **Create AI agents** that can help with anything
+- **Join channels** to discuss topics you care about
 
-1. Clone the repository:
+## Sign In
 
-```bash
-git clone https://github.com/Spritz-Labs/spritz.git
-cd spritz
-```
+Spritz offers several ways to sign in. Choose whichever works best for you:
 
-2. Install dependencies:
+### Option 1: Connect Your Wallet (Recommended for Web3 Users)
 
-```bash
-npm install
-# or
-yarn install
-```
+1. Go to [app.spritz.chat](https://app.spritz.chat)
+2. Click **"Connect Wallet"**
+3. Select your wallet (MetaMask, Rainbow, Coinbase, etc.)
+4. Sign the message to verify ownership
+5. You're in!
 
-**Note:** The project uses Yarn 3.2.3 as specified in `package.json`, but npm also works.
+### Option 2: Passkey (Fastest - No Wallet Needed)
 
-3. Set up environment variables:
-
-Copy `.env.example` to `.env.local` and fill in your API keys:
-
-```bash
-cp .env.example .env.local
-```
-
-**Note:** If `.env.example` doesn't exist yet, create it with the variables listed below.
-
-### Required Environment Variables
-
-```env
-# Database
-DATABASE_URL=your_postgres_connection_string
-NEXT_PUBLIC_DATABASE_URL=your_public_database_url
-
-# WalletConnect / Reown
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
-```
-
-### AI Agents
-
-```env
-# Google Gemini (required for AI agents)
-GOOGLE_GEMINI_API_KEY=your_gemini_api_key
-```
-
-### Video Calls
-
-**Option A: Huddle01 (Recommended - Decentralized)**
-
-```env
-# Huddle01
-NEXT_PUBLIC_HUDDLE01_PROJECT_ID=your_huddle01_project_id
-NEXT_PUBLIC_HUDDLE01_API_KEY=your_huddle01_api_key
-HUDDLE01_API_KEY=your_huddle01_api_key
-```
-
-**Option B: Agora (Centralized Alternative)**
-
-```env
-# Agora (alternative to Huddle01)
-NEXT_PUBLIC_AGORA_APP_ID=your_agora_app_id
-# Optional: Token endpoint for production (leave empty for testing mode)
-NEXT_PUBLIC_AGORA_TOKEN_ENDPOINT=https://your-token-server.com/token
-```
-
-**Note:** You can use either Huddle01 or Agora, or both. Users can choose their preferred provider in settings. Huddle01 is decentralized, while Agora is centralized but may offer better reliability.
-
-### Livestreaming
-
-```env
-# Livepeer
-LIVEPEER_API_KEY=your_livepeer_api_key
-```
-
-### Smart Accounts (Passkeys)
-
-```env
-# Pimlico (ERC-4337)
-NEXT_PUBLIC_PIMLICO_API_KEY=your_pimlico_api_key
-```
-
-### Optional Environment Variables
-
-```env
-# Push Notifications
-NEXT_PUBLIC_VAPID_PUBLIC_KEY=your_vapid_public_key
-VAPID_PRIVATE_KEY=your_vapid_private_key
-VAPID_SUBJECT=mailto:your@email.com
-
-# Phone Verification (Optional)
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
-TWILIO_VERIFY_SERVICE_SID=your_verify_service_sid
-
-# Email Verification (Optional)
-RESEND_API_KEY=your_resend_api_key
-
-# Pixel Art Storage (Optional)
-PINATA_API_KEY=your_pinata_api_key
-PINATA_SECRET_KEY=your_pinata_secret_key
-NEXT_PUBLIC_PINATA_GATEWAY=gateway.pinata.cloud
-
-# Solana (Optional)
-NEXT_PUBLIC_HELIUS_API_KEY=your_helius_api_key
-
-# x402 Payments (Optional)
-NEXT_PUBLIC_APP_URL=https://app.spritz.chat
-X402_FACILITATOR_URL=https://x402.org/facilitator
-
-# Google Calendar (Optional)
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_REDIRECT_URI=https://app.spritz.chat/api/calendar/callback
-
-# GitHub Integration (Optional - for bug reports)
-GITHUB_OWNER=your_github_username_or_org
-GITHUB_REPO=your_repo_name
-GITHUB_TOKEN=your_github_personal_access_token
-
-# World ID (Optional - for Digital ID verification)
-NEXT_PUBLIC_WORLD_ID_APP_ID=app_your_world_id_app_id
-NEXT_PUBLIC_WORLD_ID_ACTION=your_action_name
-```
-
-4. Run database migrations:
-
-See the [Database Setup](#database-setup) section below for migration scripts. Run these in your PostgreSQL database.
-
-5. Start the development server:
-
-```bash
-npm run dev
-```
-
-Visit `http://localhost:3000` to see the app.
-
-**Note:** The Spritz app development server runs on port 3000 by default. The documentation site (this project) runs on port 3030.
-
-## Database Setup
-
-Spritz uses PostgreSQL with several tables. Run these migrations in your database. See the `/migrations` folder in the repository for complete migration scripts.
-
-### Enable Extensions
-
-First, enable required PostgreSQL extensions:
-
-```sql
--- Enable pgvector for vector similarity search
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
-### Run Migrations
-
-1. Connect to your PostgreSQL database
-2. Open your SQL client or terminal
-3. Run each migration file from `/migrations` in order:
-    - `agents.sql` - Core agent tables
-    - `agents_x402.sql` - x402 payment configuration
-    - `agents_mcp.sql` - MCP server support
-    - `embeddings.sql` - Vector search setup
-    - `streams.sql` - Streaming tables
-    - And more...
-
-### Verify Setup
-
-Check that tables were created:
-
-```sql
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = 'public'
-AND table_name LIKE 'shout_%';
-```
-
-For detailed schema documentation, see [Database Schema](/docs/database/schema).
-
-## First Steps
-
-### 1. Sign In to Spritz
-
-Spritz supports multiple authentication methods:
-
-**Option A: Wallet Connection (Web3)**
-
-1. Click "Connect Wallet" in the top right
-2. Select your wallet provider (Ethereum, Base, or Solana)
-3. Sign the message to authenticate (SIWE/SIWS)
-
-**Option B: Passkey Authentication (Passwordless)**
-
-1. Click "Sign In with Passkey"
+1. Click **"Sign In with Passkey"**
 2. Use Face ID, Touch ID, or Windows Hello
-3. A smart account will be created automatically
+3. A secure wallet is created for you automatically
+4. You're ready to go!
 
-**Option C: Email Login**
+### Option 3: Email
 
-1. Click "Sign In with Email"
+1. Click **"Sign In with Email"**
 2. Enter your email address
-3. Check your inbox for a 6-digit verification code
-4. Enter the code to sign in
-5. A secure session will be created for you
+3. Check your inbox for a 6-digit code
+4. Enter the code
+5. Done!
 
-**Note:** Email login uses a deterministic key derivation to create a wallet address from your email, allowing you to interact with Web3 features without managing private keys.
+### Option 4: Digital ID (World ID / Alien)
 
-**Option D: Digital ID (World ID or Alien ID)**
-
-1. Click "Digital ID" tab in Settings
-2. Choose your verification method:
-   - **World ID**: Scan with World App (Orb verification for highest trust)
-   - **Alien ID**: Sign in with your Alien ID identity
-3. Complete verification flow
+1. Click the **"Digital ID"** tab
+2. Choose World ID or Alien
+3. Complete the verification
 4. Your verified identity is linked to your account
 
-**Note:** Digital ID provides a privacy-preserving way to prove you're a unique human without revealing personal information.
+## Set Up Your Profile
 
-### Cross-Device Passkey Support
+After signing in, personalize your profile:
 
-Passkey authentication now supports cross-device login:
+1. Click your avatar in the top right
+2. Go to **Settings → Profile**
+3. Add a **username** (this is how friends find you)
+4. Add a **bio** to tell people about yourself
+5. Upload a **profile photo** or create a pixel art avatar
 
-1. Start passkey sign-in on any device
-2. Choose "Use another device" option
-3. Scan the QR code with your phone (where passkey is stored)
-4. Authenticate on your phone
-5. You're signed in on the new device
+### Create a Public Profile
 
-This enables seamless authentication across desktop and mobile using WebAuthn hybrid transport.
+Want a shareable profile page?
 
-### 2. Create Your First AI Agent
+1. Go to **Settings → Profile**
+2. Toggle **"Enable Public Landing Page"**
+3. Your profile is now at `spritz.chat/user/YOUR_ADDRESS`
+4. Add widgets to customize your page (music, links, photos, and more!)
 
-1. Navigate to the Agents section
-2. Click "Create Agent"
-3. Fill in:
-    - **Name**: Your agent's name
-    - **Personality**: Describe how your agent should behave
-    - **System Instructions**: Custom instructions for the agent
-    - **Visibility**: Choose private, friends, or public
-4. Click "Create"
+## Add Friends
 
-### 3. Add Knowledge to Your Agent
+### By Username
 
-1. Open your agent's settings
-2. Go to the Knowledge Base section
-3. Add URLs (GitHub repos, documentation, web pages)
-4. Click "Index" to process the content
-5. Your agent will now use this knowledge in conversations
+1. Go to the **Friends** tab
+2. Click **"Add Friend"**
+3. Enter their username
+4. Send the request
 
-### 4. Go Live
+### By QR Code
 
-1. Click "Go Live" on your dashboard
+1. Click the **QR icon** in the Friends tab
+2. Show your QR code or scan theirs
+3. Instant friend request!
+
+### By Wallet Address
+
+1. Click **"Add Friend"**
+2. Paste their wallet address (0x...)
+3. Send the request
+
+## Start Chatting
+
+### Direct Messages
+
+1. Go to the **Chats** tab
+2. Click a friend's name
+3. Start typing!
+
+**Features:**
+- End-to-end encrypted
+- Voice messages
+- Image sharing
+- Link previews
+- Message reactions
+
+### Group Chats
+
+1. Click **"New Group"**
+2. Add friends to the group
+3. Name your group
+4. Start the conversation!
+
+## Make Video Calls
+
+### 1-on-1 Calls
+
+1. Open a chat with a friend
+2. Click the **video icon** 📹
+3. Wait for them to answer
+4. Enjoy HD video calling!
+
+### Group Calls
+
+1. Open a group chat
+2. Click the **video icon**
+3. Everyone in the group can join
+4. Supports up to 10 participants
+
+## Go Live (Livestream)
+
+Share moments with all your friends:
+
+1. Click **"Go Live"** on your dashboard
 2. Allow camera and microphone access
 3. Add a title (optional)
-4. Click "Go Live" to start broadcasting
-5. Share with friends - they'll see your live badge
+4. Click **"Start Streaming"**
 
-## Next Steps
+Your friends will see a **LIVE** badge next to your name and can tune in!
 
--   Learn about [AI Agents](/docs/agents/intro)
--   Explore [Livestreaming](/docs/streaming/technical)
--   Check out the [API Reference](/docs/api/intro)
--   Read about [x402 Monetization](/docs/agents/x402)
+## Explore AI Agents
 
-## Troubleshooting
+AI agents are like smart assistants you can chat with:
 
-### Wallet Connection Issues
+### Use Public Agents
 
--   Make sure you have a Web3 wallet installed
--   Check that you're on a supported network
--   Try refreshing the page
+1. Go to the **Agents** tab
+2. Browse or search for agents
+3. Click one to start chatting
+4. Ask questions, get help, have fun!
 
-### Agent Not Responding
+### Create Your Own Agent
 
--   Verify your Gemini API key is correct
--   Check the browser console for errors
--   Ensure the agent has proper system instructions
+1. Click **"Create Agent"**
+2. Give it a name and personality
+3. Add knowledge (optional) - URLs to docs, websites, etc.
+4. Choose visibility (private, friends, or public)
+5. Start chatting with your creation!
 
-### Streaming Issues
+## Join Channels
 
--   Check your camera/microphone permissions
--   Verify your Livepeer API key
--   Ensure you have a stable internet connection
+Channels are public spaces to discuss topics:
+
+1. Go to the **Channels** tab
+2. Browse available channels
+3. Click **"Join"** on any channel
+4. Start participating in the conversation!
+
+## Organize with Chat Folders
+
+Keep your chats organized:
+
+1. Long-press (or right-click) on a chat
+2. Select **"Add to Folder"**
+3. Choose an emoji folder (or create one)
+4. Your chats are now organized!
+
+## Wallet & Payments
+
+### View Your Wallet
+
+1. Go to **Settings → Wallet**
+2. See your balances across all supported chains
+3. View transaction history
+
+### Buy Crypto
+
+1. Go to **Settings → Wallet → Buy Crypto**
+2. Click **"Buy with Card"**
+3. Choose amount and complete purchase via Coinbase Pay
+
+### Supported Networks
+
+| Network | Features |
+|---------|----------|
+| Ethereum | Full support |
+| Base | Gas-free transactions |
+| Arbitrum | Gas-free transactions |
+| Optimism | Gas-free transactions |
+| Polygon | Gas-free transactions |
+| BNB Chain | Gas-free transactions |
+| Avalanche | Gas-free transactions |
+| Unichain | Gas-free transactions |
+
+## Tips & Tricks
+
+- **Dark Mode**: Toggle in the navbar (sun/moon icon)
+- **Push Notifications**: Enable in Settings to never miss a message
+- **Keyboard Shortcuts**: Press `?` to see all shortcuts
+- **Pin Important Chats**: Long-press a chat and select "Pin"
+- **Mute Chats**: Long-press a chat and select "Mute"
 
 ## Need Help?
 
--   Check our [FAQ](/docs/faq)
--   Open an [issue on GitHub](https://github.com/Spritz-Labs/spritz/issues)
--   Contact support at connect@spritz.chat
+- **FAQ**: Check our [FAQ](/docs/faq) for common questions
+- **Email**: Reach us at contact@spritz.chat
+- **Twitter**: Follow [@spritzchat](https://x.com/spritzchat)
+
+## Next Steps
+
+Now that you're set up:
+
+- [Learn more about messaging](/docs/guides/messaging)
+- [Explore video calls](/docs/guides/video-calls)
+- [Discover AI agents](/docs/agents/intro)
+- [Customize your profile](/docs/guides/profile-settings)
+
+---
+
+**For Developers:** Looking to run your own instance or integrate with Spritz? Check out the [Developer Setup Guide](/docs/developers/installation).
