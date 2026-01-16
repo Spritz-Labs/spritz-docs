@@ -36,9 +36,11 @@ Create a customizable Bento-style profile page with draggable widgets.
 
 **Available Widget Types:**
 
+**Core Widgets:**
+
 | Widget | Description | Sizes |
 |--------|-------------|-------|
-| **Map** | Show a location | 1x1, 2x1, 2x2 |
+| **Map** | Show a location with dark theme tiles | 1x1, 2x1, 2x2 |
 | **Image** | Display an image | All sizes |
 | **Text** | Custom text block | All sizes |
 | **Social Embed** | Embed social posts | 2x1, 2x2 |
@@ -49,6 +51,54 @@ Create a customizable Bento-style profile page with draggable widgets.
 | **Video** | Video embed | 2x2, 4x2 |
 | **Countdown** | Event countdown | 1x1, 2x1 |
 | **Stats** | Display statistics | 1x1, 2x1 |
+
+**Interactive & Fun Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Poll** | Let visitors vote on questions |
+| **Guestbook** | Visitors can leave messages |
+| **Reaction Wall** | Emoji reactions with flying animations |
+| **Virtual Pet** | Animated pet with moods (cat, dog, robot, etc.) |
+| **Fortune Cookie** | Click to reveal random wisdom/fortunes |
+
+**Aesthetic Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Photo Carousel** | Auto-rotating image slideshow |
+| **Mood Board** | Pinterest-style image collage |
+| **Color Palette** | Display brand/favorite colors (click to copy) |
+| **Vinyl Record** | Spinning album art with Spotify link |
+| **Polaroid Stack** | Stacked polaroid-style photos |
+| **Zodiac Sign** | Animated astrological sign display |
+
+**Entertainment Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Bookshelf** | Display books with covers and ratings |
+| **Game Now Playing** | Show current game with platform badge |
+| **Movie Queue** | Watch list with posters |
+| **Podcast Favorites** | Podcast grid with play buttons |
+
+**Productivity Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Availability Status** | Show if available/busy/away |
+| **Timezone Overlap** | Compare visitor's time vs yours |
+| **Streak Counter** | Track daily streaks with fire animation |
+| **Goals Checklist** | Public goals with progress bar |
+
+**Fun Stats Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Fun Counter** | Count anything (coffees, commits, etc.) |
+| **Visitor Counter** | Retro hit counter style |
+| **Random Fact** | Cycling facts about you |
+| **Languages** | Display languages with proficiency bars |
 
 **Widget Sizes:**
 - `1x1` - Square, compact
@@ -275,6 +325,22 @@ Enable browser push notifications:
 - 3-20 characters
 - Alphanumeric and underscores
 - Unique across platform
+
+**Reserved Usernames:**
+
+Certain usernames are blocked to prevent impersonation and scams:
+
+- **Brand names**: spritz, spritzapp, spritz_support, etc.
+- **Official roles**: admin, moderator, support, staff, team
+- **Security terms**: security, root, sysadmin
+- **Financial terms**: wallet, treasury, payment
+- **Authority titles**: ceo, founder, developer
+- **Scam terms**: giveaway, airdrop, prize, verify
+- **Known figures**: vitalik, satoshi, elon
+
+**Blocked patterns:**
+- Prefixes: `spritz_*`, `official_*`, `support_*`, `admin_*`
+- Suffixes: `*_official`, `*_support`, `*_admin`, `*_verified`
 
 ### Change Username
 

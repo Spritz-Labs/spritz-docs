@@ -35,8 +35,47 @@ Admin features are only available to users with `is_admin: true` in the database
 
 -   **View Profile**: See user's full profile
 -   **View Activity**: Check user's recent activity
+-   **View Wallet Deployments**: See user's smart wallet status across all chains
 -   **Grant Beta Access**: Enable beta features
 -   **Revoke Access**: Remove user access (if needed)
+
+### Chain Deployment View
+
+View a user's smart wallet deployment status across all supported chains:
+
+1. Go to Admin → Users
+2. Click on a user to open details
+3. View the chain deployment grid showing:
+   - Which chains have deployed smart wallets
+   - Balance on each chain
+   - Total balance across all chains (USD)
+
+**Chain Status Indicators:**
+
+| Status | Meaning |
+|--------|---------|
+| ✓ (Green) | Wallet deployed on this chain |
+| - (Gray) | Wallet not deployed |
+
+**Supported Chains:**
+
+| Chain | Chain ID |
+|-------|----------|
+| Ethereum | 1 |
+| Base | 8453 |
+| Arbitrum | 42161 |
+| Optimism | 10 |
+| Polygon | 137 |
+| BNB Chain | 56 |
+| Unichain | 130 |
+| Avalanche | 43114 |
+
+**API Endpoint:**
+
+```typescript
+GET /api/admin/user-wallets?address=0x...
+// Returns wallet deployment status and balances across all chains
+```
 
 ## Analytics
 
