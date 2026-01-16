@@ -353,11 +353,6 @@ const config: Config = {
                         },
                         {
                             type: "doc",
-                            docId: "api/complete",
-                            label: "Complete Reference",
-                        },
-                        {
-                            type: "doc",
                             docId: "api/agents-detailed",
                             label: "Agents API",
                         },
@@ -369,6 +364,7 @@ const config: Config = {
                     ],
         },
                 { to: "/blog", label: "Blog", position: "left" },
+                { to: "/brand", label: "Brand", position: "left" },
         {
                     href: "https://github.com/Spritz-Labs/spritz",
                     label: "GitHub",
@@ -419,6 +415,10 @@ const config: Config = {
             {
                             label: "Blog",
                             to: "/blog",
+            },
+            {
+                            label: "Brand Kit",
+                            to: "/brand",
             },
             {
                             label: "App",
