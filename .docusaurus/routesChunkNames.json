@@ -1,11 +1,20 @@
 {
-  "/blog-7a7": {
+  "/blog-485": {
     "__comp": "a6aa9e1f",
     "__context": {
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
     "items": [
+      {
+        "content": "be110752"
+      },
+      {
+        "content": "5ab8f523"
+      },
+      {
+        "content": "92fdb72a"
+      },
       {
         "content": "b387a76f"
       },
@@ -33,6 +42,17 @@
     "sidebar": "814f3328",
     "__props": "ef8b811a"
   },
+  "/blog/spritz-alien-partnership-bce": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "58e28d40"
+  },
   "/blog/spritz-chat-manifesto-805": {
     "__comp": "ccc49370",
     "__context": {
@@ -52,13 +72,35 @@
     "sidebar": "814f3328",
     "__props": "3a2db09e"
   },
-  "/blog/tags/censorship-resistance-08b": {
+  "/blog/tags/alien-80c": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
     "items": [
+      {
+        "content": "92fdb72a"
+      }
+    ],
+    "__props": "37f400a2"
+  },
+  "/blog/tags/censorship-resistance-3d6": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "be110752"
+      },
+      {
+        "content": "5ab8f523"
+      },
+      {
+        "content": "92fdb72a"
+      },
       {
         "content": "b387a76f"
       },
@@ -68,13 +110,22 @@
     ],
     "__props": "53276c65"
   },
-  "/blog/tags/decentralization-fd9": {
+  "/blog/tags/decentralization-353": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
     "items": [
+      {
+        "content": "be110752"
+      },
+      {
+        "content": "5ab8f523"
+      },
+      {
+        "content": "92fdb72a"
+      },
       {
         "content": "b387a76f"
       },
@@ -83,6 +134,45 @@
       }
     ],
     "__props": "21d2a0db"
+  },
+  "/blog/tags/ethereum-43c": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "5ab8f523"
+      }
+    ],
+    "__props": "a1ed4c25"
+  },
+  "/blog/tags/global-4a1": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "be110752"
+      }
+    ],
+    "__props": "60778d1c"
+  },
+  "/blog/tags/logos-messaging-4cf": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "5ab8f523"
+      }
+    ],
+    "__props": "2d968290"
   },
   "/blog/tags/manifesto-d87": {
     "__comp": "6875c492",
@@ -113,7 +203,7 @@
     ],
     "__props": "fe40915d"
   },
-  "/blog/tags/privacy-a07": {
+  "/blog/tags/partnership-b02": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
@@ -121,18 +211,75 @@
     "sidebar": "814f3328",
     "items": [
       {
-        "content": "b387a76f"
+        "content": "92fdb72a"
       }
     ],
-    "__props": "5b428bcf"
+    "__props": "204759e4"
   },
-  "/blog/tags/spritz-9e7": {
+  "/blog/tags/policy-e7a": {
     "__comp": "6875c492",
     "__context": {
       "plugin": "36994c47"
     },
     "sidebar": "814f3328",
     "items": [
+      {
+        "content": "be110752"
+      }
+    ],
+    "__props": "1e186568"
+  },
+  "/blog/tags/privacy-784": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "be110752"
+      },
+      {
+        "content": "5ab8f523"
+      },
+      {
+        "content": "92fdb72a"
+      },
+      {
+        "content": "b387a76f"
+      }
+    ],
+    "__props": "5b428bcf"
+  },
+  "/blog/tags/proof-of-personhood-ee5": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "92fdb72a"
+      }
+    ],
+    "__props": "4302c4a1"
+  },
+  "/blog/tags/spritz-262": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "be110752"
+      },
+      {
+        "content": "5ab8f523"
+      },
+      {
+        "content": "92fdb72a"
+      },
       {
         "content": "b387a76f"
       },
@@ -141,6 +288,32 @@
       }
     ],
     "__props": "a961ffb3"
+  },
+  "/blog/tags/vitalik-17e": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "5ab8f523"
+      }
+    ],
+    "__props": "841c9122"
+  },
+  "/blog/tags/voip-596": {
+    "__comp": "6875c492",
+    "__context": {
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "items": [
+      {
+        "content": "be110752"
+      }
+    ],
+    "__props": "f395b8ab"
   },
   "/blog/tags/web3-5ce": {
     "__comp": "6875c492",
@@ -158,6 +331,28 @@
     ],
     "__props": "8f47e305"
   },
+  "/blog/vitalik-decentralized-messaging-vision-671": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "0cba242f"
+  },
+  "/blog/voip-restrictions-global-eb3": {
+    "__comp": "ccc49370",
+    "__context": {
+      "data": {
+        "blogMetadata": "acecf23e"
+      },
+      "plugin": "36994c47"
+    },
+    "sidebar": "814f3328",
+    "content": "32a0ad80"
+  },
   "/blog/why-we-built-spritz-6d3": {
     "__comp": "ccc49370",
     "__context": {
@@ -168,6 +363,13 @@
     },
     "sidebar": "814f3328",
     "content": "ae681c21"
+  },
+  "/brand-d91": {
+    "__comp": "b832a665",
+    "__context": {
+      "plugin": "a7456010"
+    },
+    "config": "5e9f5e1a"
   },
   "/markdown-page-3d7": {
     "__comp": "1f391b9e",

@@ -2,6 +2,24 @@
   "title": "Recent posts",
   "items": [
     {
+      "title": "Nearly One-Third of the World Can't Reliably Call",
+      "permalink": "/blog/voip-restrictions-global",
+      "unlisted": false,
+      "date": "2026-01-15T00:00:00.000Z"
+    },
+    {
+      "title": "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos",
+      "permalink": "/blog/vitalik-decentralized-messaging-vision",
+      "unlisted": false,
+      "date": "2026-01-14T00:00:00.000Z"
+    },
+    {
+      "title": "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication",
+      "permalink": "/blog/spritz-alien-partnership",
+      "unlisted": false,
+      "date": "2026-01-13T00:00:00.000Z"
+    },
+    {
       "title": "Spritz Chat Manifesto",
       "permalink": "/blog/spritz-chat-manifesto",
       "unlisted": false,

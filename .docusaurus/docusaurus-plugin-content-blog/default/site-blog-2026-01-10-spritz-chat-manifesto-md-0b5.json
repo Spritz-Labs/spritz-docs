@@ -3,7 +3,7 @@
   "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2026-01-10-spritz-chat-manifesto.md",
   "source": "@site/blog/2026-01-10-spritz-chat-manifesto.md",
   "title": "Spritz Chat Manifesto",
-  "description": "Communication is a universal human right recognized by the United Nations. Yet billions of people are denied meaningful access to it.",
+  "description": "The Spritz Chat Manifesto: Communication is a universal human right. Learn why we built a fully decentralized peer-to-peer communication network with no centralized servers, no gatekeepers, and full encryption by design.",
   "date": "2026-01-10T00:00:00.000Z",
   "tags": [
     {
@@ -55,13 +55,20 @@
     {
       "name": "Anonymous",
       "title": "Spritz Team",
+      "url": "https://app.spritz.chat",
+      "socials": {
+        "x": "https://x.com/spritzchat",
+        "github": "https://github.com/Spritz-Labs"
+      },
       "page": null,
+      "imageURL": "/img/logo.svg",
       "key": "anonymous"
     }
   ],
   "frontMatter": {
     "slug": "spritz-chat-manifesto",
     "title": "Spritz Chat Manifesto",
+    "description": "The Spritz Chat Manifesto: Communication is a universal human right. Learn why we built a fully decentralized peer-to-peer communication network with no centralized servers, no gatekeepers, and full encryption by design.",
     "authors": [
       "anonymous"
     ],
@@ -73,9 +80,25 @@
       "web3",
       "manifesto",
       "privacy"
-    ]
+    ],
+    "keywords": [
+      "Spritz manifesto",
+      "decentralized communication",
+      "peer-to-peer messaging",
+      "censorship-resistant chat",
+      "encrypted messaging",
+      "Web3 communication",
+      "privacy-first messaging",
+      "decentralized social network",
+      "human rights communication"
+    ],
+    "image": "/og-image.png"
   },
   "unlisted": false,
+  "prevItem": {
+    "title": "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication",
+    "permalink": "/blog/spritz-alien-partnership"
+  },
   "nextItem": {
     "title": "Why We Built Spritz",
     "permalink": "/blog/why-we-built-spritz"

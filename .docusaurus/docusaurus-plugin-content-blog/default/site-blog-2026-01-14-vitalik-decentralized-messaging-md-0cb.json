@@ -1,0 +1,107 @@
+{
+  "permalink": "/blog/vitalik-decentralized-messaging-vision",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2026-01-14-vitalik-decentralized-messaging.md",
+  "source": "@site/blog/2026-01-14-vitalik-decentralized-messaging.md",
+  "title": "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos",
+  "description": "Vitalik Buterin declares 'The decentralized renaissance is coming.' Learn why Spritz built on Logos Messaging (Waku) to align with Ethereum's original cypherpunk vision for censorship-resistant, privacy-preserving communication.",
+  "date": "2026-01-14T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Spritz",
+      "permalink": "/blog/tags/spritz",
+      "description": "Posts about Spritz platform and features"
+    },
+    {
+      "inline": false,
+      "label": "Decentralization",
+      "permalink": "/blog/tags/decentralization",
+      "description": "Posts about decentralized technology and architecture"
+    },
+    {
+      "inline": false,
+      "label": "Privacy",
+      "permalink": "/blog/tags/privacy",
+      "description": "Posts about privacy and data protection"
+    },
+    {
+      "inline": false,
+      "label": "Logos Messaging",
+      "permalink": "/blog/tags/logos-messaging",
+      "description": "Posts about Logos Messaging protocol and decentralized communication"
+    },
+    {
+      "inline": false,
+      "label": "Ethereum",
+      "permalink": "/blog/tags/ethereum",
+      "description": "Posts about Ethereum ecosystem and technology"
+    },
+    {
+      "inline": false,
+      "label": "Vitalik Buterin",
+      "permalink": "/blog/tags/vitalik",
+      "description": "Posts referencing Vitalik Buterin's ideas and vision"
+    },
+    {
+      "inline": false,
+      "label": "Censorship Resistance",
+      "permalink": "/blog/tags/censorship-resistance",
+      "description": "Posts about building censorship-resistant platforms"
+    }
+  ],
+  "readingTime": 4.18,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Anonymous",
+      "title": "Spritz Team",
+      "url": "https://app.spritz.chat",
+      "socials": {
+        "x": "https://x.com/spritzchat",
+        "github": "https://github.com/Spritz-Labs"
+      },
+      "page": null,
+      "imageURL": "/img/logo.svg",
+      "key": "anonymous"
+    }
+  ],
+  "frontMatter": {
+    "slug": "vitalik-decentralized-messaging-vision",
+    "title": "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos",
+    "description": "Vitalik Buterin declares 'The decentralized renaissance is coming.' Learn why Spritz built on Logos Messaging (Waku) to align with Ethereum's original cypherpunk vision for censorship-resistant, privacy-preserving communication.",
+    "authors": [
+      "anonymous"
+    ],
+    "tags": [
+      "spritz",
+      "decentralization",
+      "privacy",
+      "logos-messaging",
+      "ethereum",
+      "vitalik",
+      "censorship-resistance"
+    ],
+    "keywords": [
+      "Vitalik Buterin",
+      "decentralized messaging",
+      "Logos Messaging",
+      "Waku protocol",
+      "Ethereum cypherpunk",
+      "Web3 messaging",
+      "Whisper protocol",
+      "decentralized renaissance",
+      "privacy messaging",
+      "censorship-resistant communication"
+    ],
+    "image": "/og-image.png"
+  },
+  "unlisted": false,
+  "prevItem": {
+    "title": "Nearly One-Third of the World Can't Reliably Call",
+    "permalink": "/blog/voip-restrictions-global"
+  },
+  "nextItem": {
+    "title": "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication",
+    "permalink": "/blog/spritz-alien-partnership"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "id": "api/complete",
-  "title": "Complete API Reference",
-  "description": "Comprehensive reference for all Spritz API endpoints.",
+  "title": "complete",
+  "description": "",
   "source": "@site/docs/api/complete.md",
   "sourceDirName": "api",
   "slug": "/api/complete",

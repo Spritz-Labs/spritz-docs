@@ -48,40 +48,56 @@
     --ifm-button-color: #ffffff;
 }
 
-/* Dark Mode - Spritz Branding */
+/* Dark Mode - True Dark Theme */
 [data-theme="dark"] {
     /* Primary Orange - #FF5500 */
-    --ifm-color-primary: #ff5500;
-    --ifm-color-primary-dark: #e04d00;
-    --ifm-color-primary-darker: #d44800;
-    --ifm-color-primary-darkest: #ae3b00;
-    --ifm-color-primary-light: #ff6619;
-    --ifm-color-primary-lighter: #ff6f26;
-    --ifm-color-primary-lightest: #ff8f4d;
+    --ifm-color-primary: #ff6b1a;
+    --ifm-color-primary-dark: #ff5500;
+    --ifm-color-primary-darker: #e04d00;
+    --ifm-color-primary-darkest: #cc4400;
+    --ifm-color-primary-light: #ff8533;
+    --ifm-color-primary-lighter: #ff9f5c;
+    --ifm-color-primary-lightest: #ffbf8c;
 
-    /* Background - Cream #FFF0E0 */
-    --ifm-background-color: #fff0e0;
-    --ifm-background-surface-color: #f5e6d3;
+    /* Background - Dark */
+    --ifm-background-color: #0a0a0a;
+    --ifm-background-surface-color: #141414;
 
-    /* Text - Black for contrast on cream */
-    --ifm-font-color-base: #000000;
-    --ifm-heading-color: #000000;
-    --ifm-color-content: #000000;
-    --ifm-color-content-secondary: #333333;
+    /* Text - Light for contrast on dark */
+    --ifm-font-color-base: #e5e5e5;
+    --ifm-heading-color: #ffffff;
+    --ifm-color-content: #e5e5e5;
+    --ifm-color-content-secondary: #a3a3a3;
+
+    /* Cards and surfaces */
+    --ifm-card-background-color: #1a1a1a;
+    --ifm-color-emphasis-100: #1f1f1f;
+    --ifm-color-emphasis-200: #2a2a2a;
+    --ifm-color-emphasis-300: #3a3a3a;
+    --ifm-color-emphasis-600: #a3a3a3;
+    --ifm-color-emphasis-700: #c4c4c4;
+    --ifm-color-emphasis-800: #e0e0e0;
+    --ifm-color-emphasis-900: #f5f5f5;
 
     /* Code */
-    --docusaurus-highlighted-code-line-bg: rgba(255, 85, 0, 0.3);
+    --docusaurus-highlighted-code-line-bg: rgba(255, 85, 0, 0.2);
+    --ifm-code-background: #1a1a1a;
 
     /* Links */
-    --ifm-link-color: #ff5500;
-    --ifm-link-hover-color: #e04d00;
+    --ifm-link-color: #ff6b1a;
+    --ifm-link-hover-color: #ff8533;
 
     /* Navbar */
-    --ifm-navbar-background-color: rgba(255, 240, 224, 0.95);
-    --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --ifm-navbar-background-color: rgba(10, 10, 10, 0.95);
+    --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
     /* Footer */
-    --ifm-footer-background-color: #f5e6d3;
+    --ifm-footer-background-color: #0f0f0f;
+
+    /* Menu */
+    --ifm-menu-color: #e5e5e5;
+    --ifm-menu-color-active: #ff6b1a;
+    --ifm-menu-color-background-active: rgba(255, 85, 0, 0.1);
 }
 
 /* Custom Spritz Branding */
@@ -202,7 +218,7 @@
 }
 
 [data-theme="dark"] .markdown {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .markdown h1,
@@ -211,12 +227,12 @@
 [data-theme="dark"] .markdown h4,
 [data-theme="dark"] .markdown h5,
 [data-theme="dark"] .markdown h6 {
-    color: #000000;
+    color: #ffffff;
 }
 
 [data-theme="dark"] .markdown p,
 [data-theme="dark"] .markdown li {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .markdown a {
@@ -224,7 +240,7 @@
 }
 
 [data-theme="dark"] .markdown a:hover {
-    color: var(--ifm-color-primary-dark);
+    color: var(--ifm-color-primary-light);
 }
 
 /* Table of contents active link */
@@ -234,10 +250,14 @@
 }
 
 [data-theme="dark"] .table-of-contents__link {
-    color: #333333;
+    color: #a3a3a3;
 }
 
 [data-theme="dark"] .table-of-contents__link:hover {
+    color: var(--ifm-color-primary);
+}
+
+[data-theme="dark"] .table-of-contents__link--active {
     color: var(--ifm-color-primary);
 }
 
@@ -279,15 +299,16 @@
 
 /* Ensure footer text is readable in both themes */
 [data-theme="dark"] .footer {
-    background-color: #f5e6d3;
+    background-color: #0f0f0f;
+    border-top: 1px solid rgba(255, 85, 0, 0.2);
 }
 
 [data-theme="dark"] .footer__title {
-    color: #000000;
+    color: #ffffff;
 }
 
 [data-theme="dark"] .footer__link-item {
-    color: #1a1a1a;
+    color: #a3a3a3;
 }
 
 [data-theme="dark"] .footer__link-item:hover {
@@ -295,7 +316,7 @@
 }
 
 [data-theme="dark"] .footer__copyright {
-    color: #1a1a1a;
+    color: #737373;
 }
 
 /* Navbar styling */
@@ -324,18 +345,18 @@
 }
 
 [data-theme="dark"] .navbar {
-    background-color: rgba(255, 240, 224, 0.95);
+    background-color: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 85, 0, 0.1);
-    color: #000000;
+    border-bottom: 1px solid rgba(255, 85, 0, 0.15);
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .navbar__item {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .navbar__link {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .navbar__link:hover {
@@ -343,7 +364,7 @@
 }
 
 [data-theme="dark"] .navbar__brand {
-    color: #000000;
+    color: #ffffff;
 }
 
 /* Hero section accent */
@@ -373,7 +394,7 @@
 }
 
 [data-theme="dark"] .hero {
-    background: linear-gradient(135deg, #fff0e0 0%, #f5e6d3 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
 }
 
 [data-theme="dark"] .hero__title {
@@ -381,6 +402,10 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+[data-theme="dark"] .hero__subtitle {
+    color: #a3a3a3;
 }
 
 /* Badge colors */
@@ -446,15 +471,21 @@ code {
 }
 
 [data-theme="dark"] .menu__link {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 [data-theme="dark"] .menu__link:hover {
     color: var(--ifm-color-primary);
+    background-color: rgba(255, 85, 0, 0.1);
+}
+
+[data-theme="dark"] .menu__link--active {
+    color: var(--ifm-color-primary);
+    background-color: rgba(255, 85, 0, 0.1);
 }
 
 [data-theme="dark"] .menu__list-item {
-    color: #000000;
+    color: #e5e5e5;
 }
 
 /* Mobile sidebar styling */
@@ -542,18 +573,23 @@ code {
 
 /* Dark mode */
 [data-theme="dark"] .navbar-sidebar {
-    background-color: #fff0e0 !important;
+    background-color: #0a0a0a !important;
 }
 
 [data-theme="dark"] .navbar-sidebar .menu__link,
 [data-theme="dark"] .navbar-sidebar .navbar__link,
 [data-theme="dark"] .navbar-sidebar .navbar-sidebar__back {
-    color: #000000 !important;
+    color: #e5e5e5 !important;
 }
 
 [data-theme="dark"] .navbar-sidebar .menu__link:hover,
 [data-theme="dark"] .navbar-sidebar .navbar__link:hover {
     color: var(--ifm-color-primary) !important;
+    background-color: rgba(255, 85, 0, 0.1);
+}
+
+[data-theme="dark"] .navbar-sidebar__brand {
+    border-bottom-color: rgba(255, 85, 0, 0.2);
 }
 
 /* ============================================
@@ -597,19 +633,24 @@ code {
 }
 
 [data-theme="dark"] .markdown table {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    border: 1px solid #2a2a2a;
 }
 
 [data-theme="dark"] .markdown table th {
-    background: linear-gradient(135deg, rgba(255, 85, 0, 0.2) 0%, rgba(251, 141, 34, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(255, 85, 0, 0.15) 0%, rgba(251, 141, 34, 0.1) 100%);
+    color: #ffffff;
+    border-bottom: 2px solid var(--ifm-color-primary);
 }
 
 [data-theme="dark"] .markdown table td {
-    border-bottom-color: rgba(0, 0, 0, 0.1);
+    border-bottom-color: #2a2a2a;
+    color: #e5e5e5;
+    background: #141414;
 }
 
 [data-theme="dark"] .markdown table tr:nth-child(even) td {
-    background: rgba(0, 0, 0, 0.05);
+    background: #1a1a1a;
 }
 
 [data-theme="dark"] .markdown table tr:hover td {
@@ -736,7 +777,11 @@ code {
     }
 
     [data-theme="dark"] .markdown table tr:nth-child(even) td {
-        background: rgba(0, 0, 0, 0.05);
+        background: #1a1a1a;
+    }
+
+    [data-theme="dark"] .markdown table td {
+        background: #141414;
     }
 
     /* Buttons mobile */

@@ -71,18 +71,18 @@
 
 /* Dark mode adjustments */
 [data-theme='dark'] .socialShareContainer {
-    background-color: var(--ifm-background-surface-color);
-    border-color: rgba(255, 85, 0, 0.2);
+    background-color: #1a1a1a;
+    border-color: #2a2a2a;
 }
 
 [data-theme='dark'] .socialShareLabel {
-    color: #000000;
+    color: #ffffff;
 }
 
 [data-theme='dark'] .shareButton {
-    background-color: #ffffff;
-    border-color: rgba(255, 85, 0, 0.3);
-    color: #000000;
+    background-color: #141414;
+    border-color: #2a2a2a;
+    color: #e5e5e5;
 }
 
 [data-theme='dark'] .shareButton:hover {

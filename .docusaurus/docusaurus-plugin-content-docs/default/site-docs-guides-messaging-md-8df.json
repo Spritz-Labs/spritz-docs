@@ -1,7 +1,7 @@
 {
   "id": "guides/messaging",
   "title": "Messaging Guide",
-  "description": "Spritz uses the Waku Protocol for decentralized, peer-to-peer messaging with end-to-end encryption.",
+  "description": "Spritz uses Logos Messaging for decentralized, peer-to-peer messaging with end-to-end encryption.",
   "source": "@site/docs/guides/messaging.md",
   "sourceDirName": "guides",
   "slug": "/guides/messaging",

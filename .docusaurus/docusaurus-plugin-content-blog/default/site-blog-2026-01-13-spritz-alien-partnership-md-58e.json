@@ -1,0 +1,107 @@
+{
+  "permalink": "/blog/spritz-alien-partnership",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2026-01-13-spritz-alien-partnership.md",
+  "source": "@site/blog/2026-01-13-spritz-alien-partnership.md",
+  "title": "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication",
+  "description": "Spritz Chat partners with Alien for privacy-preserving proof of personhood. Learn how decentralized messaging combined with human verification enables censorship-resistant communication for 2.3 billion people affected by restrictions.",
+  "date": "2026-01-13T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Spritz",
+      "permalink": "/blog/tags/spritz",
+      "description": "Posts about Spritz platform and features"
+    },
+    {
+      "inline": false,
+      "label": "Alien",
+      "permalink": "/blog/tags/alien",
+      "description": "Posts about Alien and proof of personhood"
+    },
+    {
+      "inline": false,
+      "label": "Partnership",
+      "permalink": "/blog/tags/partnership",
+      "description": "Posts about Spritz partnerships and collaborations"
+    },
+    {
+      "inline": false,
+      "label": "Censorship Resistance",
+      "permalink": "/blog/tags/censorship-resistance",
+      "description": "Posts about building censorship-resistant platforms"
+    },
+    {
+      "inline": false,
+      "label": "Privacy",
+      "permalink": "/blog/tags/privacy",
+      "description": "Posts about privacy and data protection"
+    },
+    {
+      "inline": false,
+      "label": "Decentralization",
+      "permalink": "/blog/tags/decentralization",
+      "description": "Posts about decentralized technology and architecture"
+    },
+    {
+      "inline": false,
+      "label": "Proof of Personhood",
+      "permalink": "/blog/tags/proof-of-personhood",
+      "description": "Posts about human verification and anti-sybil mechanisms"
+    }
+  ],
+  "readingTime": 3.02,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Anonymous",
+      "title": "Spritz Team",
+      "url": "https://app.spritz.chat",
+      "socials": {
+        "x": "https://x.com/spritzchat",
+        "github": "https://github.com/Spritz-Labs"
+      },
+      "page": null,
+      "imageURL": "/img/logo.svg",
+      "key": "anonymous"
+    }
+  ],
+  "frontMatter": {
+    "slug": "spritz-alien-partnership",
+    "title": "Spritz Chat × Alien: Enabling Censorship-Resistant Human Communication",
+    "description": "Spritz Chat partners with Alien for privacy-preserving proof of personhood. Learn how decentralized messaging combined with human verification enables censorship-resistant communication for 2.3 billion people affected by restrictions.",
+    "authors": [
+      "anonymous"
+    ],
+    "tags": [
+      "spritz",
+      "alien",
+      "partnership",
+      "censorship-resistance",
+      "privacy",
+      "decentralization",
+      "proof-of-personhood"
+    ],
+    "keywords": [
+      "Spritz Alien partnership",
+      "proof of personhood",
+      "censorship-resistant messaging",
+      "decentralized communication",
+      "human verification",
+      "privacy-preserving identity",
+      "VoIP restrictions",
+      "global communication",
+      "Web3 messaging",
+      "anti-censorship"
+    ],
+    "image": "/og-image.png"
+  },
+  "unlisted": false,
+  "prevItem": {
+    "title": "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos",
+    "permalink": "/blog/vitalik-decentralized-messaging-vision"
+  },
+  "nextItem": {
+    "title": "Spritz Chat Manifesto",
+    "permalink": "/blog/spritz-chat-manifesto"
+  }
+}

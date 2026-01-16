@@ -41,6 +41,29 @@ export default {
     "path": "i18n",
     "localeConfigs": {}
   },
+  "headTags": [
+    {
+      "tagName": "link",
+      "attributes": {
+        "rel": "preconnect",
+        "href": "https://app.spritz.chat"
+      }
+    },
+    {
+      "tagName": "link",
+      "attributes": {
+        "rel": "dns-prefetch",
+        "href": "https://app.spritz.chat"
+      }
+    },
+    {
+      "tagName": "link",
+      "attributes": {
+        "rel": "canonical",
+        "href": "https://docs.spritz.chat"
+      }
+    }
+  ],
   "presets": [
     [
       "classic",
@@ -53,12 +76,21 @@ export default {
         },
         "blog": {
           "showReadingTime": true,
+          "blogTitle": "Spritz Blog",
+          "blogDescription": "Latest updates, announcements, and insights from Spritz - the decentralized social platform for Web3 messaging, AI agents, and censorship-resistant communication.",
+          "blogSidebarTitle": "Recent posts",
+          "blogSidebarCount": 10,
           "feedOptions": {
             "type": [
               "rss",
-              "atom"
+              "atom",
+              "json"
             ],
-            "xslt": true
+            "xslt": true,
+            "title": "Spritz Blog",
+            "description": "Latest updates from Spritz - decentralized social platform",
+            "copyright": "Copyright © 2026 Spritz Labs",
+            "language": "en"
           },
           "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
           "onInlineTags": "warn",
@@ -76,7 +108,8 @@ export default {
             "/blog/tags/**",
             "/blog/authors/**",
             "/blog/archive",
-            "/markdown-page"
+            "/markdown-page",
+            "/search"
           ],
           "filename": "sitemap.xml"
         }
@@ -95,7 +128,7 @@ export default {
     "metadata": [
       {
         "name": "keywords",
-        "content": "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Waku protocol, Logos, x402 payments, Web3, blockchain, decentralized messaging, P2P communication, Livepeer, Huddle01, Sign-In with Ethereum, SIWE, Sign-In with Solana, SIWS, passkeys, crypto payments, decentralized social network"
+        "content": "Spritz, decentralized social platform, Web3 messaging, AI agents, livestreaming, censorship resistant, open source, peer-to-peer, Logos Messaging, Logos, x402 payments, Web3, blockchain, decentralized messaging, P2P communication, Livepeer, Huddle01, Sign-In with Ethereum, SIWE, Sign-In with Solana, SIWS, passkeys, crypto payments, decentralized social network"
       },
       {
         "name": "author",
@@ -119,7 +152,7 @@ export default {
       },
       {
         "property": "og:site_name",
-        "content": "Spritz Documentation"
+        "content": "Spritz"
       },
       {
         "property": "og:title",
@@ -147,7 +180,7 @@ export default {
       },
       {
         "property": "og:image:alt",
-        "content": "Spritz Documentation - Decentralized Social Platform"
+        "content": "Spritz - Censorship-Resistant Chat for Web3"
       },
       {
         "property": "og:locale",
@@ -159,11 +192,11 @@ export default {
       },
       {
         "name": "twitter:site",
-        "content": "@SpritzLabs"
+        "content": "@spritzchat"
       },
       {
         "name": "twitter:creator",
-        "content": "@SpritzLabs"
+        "content": "@spritzchat"
       },
       {
         "name": "twitter:title",
@@ -179,7 +212,7 @@ export default {
       },
       {
         "name": "twitter:image:alt",
-        "content": "Spritz Documentation - Decentralized Social Platform"
+        "content": "Spritz - Censorship-Resistant Chat for Web3"
       },
       {
         "name": "application-name",
@@ -314,11 +347,6 @@ export default {
             },
             {
               "type": "doc",
-              "docId": "api/complete",
-              "label": "Complete Reference"
-            },
-            {
-              "type": "doc",
               "docId": "api/agents-detailed",
               "label": "Agents API"
             },
@@ -332,6 +360,11 @@ export default {
         {
           "to": "/blog",
           "label": "Blog",
+          "position": "left"
+        },
+        {
+          "to": "/brand",
+          "label": "Brand",
           "position": "left"
         },
         {
@@ -384,6 +417,10 @@ export default {
             {
               "label": "Blog",
               "to": "/blog"
+            },
+            {
+              "label": "Brand Kit",
+              "to": "/brand"
             },
             {
               "label": "App",
@@ -618,7 +655,6 @@ export default {
   "plugins": [],
   "themes": [],
   "scripts": [],
-  "headTags": [],
   "stylesheets": [],
   "clientModules": [],
   "titleDelimiter": "|",

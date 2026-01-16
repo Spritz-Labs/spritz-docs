@@ -1,0 +1,91 @@
+{
+  "permalink": "/blog/voip-restrictions-global",
+  "editUrl": "https://github.com/Spritz-Labs/spritz-docs/tree/main/blog/2026-01-15-voip-restrictions-global.md",
+  "source": "@site/blog/2026-01-15-voip-restrictions-global.md",
+  "title": "Nearly One-Third of the World Can't Reliably Call",
+  "description": "Approximately 29% of the global population—nearly 2.3 billion people—lives in countries where internet calling is restricted. Implications for policy, product, and global tech strategy.",
+  "date": "2026-01-15T00:00:00.000Z",
+  "tags": [
+    {
+      "inline": false,
+      "label": "Censorship Resistance",
+      "permalink": "/blog/tags/censorship-resistance",
+      "description": "Posts about building censorship-resistant platforms"
+    },
+    {
+      "inline": false,
+      "label": "Privacy",
+      "permalink": "/blog/tags/privacy",
+      "description": "Posts about privacy and data protection"
+    },
+    {
+      "inline": false,
+      "label": "Spritz",
+      "permalink": "/blog/tags/spritz",
+      "description": "Posts about Spritz platform and features"
+    },
+    {
+      "inline": false,
+      "label": "Decentralization",
+      "permalink": "/blog/tags/decentralization",
+      "description": "Posts about decentralized technology and architecture"
+    },
+    {
+      "inline": false,
+      "label": "VoIP",
+      "permalink": "/blog/tags/voip",
+      "description": "Posts about voice and video calling over the internet"
+    },
+    {
+      "inline": false,
+      "label": "Policy",
+      "permalink": "/blog/tags/policy",
+      "description": "Posts about digital policy and regulation"
+    },
+    {
+      "inline": false,
+      "label": "Global",
+      "permalink": "/blog/tags/global",
+      "description": "Posts about global connectivity and access"
+    }
+  ],
+  "readingTime": 4.61,
+  "hasTruncateMarker": true,
+  "authors": [
+    {
+      "name": "Anonymous",
+      "title": "Spritz Team",
+      "url": "https://app.spritz.chat",
+      "socials": {
+        "x": "https://x.com/spritzchat",
+        "github": "https://github.com/Spritz-Labs"
+      },
+      "page": null,
+      "imageURL": "/img/logo.svg",
+      "key": "anonymous"
+    }
+  ],
+  "frontMatter": {
+    "slug": "voip-restrictions-global",
+    "title": "Nearly One-Third of the World Can't Reliably Call",
+    "description": "Approximately 29% of the global population—nearly 2.3 billion people—lives in countries where internet calling is restricted. Implications for policy, product, and global tech strategy.",
+    "authors": [
+      "anonymous"
+    ],
+    "tags": [
+      "censorship-resistance",
+      "privacy",
+      "spritz",
+      "decentralization",
+      "voip",
+      "policy",
+      "global"
+    ],
+    "image": "/img/world-map.png"
+  },
+  "unlisted": false,
+  "nextItem": {
+    "title": "Vitalik's Vision for Decentralized Messaging — And Why Spritz Built on Logos",
+    "permalink": "/blog/vitalik-decentralized-messaging-vision"
+  }
+}

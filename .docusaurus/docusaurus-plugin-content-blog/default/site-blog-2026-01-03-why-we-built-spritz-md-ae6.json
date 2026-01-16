@@ -37,13 +37,19 @@
       "description": "Posts about Web3 technologies and principles"
     }
   ],
-  "readingTime": 4.69,
+  "readingTime": 4.74,
   "hasTruncateMarker": true,
   "authors": [
     {
       "name": "Anonymous",
       "title": "Spritz Team",
+      "url": "https://app.spritz.chat",
+      "socials": {
+        "x": "https://x.com/spritzchat",
+        "github": "https://github.com/Spritz-Labs"
+      },
       "page": null,
+      "imageURL": "/img/logo.svg",
       "key": "anonymous"
     }
   ],
@@ -73,7 +79,8 @@
       "Web3",
       "blockchain",
       "decentralized communication"
-    ]
+    ],
+    "image": "/og-image.png"
   },
   "unlisted": false,
   "prevItem": {
