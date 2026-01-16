@@ -63,3 +63,23 @@
     justify-content: center;
   }
 }
+
+/* Dark Mode Support */
+:global([data-theme="dark"]) .heroBanner {
+  background: linear-gradient(135deg, #fff0e0 0%, #f5e6d3 50%, #fff0e0 100%);
+}
+
+:global([data-theme="dark"]) .heroBanner::before {
+  background: radial-gradient(circle at 30% 50%, rgba(255, 85, 0, 0.08) 0%, transparent 50%);
+}
+
+:global([data-theme="dark"]) .buttons a {
+  color: #000000;
+  border-color: rgba(255, 85, 0, 0.3);
+}
+
+:global([data-theme="dark"]) .buttons a:hover {
+  color: #ffffff;
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
