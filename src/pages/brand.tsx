@@ -18,6 +18,9 @@ const logoAssets = [
   { name: 'Logo Icon (Dark BG)', file: 'logo-dark-bg.svg', desc: 'Icon with forest green background' },
   { name: 'Wordmark (Dark Mode)', file: 'logo-wordmark-dark.svg', desc: 'Logo + wordmark for dark backgrounds' },
   { name: 'Wordmark (Light Mode)', file: 'logo-wordmark-light.svg', desc: 'Logo + wordmark for light backgrounds' },
+  { name: 'Script Wordmark (White)', file: 'wordmark-script-dark.svg', desc: 'Playful script wordmark for dark backgrounds' },
+  { name: 'Script Wordmark (Green)', file: 'wordmark-script-light.svg', desc: 'Playful script wordmark for light backgrounds' },
+  { name: 'Script Wordmark (Orange)', file: 'wordmark-script-orange.svg', desc: 'Gradient script wordmark' },
 ];
 
 function ColorSwatch({ color }: { color: typeof colors[0] }) {
