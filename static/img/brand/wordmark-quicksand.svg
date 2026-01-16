@@ -1,26 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
   <defs>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&amp;display=swap');
     </style>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF5500"/>
+      <stop offset="100%" style="stop-color:#FB8D22"/>
+    </linearGradient>
   </defs>
   
-  <!-- Logo icon scaled down -->
+  <!-- Logo icon -->
   <g transform="translate(10, 15) scale(0.175)">
-    <!-- Background - Cream/Light Peach -->
     <rect width="512" height="512" rx="108" fill="#FFF5E6"/>
-    
-    <!-- Stem (dark brown) -->
     <rect x="240" y="96" width="32" height="32" fill="#8B4513"/>
-    
-    <!-- Leaf (green) -->
     <rect x="272" y="96" width="32" height="32" fill="#22C55E"/>
     <rect x="304" y="96" width="32" height="32" fill="#22C55E"/>
     <rect x="272" y="128" width="32" height="32" fill="#22C55E"/>
     <rect x="304" y="128" width="32" height="32" fill="#16A34A"/>
     <rect x="336" y="128" width="32" height="32" fill="#16A34A"/>
-    
-    <!-- Orange body -->
     <rect x="208" y="128" width="32" height="32" fill="#FF5500"/>
     <rect x="240" y="128" width="32" height="32" fill="#FF5500"/>
     <rect x="176" y="160" width="32" height="32" fill="#FF5500"/>
@@ -79,6 +76,5 @@
     <rect x="272" y="384" width="32" height="32" fill="#CC4400"/>
   </g>
   
-  <!-- Wordmark "Spritz" in Pacifico script -->
-  <text x="120" y="82" font-family="Pacifico, cursive" font-size="58" fill="#004921">Spritz</text>
+  <text x="115" y="78" font-family="Quicksand, sans-serif" font-size="52" font-weight="700" fill="url(#orangeGrad)">Spritz</text>
 </svg>

@@ -16,11 +16,13 @@ const logoAssets = [
   { name: 'Logo Icon (Cream BG)', file: 'logo-icon.svg', desc: 'Primary app icon with cream background' },
   { name: 'Logo Icon (Transparent)', file: 'logo-icon-transparent.svg', desc: 'Icon without background for overlays' },
   { name: 'Logo Icon (Dark BG)', file: 'logo-dark-bg.svg', desc: 'Icon with forest green background' },
-  { name: 'Wordmark (Dark Mode)', file: 'logo-wordmark-dark.svg', desc: 'Logo + wordmark for dark backgrounds' },
-  { name: 'Wordmark (Light Mode)', file: 'logo-wordmark-light.svg', desc: 'Logo + wordmark for light backgrounds' },
-  { name: 'Script Wordmark (White)', file: 'wordmark-script-dark.svg', desc: 'Playful script wordmark for dark backgrounds' },
-  { name: 'Script Wordmark (Green)', file: 'wordmark-script-light.svg', desc: 'Playful script wordmark for light backgrounds' },
-  { name: 'Script Wordmark (Orange)', file: 'wordmark-script-orange.svg', desc: 'Gradient script wordmark' },
+  { name: 'Wordmark - DM Sans', file: 'logo-wordmark-dark.svg', desc: 'Clean sans-serif (current app font)' },
+  { name: 'Wordmark - Lobster', file: 'wordmark-lobster.svg', desc: 'Bold retro script' },
+  { name: 'Wordmark - Fredoka', file: 'wordmark-fredoka.svg', desc: 'Playful, bubbly rounded' },
+  { name: 'Wordmark - Quicksand', file: 'wordmark-quicksand.svg', desc: 'Clean, modern rounded' },
+  { name: 'Wordmark - Righteous', file: 'wordmark-righteous.svg', desc: 'Retro geometric display' },
+  { name: 'Wordmark - Satisfy', file: 'wordmark-satisfy.svg', desc: 'Elegant flowing script' },
+  { name: 'Wordmark - Poppins', file: 'wordmark-poppins.svg', desc: 'Modern geometric sans' },
 ];
 
 function ColorSwatch({ color }: { color: typeof colors[0] }) {
