@@ -21,13 +21,80 @@ Enable a public landing page for your profile:
 2. Toggle "Enable Public Landing Page"
 3. Your profile is now visible at `spritz.chat/user/YOUR_ADDRESS`
 4. Add a bio to tell visitors about yourself
-5. Visitors can see your username, bio, avatar, and social links
+5. Customize with Bento-style widgets
 
 **Features:**
 - **ENS Resolution**: If you have an ENS name, it displays automatically
 - **Public Bio**: Share what you're about with the world
 - **Social Links**: Visitors can find your other profiles
-- **Avatar Display**: Your pixel art avatar is prominently shown
+- **Bento Widgets**: Customizable grid layout with various widget types
+- **Custom Themes**: Personalize colors, backgrounds, and card styles
+
+### Profile Widgets (Bento Layout)
+
+Create a customizable Bento-style profile page with draggable widgets.
+
+**Available Widget Types:**
+
+| Widget | Description | Sizes |
+|--------|-------------|-------|
+| **Map** | Show a location | 1x1, 2x1, 2x2 |
+| **Image** | Display an image | All sizes |
+| **Text** | Custom text block | All sizes |
+| **Social Embed** | Embed social posts | 2x1, 2x2 |
+| **NFT** | Showcase an NFT | 1x1, 2x1, 2x2 |
+| **Link** | Clickable link card | 1x1, 2x1 |
+| **Spotify** | Music embed | 2x1, 4x1 |
+| **GitHub** | GitHub profile/repo | 2x1, 2x2 |
+| **Video** | Video embed | 2x2, 4x2 |
+| **Countdown** | Event countdown | 1x1, 2x1 |
+| **Stats** | Display statistics | 1x1, 2x1 |
+
+**Widget Sizes:**
+- `1x1` - Square, compact
+- `2x1` - Wide, single row
+- `1x2` - Tall, single column
+- `2x2` - Large square
+- `4x1` - Full-width banner
+- `4x2` - Full-width large
+
+**Managing Widgets:**
+
+1. Go to your public profile
+2. Click "Edit Widgets"
+3. Add widgets from the widget picker
+4. Drag and drop to reorder
+5. Click a widget to configure it
+6. Toggle visibility on/off
+7. Save your layout
+
+### Profile Themes
+
+Customize your profile's appearance:
+
+- **Background**: Solid color, gradient, image, or mesh
+- **Accent Color**: Primary highlight color (default: orange)
+- **Text Color**: Main text color
+- **Card Style**: Rounded, sharp, or pill-shaped cards
+- **Card Background**: Semi-transparent backgrounds
+- **Font**: System, Inter, Mono, or Serif
+
+### Custom Avatar
+
+Upload your own profile photo:
+
+1. Go to Profile Settings → Avatar
+2. Click "Upload Photo"
+3. Select an image (JPG, PNG, WebP)
+4. Crop and adjust
+5. Save your avatar
+
+**Avatar Options:**
+- **Custom Upload**: Your uploaded photo
+- **ENS Avatar**: Automatically fetched from your ENS name
+- **Pixel Art**: Create in the built-in editor
+
+Toggle between custom avatar and ENS avatar in settings.
 
 ### Pixel Art Avatars
 

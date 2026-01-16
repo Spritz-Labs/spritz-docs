@@ -82,9 +82,10 @@ CREATE TABLE shout_agents (
     system_instructions TEXT,
     model TEXT DEFAULT 'gemini-2.0-flash',
     avatar_emoji TEXT DEFAULT '🤖',
-    
+    avatar_url TEXT, -- Custom uploaded avatar image (optional)
+
     -- Visibility: 'private', 'friends', 'public'
-    visibility TEXT DEFAULT 'private' 
+    visibility TEXT DEFAULT 'private'
         CHECK (visibility IN ('private', 'friends', 'public')),
     
     -- Capabilities
@@ -564,6 +565,62 @@ CREATE INDEX idx_call_history_callee ON shout_call_history(callee_address);
 CREATE INDEX idx_call_history_created ON shout_call_history(created_at DESC);
 ```
 
+## Profile Widgets Tables
+
+### `profile_widgets`
+
+Customizable Bento-style profile widgets.
+
+```sql
+CREATE TABLE profile_widgets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    widget_type TEXT NOT NULL, -- 'map', 'image', 'text', 'social_embed', 'nft', 'link', 'spotify', 'github', 'video', 'countdown', 'stats'
+    size TEXT NOT NULL DEFAULT '1x1', -- '1x1', '2x1', '1x2', '2x2', '4x1', '4x2'
+    position INTEGER NOT NULL DEFAULT 0,
+    config JSONB NOT NULL DEFAULT '{}',
+    is_visible BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_profile_widgets_user ON profile_widgets(user_address);
+CREATE INDEX idx_profile_widgets_position ON profile_widgets(user_address, position);
+```
+
+### `profile_themes`
+
+User profile theme and styling preferences.
+
+```sql
+CREATE TABLE profile_themes (
+    user_address TEXT PRIMARY KEY,
+    background_type TEXT NOT NULL DEFAULT 'solid', -- 'solid', 'gradient', 'image', 'mesh'
+    background_value TEXT NOT NULL DEFAULT '#09090b',
+    accent_color TEXT NOT NULL DEFAULT '#f97316',
+    secondary_color TEXT,
+    text_color TEXT NOT NULL DEFAULT '#ffffff',
+    card_style TEXT NOT NULL DEFAULT 'rounded', -- 'rounded', 'sharp', 'pill'
+    card_background TEXT NOT NULL DEFAULT 'rgba(24, 24, 27, 0.8)',
+    card_border TEXT DEFAULT 'rgba(63, 63, 70, 0.5)',
+    font_family TEXT NOT NULL DEFAULT 'system', -- 'system', 'inter', 'mono', 'serif'
+    show_spritz_badge BOOLEAN NOT NULL DEFAULT true,
+    custom_css TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### Custom Avatar Columns
+
+Additional columns on `shout_user_settings` for custom avatars:
+
+```sql
+ALTER TABLE shout_user_settings 
+ADD COLUMN custom_avatar_url TEXT,
+ADD COLUMN use_custom_avatar BOOLEAN DEFAULT FALSE;
+```
+
 ## Authentication Tables
 
 ### `passkey_credentials`
@@ -910,6 +967,11 @@ All migration scripts are located in `/migrations` directory:
 - `agents_api_tools.sql` - Custom API tools
 - `embeddings.sql` - Vector search setup (pgvector)
 - `favorite_agents.sql` - Agent favorites
+- `044_agent_avatar.sql` - Custom agent avatar uploads
+
+### Profile
+- `042_profile_widgets.sql` - Bento-style profile widgets
+- `043_custom_avatar.sql` - Custom profile avatar uploads
 
 ### Communication
 - `group_chats.sql` - Group chat tables

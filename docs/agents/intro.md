@@ -39,7 +39,21 @@ AI agents in Spritz are intelligent assistants that can:
    - **Personality**: How your agent should behave and respond
    - **System Instructions**: Custom instructions for the AI model
    - **Model**: Choose from available Gemini models (default: `gemini-2.0-flash`)
-   - **Avatar Emoji**: Pick an emoji to represent your agent
+   - **Avatar**: Choose an emoji or upload a custom image
+
+### Agent Avatar
+
+Customize your agent's appearance:
+
+- **Emoji**: Quick selection from emoji picker (default)
+- **Custom Image**: Upload a JPG, PNG, or WebP image
+  1. Click the avatar area when editing your agent
+  2. Select "Upload Image"
+  3. Choose your image file
+  4. Crop and adjust as needed
+  5. Save your agent
+
+Custom avatars are displayed in chat, discovery, and agent cards.
 
 ### Visibility Options
 
