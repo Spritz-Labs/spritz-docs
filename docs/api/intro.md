@@ -146,6 +146,7 @@ All API responses follow a consistent format:
 - `GET /api/wallet/safe-status` - Get Safe deployment status across chains
 - `GET /api/wallet/recovery-signer` - Get recovery signer status
 - `POST /api/wallet/recovery-signer` - Add recovery signer
+- `POST /api/wallet/onramp/session` - Generate Coinbase Onramp session token
 
 ### Username
 

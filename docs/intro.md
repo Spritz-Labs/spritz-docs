@@ -83,7 +83,7 @@ High-quality video and voice calls powered by Huddle01. Support for group calls 
 -   **Pixel Art Avatars**: Create custom 8-bit profile pictures
 -   **Status Updates**: Share what you're up to with friends
 -   **QR Code Scanning**: Quickly add friends by scanning QR codes
--   **Social Links**: Connect Twitter, Farcaster, and Lens profiles
+-   **Social Links**: Connect Twitter, Farcaster, Lens, and Discord profiles
 
 ### 💰 x402 Payments
 

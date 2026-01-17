@@ -84,8 +84,9 @@ Spritz is built as a **Next.js 16** application using the App Router, with a **P
 ### Messaging
 
 - **Protocol**: [Logos Messaging](https://logos.co/tech-stack)
-- **Encryption**: Symmetric key encryption (AES-GCM)
+- **Encryption**: ECDH key exchange + AES-256-GCM (upgraded from deterministic keys)
 - **Transport**: Peer-to-peer relay network via Logos Messaging Light Node
+- **Key Backup**: Optional PIN-protected cloud backup with PBKDF2 (100,000 iterations)
 
 ### Payments
 

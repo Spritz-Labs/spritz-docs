@@ -10,7 +10,7 @@ Manage your Spritz profile, preferences, and account settings.
 - **Bio**: Add a description about yourself (up to 160 characters)
 - **Status**: Share what you're up to
 - **Avatar**: Upload or create pixel art avatar
-- **Social Links**: Connect Twitter, Farcaster, Lens
+- **Social Links**: Connect Twitter, Farcaster, Lens, Discord
 - **ENS Name**: Your ENS name is automatically resolved if you have one
 
 ### Public Profile
@@ -192,6 +192,7 @@ Connect your social profiles:
    - Twitter/X
    - Farcaster
    - Lens Protocol
+   - Discord
 4. Links appear on your profile
 
 ## Wallet Features

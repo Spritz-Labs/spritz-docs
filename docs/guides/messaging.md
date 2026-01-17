@@ -197,11 +197,19 @@ message ChatMessage {
 
 ### Encryption
 
-Uses **symmetric key encryption (AES-GCM)**:
+Uses **ECDH key exchange with AES-256-GCM encryption**:
 
-- **DM keys** are derived deterministically from both wallet addresses using SHA-256
+- **DM keys** use ECDH (Elliptic Curve Diffie-Hellman) with P-256 curve
+  - Each user generates a P-256 keypair
+  - Shared secret derived via ECDH from peer's public key
+  - This is more secure than deterministic keys—knowing addresses alone cannot derive the encryption key
 - **Group keys** are randomly generated and shared with members
 - All messages are encrypted before being sent to Logos Messaging
+
+**Key Backup (Optional):**
+- Keys stored locally by default for maximum security
+- Opt-in cloud backup protected by 12-word phrase + 6-digit PIN
+- PBKDF2 with 100,000 iterations for key derivation
 
 ### Content Topics
 

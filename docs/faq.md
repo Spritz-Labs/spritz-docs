@@ -72,7 +72,7 @@ Spritz uses [Logos Messaging](https://logos.co/tech-stack) for decentralized pee
 
 ### Is messaging encrypted?
 
-Yes, messaging is end-to-end encrypted using symmetric key encryption (AES-GCM).
+Yes, messaging is end-to-end encrypted using ECDH key exchange with AES-256-GCM encryption. This upgrade from deterministic keys means that knowing wallet addresses alone cannot derive encryption keys—actual key possession is required.
 
 ### What types of messaging are available?
 
