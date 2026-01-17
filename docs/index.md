@@ -6,7 +6,7 @@ Complete guide to all Spritz documentation.
 
 - **[Introduction](/docs/intro)**: Overview of Spritz and its features
 - **[Getting Started](/docs/getting-started)**: Installation, setup, and first steps
-- **[Quick Start Guide](https://github.com/Spritz-Labs/spritz-docs/blob/main/QUICK_START.md)**: Fast setup for new developers
+- **[Developer Installation](/docs/developers/installation)**: Technical setup guide for developers
 
 ## 🤖 AI Agents
 
@@ -49,7 +49,7 @@ Complete guide to all Spritz documentation.
 
 - **[Architecture Overview](/docs/architecture/overview)**: System design and architecture
 - **[Database Schema](/docs/database/schema)**: Complete database reference
-- **[Repository Analysis](https://github.com/Spritz-Labs/spritz-docs/blob/main/REPOSITORY_ANALYSIS.md)**: Codebase analysis and organization
+- **[Developer Installation](/docs/developers/installation)**: Technical setup and deployment
 
 ## ❓ Reference
 

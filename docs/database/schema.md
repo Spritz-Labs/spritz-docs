@@ -621,6 +621,30 @@ ADD COLUMN custom_avatar_url TEXT,
 ADD COLUMN use_custom_avatar BOOLEAN DEFAULT FALSE;
 ```
 
+## Username Tables
+
+### `shout_usernames`
+
+Username claims and management.
+
+```sql
+CREATE TABLE shout_usernames (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    wallet_address TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_usernames_wallet ON shout_usernames(wallet_address);
+CREATE INDEX idx_usernames_username ON shout_usernames(username);
+```
+
+**Constraints:**
+- Username must be 3-20 characters
+- Only lowercase letters, numbers, and underscores allowed
+- Reserved usernames are blocked (see [Security](/docs/developers/security#reserved-usernames))
+
 ## Authentication Tables
 
 ### `passkey_credentials`
@@ -1006,6 +1030,9 @@ All migration scripts are located in `/migrations` directory:
 
 ### Moderation
 - `041_moderation_system.sql` - Moderators, muted users, and audit log
+
+### Usernames
+- `045_usernames.sql` - Username claims and reserved name validation
 
 See the repository's `/migrations` folder for complete migration scripts.
 

@@ -143,11 +143,23 @@ All API responses follow a consistent format:
 - `GET /api/wallet/balances` - Get token balances
 - `GET /api/wallet/transactions` - Get transaction history
 - `POST /api/wallet/smart-wallet` - Get/create smart wallet address
+- `GET /api/wallet/safe-status` - Get Safe deployment status across chains
+- `GET /api/wallet/recovery-signer` - Get recovery signer status
+- `POST /api/wallet/recovery-signer` - Add recovery signer
 
 ### Username
 
-- `GET /api/username` - Get current username
+- `GET /api/username?address=0x...` - Get username for address
 - `POST /api/username` - Claim or update username
+- `DELETE /api/username` - Remove username
+- `GET /api/username/resolve?username=name` - Resolve username to address
+
+### Profile Widgets
+
+- `GET /api/profile/widgets` - Get user's profile widgets
+- `POST /api/profile/widgets` - Create/update profile widgets
+- `GET /api/profile/theme` - Get user's profile theme
+- `POST /api/profile/theme` - Update profile theme
 
 ### Friends
 
@@ -220,6 +232,16 @@ All API responses follow a consistent format:
 - `POST /api/bug-reports` - Submit bug report
 - `GET /api/github/issues` - List GitHub issues (admin only)
 - `GET /api/github/issues/:number` - Get GitHub issue (admin only)
+
+### Admin Endpoints
+
+- `GET /api/admin/users` - List all users (admin only)
+- `GET /api/admin/analytics` - Get platform analytics (admin only)
+- `GET /api/admin/user-wallets?address=0x...` - Get user wallet status across chains (admin only)
+- `GET /api/admin/invite-codes` - List invite codes (admin only)
+- `POST /api/admin/grant-invites` - Grant invite codes to user (admin only)
+- `GET /api/admin/bug-reports` - List bug reports (admin only)
+- `POST /api/admin/bug-reports/:id/github` - Create GitHub issue from bug report (admin only)
 
 ## SDKs
 

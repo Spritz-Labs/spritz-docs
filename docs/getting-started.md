@@ -226,7 +226,7 @@ Keep your chats organized:
 ## Need Help?
 
 - **FAQ**: Check our [FAQ](/docs/faq) for common questions
-- **Email**: Reach us at contact@spritz.chat
+- **Email**: Reach us at connect@spritz.chat
 - **Twitter**: Follow [@spritzchat](https://x.com/spritzchat)
 
 ## Next Steps

@@ -197,7 +197,7 @@ Yes! Spritz supports both Ethereum (SIWE) and Solana (SIWS) authentication.
 
 ### How do I deploy Spritz?
 
-See our [Getting Started Guide](/docs/getting-started) for deployment instructions.
+See our [Developer Installation Guide](/docs/developers/installation) for deployment instructions.
 
 ### Can I contribute?
 

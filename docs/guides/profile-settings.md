@@ -30,6 +30,8 @@ Enable a public landing page for your profile:
 - **Bento Widgets**: Customizable grid layout with various widget types
 - **Custom Themes**: Personalize colors, backgrounds, and card styles
 
+**See it in action:** Check out the [Demo Profile](https://app.spritz.chat/user/demo) showcasing all available widgets!
+
 ### Profile Widgets (Bento Layout)
 
 Create a customizable Bento-style profile page with draggable widgets.
@@ -117,6 +119,24 @@ Create a customizable Bento-style profile page with draggable widgets.
 5. Click a widget to configure it
 6. Toggle visibility on/off
 7. Save your layout
+
+**Spritz Feature Widgets:**
+
+| Widget | Description |
+|--------|-------------|
+| **Message Me** | Quick link to chat with you on Spritz |
+| **Wallet** | Display your wallet address with copy button |
+| **Let's Meet** | Book a call scheduling link |
+| **AI Agent** | Showcase your AI agent |
+| **Social Link** | Link to Twitter, GitHub, Discord, etc. |
+
+**Security:**
+
+All widget URLs are validated to prevent malicious content:
+- External links use `rel="noopener noreferrer nofollow"`
+- Social links are verified against known domains
+- Video/audio embeds only from trusted platforms (YouTube, Spotify, etc.)
+- Images are sanitized to prevent tracking
 
 ### Profile Themes
 

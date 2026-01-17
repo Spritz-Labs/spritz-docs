@@ -62,6 +62,7 @@ const sidebars: SidebarsConfig = {
             'developers/messaging',
             'developers/video-calls',
             'developers/livestreaming',
+            'developers/security',
           ],
         },
         {
