@@ -56,7 +56,20 @@ DATABASE_URL=postgresql://user:password@host:5432/database
 
 # WalletConnect / Reown (for wallet connections)
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+
+# Session & Security (REQUIRED)
+JWT_SECRET=your_random_32_char_secret
+SESSION_SECRET=your_random_32_char_secret
+
+# Rate Limiting (Upstash Redis - REQUIRED for production)
+UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_token
+
+# App URL (for callbacks and CORS)
+NEXT_PUBLIC_APP_URL=https://app.spritz.chat
 ```
+
+Get Upstash credentials at [Upstash Console](https://console.upstash.com/).
 
 ### AI Agents (Google Gemini)
 
@@ -222,30 +235,33 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 ### 3. Run Migrations
 
-Migrations are in the `/migrations` folder. Run them in order:
+Migrations are in the `/migrations` folder. There are 50+ migration files.
 
 ```bash
-# Option 1: Using psql
-psql -d spritz -f migrations/agents.sql
-psql -d spritz -f migrations/agents_x402.sql
-# ... continue with other files
-
-# Option 2: Using a GUI tool
-# Import each .sql file in order
+# Run all migrations in alphabetical order
+for f in migrations/*.sql; do
+    echo "Running $f..."
+    psql -d spritz -f "$f"
+done
 ```
 
-**Core migrations (run in order):**
+Or run individual migrations using a GUI tool (import in alphabetical order).
 
-1. `agents.sql` - Agent tables
-2. `agents_x402.sql` - Payment configuration
-3. `agents_mcp.sql` - MCP server support
-4. `agents_tags.sql` - Agent tags
-5. `agents_api_tools.sql` - API tools
-6. `embeddings.sql` - Vector search (pgvector)
-7. `favorite_agents.sql` - User favorites
-8. `group_chats.sql` - Group chat tables
-9. `public_channels.sql` - Channel system
-10. `chat_enhancements.sql` - Reactions, typing, etc.
+**Key Migration Categories:**
+
+| Category | Files | Purpose |
+|----------|-------|---------|
+| **Core** | `agents.sql`, `embeddings.sql` | AI agents & vector search |
+| **Auth** | `passkey_credentials.sql`, `email_login.sql` | Authentication systems |
+| **Social** | `group_chats.sql`, `public_channels.sql`, `friend_tags.sql` | Social features |
+| **Streaming** | `streaming_analytics.sql` | Livestreaming |
+| **Scheduling** | `google_calendar.sql`, `scheduling_*.sql` | Calendar integration |
+| **Payments** | `agents_x402.sql` | x402 monetization |
+| **Security** | `security_rls_sensitive_tables.sql` | Row-level security |
+
+:::tip
+Run migrations in alphabetical order. Some migrations depend on others (e.g., `agents_x402.sql` requires `agents.sql`).
+:::
 
 See [Database Schema](/docs/database/schema) for complete documentation.
 

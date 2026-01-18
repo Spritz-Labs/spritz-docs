@@ -8,7 +8,7 @@ keywords:
         API endpoints,
         complete reference,
     ]
-sidebar_class_name: hidden
+sidebar_label: Quick Reference
 ---
 
 # Complete API Reference
@@ -84,10 +84,13 @@ This page provides a quick overview of all available API endpoints. For detailed
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/wallet/balances` | Get token balances |
+| GET | `/api/wallet/balances?address=0x...` | Get token balances (address required) |
 | GET | `/api/wallet/transactions` | Get transaction history |
 | POST | `/api/wallet/smart-wallet` | Get/create smart wallet |
 | GET | `/api/wallet/safe-status` | Get Safe deployment status |
+| GET | `/api/wallet/recovery-signer` | Get recovery signer status |
+| POST | `/api/wallet/recovery-signer` | Add recovery signer |
+| POST | `/api/wallet/onramp/session` | Generate Coinbase Onramp session |
 
 ### Username
 

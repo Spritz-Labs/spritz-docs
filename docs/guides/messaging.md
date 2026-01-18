@@ -272,30 +272,39 @@ Since Logos Messaging's Store protocol has limited retention, Spritz uses a hybr
 - Check for key synchronization issues
 - Re-establish connection if needed
 
-## API Reference
+## Client-Side Implementation
 
-### Send Message
+:::note
+Messaging in Spritz is **entirely client-side** using the Logos Messaging SDK. There is no REST API for messages - all communication happens peer-to-peer through the Logos Messaging network.
+:::
+
+### Using the Waku Hook
 
 ```typescript
-POST /api/messages
-{
-  "to": "0x...",
-  "content": "Hello!",
-  "type": "text"
+import { useWaku } from "@/hooks/useWaku";
+
+function ChatComponent({ recipientAddress }) {
+    const { 
+        sendMessage, 
+        messages, 
+        isConnected,
+        connectionStatus 
+    } = useWaku();
+    
+    const handleSend = async (content: string) => {
+        await sendMessage(recipientAddress, content);
+    };
+    
+    return (
+        <div>
+            {messages.map(msg => <Message key={msg.id} {...msg} />)}
+            <MessageInput onSend={handleSend} disabled={!isConnected} />
+        </div>
+    );
 }
 ```
 
-### Get Messages
-
-```typescript
-GET /api/messages?conversationId=...
-```
-
-### Search Messages
-
-```typescript
-GET /api/messages/search?query=keyword
-```
+For detailed technical implementation, see the [Messaging Technical Documentation](/docs/developers/messaging).
 
 ## Next Steps
 

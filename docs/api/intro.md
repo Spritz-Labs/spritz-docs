@@ -35,14 +35,22 @@ Authorization: Bearer <token>
 
 ## Rate Limiting
 
-API requests are rate-limited to prevent abuse. Current limits:
-- **Standard**: 100 requests per minute
-- **Authenticated**: 1000 requests per minute
+API requests are rate-limited to prevent abuse using Upstash Redis. Limits are tiered by endpoint type:
+
+| Tier | Limit | Used For |
+|------|-------|----------|
+| **auth** | 10/min | Login, registration, session endpoints |
+| **strict** | 5/min | Sensitive operations (invites, points, streams) |
+| **contact** | 3/min | Contact form submissions |
+| **ai** | 30/min | AI agent chat endpoints |
+| **messaging** | 60/min | Real-time messaging operations |
+| **general** | 100/min | Default for other endpoints |
 
 Rate limit headers are included in responses:
 - `X-RateLimit-Limit`: Maximum requests allowed
 - `X-RateLimit-Remaining`: Remaining requests
-- `X-RateLimit-Reset`: Time when limit resets
+- `X-RateLimit-Reset`: Unix timestamp when limit resets
+- `Retry-After`: Seconds until you can retry (on 429 errors)
 
 ## Response Format
 
@@ -137,10 +145,21 @@ All API responses follow a consistent format:
 - `POST /api/passkey/login/verify` - Verify login
 - `GET /api/passkey/credentials` - List user's passkeys
 - `DELETE /api/passkey/credential` - Remove a passkey
+- `POST /api/passkey/check-migration` - Check passkey migration status
+- `POST /api/passkey/recover/email` - Request passkey recovery via email
+- `POST /api/passkey/recover/email/verify` - Verify recovery code and get token
+
+### Email Authentication
+
+- `POST /api/email/send-code` - Send email verification code
+- `POST /api/email/verify-code` - Verify email code
+- `POST /api/email/login/send-code` - Send email login code
+- `POST /api/email/login/verify` - Verify email login
+- `POST /api/email/restore-session` - Restore session from email
 
 ### Wallet
 
-- `GET /api/wallet/balances` - Get token balances
+- `GET /api/wallet/balances?address=0x...` - Get token balances (address required)
 - `GET /api/wallet/transactions` - Get transaction history
 - `POST /api/wallet/smart-wallet` - Get/create smart wallet address
 - `GET /api/wallet/safe-status` - Get Safe deployment status across chains
@@ -210,23 +229,35 @@ All API responses follow a consistent format:
 - `DELETE /api/calendar/availability` - Remove availability window
 - `POST /api/calendar/disconnect` - Disconnect calendar
 
-### Other Endpoints
+### Points & Gamification
 
 - `GET /api/leaderboard` - Get leaderboard
 - `GET /api/points` - Get user points
 - `POST /api/points` - Add points
 - `GET /api/points/daily` - Get daily points
 - `POST /api/points/daily` - Claim daily points
+
+### Phone Verification
+
 - `POST /api/phone/send-code` - Send phone verification code
 - `POST /api/phone/verify-code` - Verify phone code
 - `POST /api/phone/remove` - Remove phone number
-- `POST /api/email/send-code` - Send email verification code
-- `POST /api/email/verify-code` - Verify email code
+
+### Uploads & Media
+
 - `POST /api/pixel-art/upload` - Upload pixel art avatar
 - `POST /api/upload` - Upload file
+- `POST /api/bug-reports/upload` - Upload media for bug reports
+
+### Other Endpoints
+
 - `POST /api/push/send` - Send push notification
 - `GET /api/invites` - Get invite codes
-- `POST /api/invites` - Create invite code
+- `POST /api/invites` - Redeem invite code
+- `POST /api/contact` - Contact form submission
+- `POST /api/beta-access/apply` - Apply for beta access
+- `GET /api/moderation` - Get moderation data
+- `GET /api/prices` - Get token prices
 - `GET /api/public/user` - Get public user info
 - `GET /api/public/user/:address` - Get public user info by address
 - `GET /api/public/schedule/:slug` - Get public schedule
