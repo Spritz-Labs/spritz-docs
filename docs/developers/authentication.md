@@ -1,489 +1,568 @@
----
-title: Authentication & Identity System
-description: Complete guide to Spritz authentication methods, identity system, and wallet architecture. Learn about SIWE, passkeys, email login, World ID, and Smart Wallets.
-keywords:
-    [
-        authentication,
-        SIWE,
-        SIWS,
-        passkeys,
-        WebAuthn,
-        Smart Wallet,
-        Safe,
-        identity,
-        World ID,
-        Alien ID,
-    ]
-sidebar_label: Authentication
-sidebar_position: 2
----
+# Authentication Technical Documentation
 
-# Authentication & Identity System
+Complete technical documentation for Spritz authentication, including wallet connections, passkeys, and session management.
 
-Spritz supports multiple authentication methods, each providing a unique "Spritz ID" (identity address) used for social features. Users can also access the Spritz Wallet (a Safe Smart Account) for on-chain transactions.
+## Authentication Overview
 
-## Two Address System
+Spritz supports multiple authentication methods, all providing:
 
-Every user has **two addresses**:
+1. **Spritz ID** - Your social identity for profiles, friends, and messages
+2. **Spritz Wallet** - A Safe Smart Account for on-chain transactions
 
-| Address Type | Purpose | Stored In |
-|--------------|---------|-----------|
-| **Spritz ID** | Identity for profile, friends, messages, username | `shout_users.wallet_address` |
-| **Spritz Wallet** | Smart contract wallet for on-chain funds | Safe Smart Account (ERC-4337) |
-
-## Authentication Methods Overview
-
-| Method | Spritz ID Source | Wallet Owner | Has Wallet Immediately? |
-|--------|------------------|--------------|-------------------------|
-| **EVM Wallet** | Wallet address (EOA) | Wallet EOA | ✅ Yes - wallet signs |
-| **Passkey** | Derived from credential ID | Passkey signer | ✅ Yes - passkey signs |
-| **Email** | Existing account OR derived | Passkey signer | ❌ No - must create passkey first |
-| **World ID** | `nullifier_hash` from World ID | Passkey signer | ❌ No - must create passkey first |
-| **Alien ID** | `alienAddress` from Alien | Passkey signer | ❌ No - must create passkey first |
-| **Solana** | Solana wallet address | Passkey signer | ❌ No - must create passkey first |
-
-**Key Architecture Points:**
-- **EVM Wallet users**: Your connected wallet signs transactions directly. No passkey needed.
-- **Everyone else**: You MUST create a passkey before you can receive/send tokens. Your passkey becomes your wallet key.
-- **Passkey = Wallet Access**: For non-wallet users, the passkey IS the key to your funds. Losing your passkey means losing wallet access.
+| Method         | Spritz ID Source    | Wallet Signer         | Immediate Wallet? |
+| -------------- | ------------------- | --------------------- | ----------------- |
+| **EVM Wallet** | Wallet address      | Wallet EOA            | ✅ Yes            |
+| **Passkey**    | Credential ID hash  | WebAuthn P-256        | ✅ Yes            |
+| **Email**      | Derived or existing | Passkey (must create) | ❌ No             |
+| **World ID**   | nullifier_hash      | Passkey (must create) | ❌ No             |
+| **Alien ID**   | alienAddress        | Passkey (must create) | ❌ No             |
+| **Solana**     | Solana address      | Passkey (must create) | ❌ No             |
 
 ---
 
-## Authentication Method Details
+## Sign-In with Ethereum (SIWE)
 
-### 1. EVM Wallet (MetaMask, Coinbase Wallet, etc.)
-
-**Authentication Flow:**
-```
-User connects wallet via Reown AppKit
-    ↓
-Frontend requests SIWE (Sign-In With Ethereum) message
-    ↓
-User signs message with wallet
-    ↓
-Server verifies signature, creates session
-    ↓
-Spritz ID = wallet address (e.g., 0x1234...)
-```
-
-**Spritz Wallet (Safe):**
-- Safe address derived from wallet address as owner
-- Wallet signs Safe transactions directly
-- No passkey needed - the connected wallet IS the signer
-
-**User Flow:**
-1. Click "Connect Wallet"
-2. Select wallet (MetaMask, Coinbase, etc.)
-3. Sign SIWE message
-4. Full access to app + wallet features
-
----
-
-### 2. Passkey (Face ID, Touch ID, Windows Hello)
-
-**Authentication Flow:**
-```
-User clicks "Login with Passkey"
-    ↓
-Server generates authentication challenge
-    ↓
-Browser triggers WebAuthn ceremony
-    ↓
-User authenticates with biometric
-    ↓
-Server verifies credential, creates session
-    ↓
-Spritz ID = stored user_address from passkey_credentials table
-```
-
-**Spritz Wallet (Safe):**
-- P256 public key extracted from passkey
-- Safe WebAuthn Signer address calculated from public key
-- Safe address derived from WebAuthn signer as owner
-- Passkey signs all transactions via WebAuthn
-
-**New User Registration:**
-```
-User clicks "Create Account"
-    ↓
-Server generates registration challenge
-    ↓
-Browser creates new passkey (WebAuthn)
-    ↓
-Server extracts P256 public key (x, y coordinates)
-    ↓
-Spritz ID = deterministic hash of credential ID
-    ↓
-Safe signer address calculated from public key
-```
-
-**Key Storage:**
-- `passkey_credentials.credential_id` - WebAuthn credential identifier
-- `passkey_credentials.public_key_x/y` - P256 coordinates for Safe signing
-- `passkey_credentials.safe_signer_address` - Precomputed WebAuthn signer
-
----
-
-### 3. Email Login
-
-**Authentication Flow:**
-```
-User enters email address
-    ↓
-Server sends 6-digit verification code via Resend
-    ↓
-User enters code
-    ↓
-Server verifies code, checks for existing account:
-    
-    IF email matches existing verified account:
-        → Use that account's address (preserves profile!)
-    ELSE:
-        → Derive new address from email + EMAIL_AUTH_SECRET
-    ↓
-Session created with final address
-```
-
-**Spritz Wallet (Safe):**
-- Email users CANNOT sign EVM transactions directly
-- Must register a passkey to use Spritz Wallet
-- Once passkey registered, Safe uses passkey as signer
-
-**Backwards Compatibility:**
-- If user already has account with email (from any auth method)
-- Email login finds and uses that existing account
-- Prevents duplicate accounts when EMAIL_AUTH_SECRET changes
-
----
-
-### 4. World ID (Worldcoin)
-
-**Authentication Flow:**
-```
-User clicks "Sign in with World ID"
-    ↓
-World ID SDK opens verification
-    ↓
-User verifies with Orb/Device
-    ↓
-Server receives proof + nullifier_hash
-    ↓
-Server verifies proof with World ID API
-    ↓
-Spritz ID = nullifier_hash (unique per person per app)
-```
-
-**Spritz Wallet (Safe):**
-- World ID users CANNOT sign EVM transactions
-- `nullifier_hash` is a proof identifier, not a real address
-- Must register passkey while logged in with World ID
-- Passkey links to their World ID identity (nullifier_hash)
-
-**Identity Persistence:**
-- `nullifier_hash` is deterministic per person per app
-- Same person always gets same Spritz ID
-- Sybil-resistant: one person = one account
-
----
-
-### 5. Alien ID
-
-**Authentication Flow:**
-```
-User clicks "Sign in with Alien ID"
-    ↓
-Alien ID SDK opens verification
-    ↓
-User authenticates with Alien
-    ↓
-Server receives alienAddress
-    ↓
-Spritz ID = alienAddress
-```
-
-**Spritz Wallet (Safe):**
-- Same as World ID - cannot sign EVM transactions
-- Must register passkey to use Spritz Wallet
-- Passkey links to their Alien ID address
-
----
-
-### 6. Solana Wallet (Phantom, Solflare, etc.)
-
-**Authentication Flow:**
-```
-User connects Solana wallet
-    ↓
-Frontend requests SIWS (Sign-In With Solana) message
-    ↓
-User signs message with Solana wallet
-    ↓
-Server verifies signature
-    ↓
-Spritz ID = Solana address (base58 format)
-```
-
-**Spritz Wallet (Safe):**
-- Solana wallets cannot sign EVM transactions
-- Must register passkey for Spritz Wallet
-- EVM funds stored in Safe on EVM chains
-
----
-
-## Adding Passkey to Existing Account
-
-When a logged-in user registers a passkey:
+### Protocol Flow
 
 ```
-User is logged in (World ID, Email, Wallet, etc.)
-    ↓
-Session contains their Spritz ID
-    ↓
-User clicks "Add Passkey" in Wallet settings
-    ↓
-Server checks getAuthenticatedUser()
-    ↓
-IF authenticated:
-    → Passkey linked to EXISTING Spritz ID ✅
-ELSE IF session cookie present but invalid:
-    → REJECT: "Session expired, please log in again"
-ELSE:
-    → Create new account (for passkey-only registration)
+┌─────────────────────────────────────────────────────────────┐
+│                      SIWE Flow                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Request Nonce                                            │
+│  ┌──────────┐    GET /api/auth/nonce                        │
+│  │  Client  │ ────────────────────────────────►             │
+│  └──────────┘ ◄────────────────────────────────             │
+│                   { nonce: "abc123..." }                     │
+│                                                              │
+│  2. Create SIWE Message                                      │
+│  ┌──────────────────────────────────────────────┐           │
+│  │ app.spritz.chat wants you to sign in...      │           │
+│  │                                               │           │
+│  │ URI: https://app.spritz.chat                 │           │
+│  │ Version: 1                                    │           │
+│  │ Chain ID: 8453                               │           │
+│  │ Nonce: abc123...                              │           │
+│  │ Issued At: 2025-01-17T12:00:00Z              │           │
+│  │ Expiration Time: 2025-01-17T12:10:00Z        │           │
+│  └──────────────────────────────────────────────┘           │
+│                                                              │
+│  3. Sign Message (Wallet)                                    │
+│  ┌──────────┐                                               │
+│  │  Wallet  │  signMessage(siweMessage)                     │
+│  │ (MM/RK)  │  → signature: 0x...                           │
+│  └──────────┘                                               │
+│                                                              │
+│  4. Verify Signature                                         │
+│  ┌──────────┐    POST /api/auth/verify                      │
+│  │  Client  │ ────────────────────────────────►             │
+│  └──────────┘    { message, signature }                     │
+│                                                              │
+│  5. Create Session                                           │
+│  ◄────────────────────────────────────────────              │
+│  Set-Cookie: spritz_session=jwt...; HttpOnly                │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**Defensive Protections:**
-1. If session exists → passkey links to existing account
-2. If session cookie present but expired → reject (prevents accidental new account)
-3. If userAddress matches existing account → link to it
-4. Only create new account if genuinely new user
+### Implementation
 
----
-
-## Spritz Wallet (Safe Smart Account)
-
-### Architecture
-
-Spritz uses Safe Smart Accounts with ERC-4337 (Account Abstraction):
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Spritz Wallet                         │
-├─────────────────────────────────────────────────────────┤
-│  Safe Smart Account (same address on all EVM chains)    │
-│  ├── Owner: EOA address OR WebAuthn Signer              │
-│  ├── Bundler: Pimlico                                   │
-│  └── Paymaster: Sponsored (L2) or ERC-20 USDC (mainnet) │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Supported Chains
-
-| Chain | Chain ID | Gas Payment | Sponsorship |
-|-------|----------|-------------|-------------|
-| Ethereum | 1 | ETH (or USDC if available) | User pays |
-| Base | 8453 | Sponsored | Free |
-| Arbitrum | 42161 | Sponsored | Free |
-| Optimism | 10 | Sponsored | Free |
-| Polygon | 137 | Sponsored | Free |
-| BNB Chain | 56 | Sponsored | Free |
-| Unichain | 130 | Sponsored | Free |
-| Avalanche | 43114 | Sponsored | Free |
-
-### Safe Address Calculation
-
-**For Wallet Users (EOA signer):**
 ```typescript
-safeAddress = calculateSafeAddress(walletAddress)
-// Safe is owned by the user's EOA
+// 1. Get nonce
+const { nonce } = await fetch("/api/auth/nonce").then((r) => r.json());
+
+// 2. Create SIWE message
+import { SiweMessage } from "siwe";
+
+const message = new SiweMessage({
+    domain: window.location.host,
+    address: userAddress,
+    statement: "Sign in to Spritz",
+    uri: window.location.origin,
+    version: "1",
+    chainId: chainId,
+    nonce: nonce,
+    issuedAt: new Date().toISOString(),
+    expirationTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+});
+
+const messageToSign = message.prepareMessage();
+
+// 3. Sign with wallet
+const signature = await signMessage({ message: messageToSign });
+
+// 4. Verify and create session
+const response = await fetch("/api/auth/verify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: messageToSign, signature }),
+});
+
+// Session cookie is automatically set
 ```
 
-**For Passkey Users (WebAuthn signer):**
+### Server-Side Verification
+
 ```typescript
-webAuthnSignerAddress = calculateWebAuthnSignerAddress(publicKeyX, publicKeyY)
-safeAddress = calculateSafeAddress(webAuthnSignerAddress)
-// Safe is owned by the passkey's P256 signer
-```
+import { SiweMessage } from "siwe";
 
-### Same Address Everywhere
+export async function POST(request: NextRequest) {
+    const { message, signature } = await request.json();
 
-Your Safe wallet address is **deterministic and identical** across all EVM chains. Send to any chain, funds are never lost - just on a different network at the same address.
+    // Parse and verify SIWE message
+    const siweMessage = new SiweMessage(message);
+    const { success, data } = await siweMessage.verify({
+        signature,
+        domain: "app.spritz.chat",
+        nonce: await getNonceFromStore(siweMessage.nonce),
+    });
 
----
+    if (!success) {
+        return NextResponse.json(
+            { error: "Invalid signature" },
+            { status: 401 }
+        );
+    }
 
-## Complete User Flows
+    // Create JWT session
+    const token = await signJWT(
+        {
+            address: data.address,
+            chainId: data.chainId,
+            authMethod: "wallet",
+        },
+        { expiresIn: "7d" }
+    );
 
-### Flow 1: New User with Wallet
+    // Set HTTP-only cookie
+    const response = NextResponse.json({ success: true });
+    response.cookies.set("spritz_session", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
 
-```
-1. User connects MetaMask
-2. Signs SIWE message
-3. Spritz ID = wallet address
-4. Safe address calculated from wallet
-5. User can send/receive immediately
-   (wallet signs Safe transactions)
-```
-
-### Flow 2: New User with Passkey
-
-```
-1. User clicks "Create Account"
-2. Creates passkey (Face ID/Touch ID)
-3. Spritz ID = hash(credential_id)
-4. Safe address calculated from passkey signer
-5. User can send/receive immediately
-   (passkey signs Safe transactions)
-```
-
-### Flow 3: New User with World ID
-
-```
-1. User verifies with World ID
-2. Spritz ID = nullifier_hash
-3. User sees profile, can chat, add friends
-4. User opens Wallet → "Register Passkey to Send"
-5. Creates passkey (linked to nullifier_hash)
-6. Safe address calculated from passkey signer
-7. User can now send/receive
-```
-
-### Flow 4: Existing User Adds Passkey
-
-```
-1. User logged in with Email/WorldID/etc.
-2. Opens Wallet settings → "Add Passkey"
-3. Creates passkey
-4. Server detects existing session
-5. Passkey linked to EXISTING Spritz ID
-6. Safe uses new passkey as signer
-7. Profile, friends, messages preserved ✅
+    return response;
+}
 ```
 
 ---
 
-## Key Security Properties
+## Sign-In with Solana (SIWS)
 
-### Identity Persistence
-- **Wallet**: Address never changes
-- **Passkey**: Credential ID never changes
-- **Email**: Finds existing account first, then derives
-- **World ID**: Same nullifier_hash for same person
-- **Alien ID**: Same address for same account
+### Message Format
 
-### Non-Custodial
-- Private keys never leave user's device
-- Passkeys backed up via iCloud/Google automatically
-- Server only stores public keys
+```typescript
+import { createSignInMessage } from "@solana/wallet-standard-util";
 
-### Session Management
-- JWT sessions in HTTP-only cookies (7 days)
-- Frontend tokens in localStorage (30 days, signed)
-- CSRF protection via origin validation
-
----
-
-## API Endpoints
-
-### SIWE/SIWS Authentication
-
-```http
-POST /api/auth/verify
-Content-Type: application/json
-
-{
-  "message": "SIWE message string",
-  "signature": "0x..."
-}
+const message = createSignInMessage({
+    domain: window.location.host,
+    address: publicKey.toBase58(),
+    statement: "Sign in to Spritz",
+    uri: window.location.origin,
+    nonce: nonce,
+    issuedAt: new Date().toISOString(),
+});
 ```
 
-```http
-POST /api/auth/verify-solana
-Content-Type: application/json
+### Verification
 
-{
-  "message": "SIWS message string",
-  "signature": "base58 signature"
-}
-```
+```typescript
+import nacl from "tweetnacl";
+import bs58 from "bs58";
 
-### Passkey Registration
-
-```http
-POST /api/passkey/register/options
-Content-Type: application/json
-
-{
-  "userAddress": "0x..." // Optional, for linking to existing account
-}
-```
-
-```http
-POST /api/passkey/register/verify
-Content-Type: application/json
-
-{
-  "credential": { /* WebAuthn credential */ },
-  "challenge": "base64 challenge"
-}
-```
-
-### Passkey Login
-
-```http
-POST /api/passkey/login/options
-```
-
-```http
-POST /api/passkey/login/verify
-Content-Type: application/json
-
-{
-  "credential": { /* WebAuthn credential */ },
-  "challenge": "base64 challenge"
-}
-```
-
-### World ID Verification
-
-```http
-POST /api/auth/world-id
-Content-Type: application/json
-
-{
-  "proof": { /* World ID proof object */ },
-  "action": "spritz-login"
-}
-```
-
-### Session Management
-
-```http
-GET /api/auth/session
-// Returns current user session
-
-POST /api/auth/logout
-// Clears session
+const isValid = nacl.sign.detached.verify(
+    new TextEncoder().encode(message),
+    bs58.decode(signature),
+    bs58.decode(publicKey)
+);
 ```
 
 ---
 
-## Environment Variables
+## Passkey Authentication (WebAuthn)
 
-```env
-# Required for Passkey/Smart Accounts
-NEXT_PUBLIC_PIMLICO_API_KEY=your_pimlico_api_key
-NEXT_PUBLIC_PIMLICO_SPONSORSHIP_POLICY_ID=sp_your_policy_id
+### Registration Flow
 
-# Required for Email Login
-RESEND_API_KEY=your_resend_api_key
-EMAIL_AUTH_SECRET=your_secure_secret_for_email_key_derivation
-
-# Required for World ID
-NEXT_PUBLIC_WORLD_ID_APP_ID=app_your_world_id_app_id
-NEXT_PUBLIC_WORLD_ID_ACTION=your_action_name
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Passkey Registration                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Generate Challenge                                       │
+│  ┌──────────┐    GET /api/auth/webauthn/register-options    │
+│  │  Server  │ ────────────────────────────────►             │
+│  └──────────┘    { challenge, rpId, user: {...} }           │
+│                                                              │
+│  2. Create Credential                                        │
+│  ┌──────────────┐                                           │
+│  │   Browser    │  navigator.credentials.create({           │
+│  │   WebAuthn   │    publicKey: {                           │
+│  │              │      challenge,                            │
+│  │              │      rp: { name: "Spritz", id: rpId },    │
+│  │              │      user: { id, name, displayName },     │
+│  │              │      pubKeyCredParams: [                   │
+│  │              │        { alg: -7, type: "public-key" }    │
+│  │              │      ],                                    │
+│  │              │      authenticatorSelection: {             │
+│  │              │        residentKey: "preferred",          │
+│  │              │        userVerification: "preferred"      │
+│  │              │      }                                     │
+│  │              │    }                                       │
+│  │              │  })                                        │
+│  └──────────────┘                                           │
+│         │                                                    │
+│         ▼                                                    │
+│  ┌──────────────┐                                           │
+│  │   Touch ID   │  User verification (biometric/PIN)        │
+│  │   Face ID    │                                           │
+│  │   PIN        │                                           │
+│  └──────────────┘                                           │
+│         │                                                    │
+│         ▼                                                    │
+│  Returns: {                                                  │
+│    id: "base64url credential ID",                           │
+│    rawId: ArrayBuffer,                                       │
+│    response: {                                               │
+│      clientDataJSON: ArrayBuffer,                           │
+│      attestationObject: ArrayBuffer (contains publicKey)    │
+│    }                                                         │
+│  }                                                           │
+│                                                              │
+│  3. Store Credential                                         │
+│  ┌──────────┐    POST /api/auth/webauthn/register           │
+│  │  Client  │ ────────────────────────────────►             │
+│  └──────────┘    { credential, publicKey: {x, y} }          │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## Next Steps
+### P-256 Key Extraction
 
-- [Smart Wallets](/docs/developers/smart-wallets) - Deep dive into Safe integration
-- [Security](/docs/developers/security) - Security best practices
-- [API Reference](/docs/api/intro) - Complete API documentation
+```typescript
+import {
+    decodeAttestationObject,
+    parseAuthData,
+} from "@simplewebauthn/server/helpers";
+
+export function extractP256PublicKey(
+    attestationObject: ArrayBuffer
+): P256PublicKey {
+    const decoded = decodeAttestationObject(new Uint8Array(attestationObject));
+    const authData = parseAuthData(decoded.authData);
+
+    if (!authData.credentialPublicKey) {
+        throw new Error("No credential public key found");
+    }
+
+    // COSE Key structure for P-256
+    // Key type (1): EC2 (2)
+    // Algorithm (3): ES256 (-7)
+    // Curve (-1): P-256 (1)
+    // X coordinate (-2): 32 bytes
+    // Y coordinate (-3): 32 bytes
+
+    const coseKey = decodeCBOR(authData.credentialPublicKey);
+
+    const x = coseKey.get(-2) as Uint8Array; // X coordinate
+    const y = coseKey.get(-3) as Uint8Array; // Y coordinate
+
+    return {
+        x: `0x${Buffer.from(x).toString("hex")}`,
+        y: `0x${Buffer.from(y).toString("hex")}`,
+    };
+}
+```
+
+### Authentication Flow
+
+```typescript
+// 1. Get authentication options
+const { challenge } = await fetch("/api/auth/webauthn/auth-options").then((r) =>
+    r.json()
+);
+
+// 2. Get credential
+const credential = await navigator.credentials.get({
+    publicKey: {
+        challenge: base64urlToArrayBuffer(challenge),
+        rpId: "spritz.chat",
+        timeout: 120000,
+        userVerification: "preferred",
+        allowCredentials: [
+            {
+                id: base64urlToArrayBuffer(credentialId),
+                type: "public-key",
+                transports: ["internal", "hybrid"],
+            },
+        ],
+    },
+});
+
+// 3. Verify on server
+const response = await fetch("/api/auth/webauthn/verify", {
+    method: "POST",
+    body: JSON.stringify({
+        credentialId: credential.id,
+        authenticatorData: bufferToBase64url(
+            credential.response.authenticatorData
+        ),
+        clientDataJSON: bufferToBase64url(credential.response.clientDataJSON),
+        signature: bufferToBase64url(credential.response.signature),
+    }),
+});
+```
+
+---
+
+## Session Management
+
+### JWT Structure
+
+```typescript
+interface SessionPayload {
+    address: string; // Spritz ID (wallet address or derived)
+    authMethod: AuthMethod; // "wallet" | "passkey" | "email" | "worldid" | "alien" | "solana"
+    chainId?: number; // For wallet auth
+    passkeyCredentialId?: string; // For passkey auth
+    iat: number; // Issued at
+    exp: number; // Expiration (7 days)
+}
+
+type AuthMethod =
+    | "wallet"
+    | "passkey"
+    | "email"
+    | "worldid"
+    | "alien"
+    | "solana";
+```
+
+### Session Verification
+
+```typescript
+// Middleware for API routes
+export async function verifySession(
+    request: NextRequest
+): Promise<SessionPayload | null> {
+    const token = request.cookies.get("spritz_session")?.value;
+    if (!token) return null;
+
+    try {
+        const payload = await verifyJWT(token);
+        return payload as SessionPayload;
+    } catch {
+        return null;
+    }
+}
+
+// Usage in API route
+export async function GET(request: NextRequest) {
+    const session = await verifySession(request);
+    if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Use session.address for user identification
+    const userData = await getUserData(session.address);
+    return NextResponse.json(userData);
+}
+```
+
+### Session Storage
+
+Sessions are stored in Supabase for multi-device support:
+
+```sql
+CREATE TABLE shout_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL REFERENCES shout_user_settings(wallet_address),
+    token_hash TEXT NOT NULL,  -- SHA-256 hash of JWT
+    auth_method TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    expires_at TIMESTAMPTZ NOT NULL,
+    last_used_at TIMESTAMPTZ DEFAULT NOW(),
+    user_agent TEXT,
+    ip_address INET
+);
+```
+
+---
+
+## Rate Limiting
+
+### Implementation
+
+```typescript
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(10, "1 m"), // 10 requests per minute
+    analytics: true,
+});
+
+export async function rateLimitMiddleware(
+    identifier: string
+): Promise<{ success: boolean; remaining: number }> {
+    const { success, remaining, reset } = await ratelimit.limit(identifier);
+
+    if (!success) {
+        throw new RateLimitError(
+            `Rate limit exceeded. Reset at ${new Date(reset)}`
+        );
+    }
+
+    return { success, remaining };
+}
+```
+
+### Rate Limits by Endpoint
+
+| Endpoint               | Limit | Window   |
+| ---------------------- | ----- | -------- |
+| `/api/auth/nonce`      | 10    | 1 minute |
+| `/api/auth/verify`     | 5     | 1 minute |
+| `/api/auth/webauthn/*` | 10    | 1 minute |
+| `/api/agents/*/chat`   | 20    | 1 minute |
+| `/api/streams`         | 5     | 1 minute |
+
+---
+
+## Third-Party Auth Integration
+
+### World ID
+
+```typescript
+// Verify World ID proof
+const verifyResponse = await fetch(
+    `https://developer.worldcoin.org/api/v1/verify/${process.env.WORLDCOIN_APP_ID}`,
+    {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            action: "spritz-login",
+            signal: signalData,
+            proof: proof,
+            merkle_root: merkle_root,
+            nullifier_hash: nullifier_hash,
+        }),
+    }
+);
+
+// Use nullifier_hash as Spritz ID (unique per user per app)
+const spritzId = `world:${nullifier_hash}`;
+```
+
+### Alien ID
+
+```typescript
+// Verify Alien ID token
+const alienResponse = await fetch("https://api.alien.xyz/verify", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${alienToken}` },
+});
+
+const { alienAddress, verified } = await alienResponse.json();
+
+// Use alienAddress as Spritz ID
+const spritzId = `alien:${alienAddress}`;
+```
+
+### Email (Magic Link)
+
+```typescript
+// Send magic link
+const token = generateSecureToken();
+await supabase.from("shout_magic_links").insert({
+    email: email,
+    token_hash: hashToken(token),
+    expires_at: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+});
+
+await sendEmail({
+    to: email,
+    subject: "Sign in to Spritz",
+    body: `Click here to sign in: https://app.spritz.chat/auth/verify?token=${token}`,
+});
+
+// Verify magic link
+const link = await supabase
+    .from("shout_magic_links")
+    .select()
+    .eq("token_hash", hashToken(token))
+    .gt("expires_at", new Date().toISOString())
+    .single();
+
+if (!link) throw new Error("Invalid or expired link");
+
+// Create session with email-derived ID
+const spritzId = `email:${hashEmail(email)}`;
+```
+
+---
+
+## Security Best Practices
+
+### Token Security
+
+| Practice              | Implementation           |
+| --------------------- | ------------------------ |
+| **HTTP-only cookies** | Prevents XSS token theft |
+| **Secure flag**       | HTTPS only               |
+| **SameSite=Strict**   | Prevents CSRF            |
+| **Short nonce TTL**   | 5 minutes max            |
+
+### Signature Verification
+
+1. **Verify nonce** - Ensure nonce hasn't been used
+2. **Check expiration** - Reject expired messages
+3. **Validate domain** - Match expected domain
+4. **Recover address** - Confirm signer matches claimed address
+
+### Session Invalidation
+
+```typescript
+// Logout endpoint
+export async function POST(request: NextRequest) {
+    const session = await verifySession(request);
+    if (session) {
+        // Invalidate session in database
+        await supabase
+            .from("shout_sessions")
+            .delete()
+            .eq("user_address", session.address);
+    }
+
+    const response = NextResponse.json({ success: true });
+    response.cookies.delete("spritz_session");
+    return response;
+}
+```
+
+---
+
+## Error Handling
+
+### Common Auth Errors
+
+| Error               | Code | Cause                         | Solution          |
+| ------------------- | ---- | ----------------------------- | ----------------- |
+| `Invalid nonce`     | 401  | Nonce expired or reused       | Request new nonce |
+| `Invalid signature` | 401  | Signature verification failed | Re-sign message   |
+| `Session expired`   | 401  | JWT expired                   | Re-authenticate   |
+| `Rate limited`      | 429  | Too many requests             | Wait and retry    |
+| `Passkey failed`    | 400  | WebAuthn error                | Check credential  |
+
+### Error Response Format
+
+```typescript
+interface AuthErrorResponse {
+    error: string;
+    code: string;
+    message?: string;
+    retryAfter?: number; // For rate limiting
+}
+```

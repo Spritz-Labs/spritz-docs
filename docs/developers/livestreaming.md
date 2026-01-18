@@ -1,82 +1,76 @@
+# Livestreaming Technical Documentation
+
+Complete technical documentation for implementing livestreaming in Spritz using Livepeer's decentralized video infrastructure.
+
+## Protocol Overview
+
+Spritz uses **Livepeer** for decentralized livestreaming with WebRTC ingestion and HLS playback.
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Ingestion** | WebRTC/WHIP | Browser-based streaming |
+| **Transcoding** | Livepeer Network | Multi-bitrate encoding |
+| **Delivery** | HLS via CDN | Adaptive playback |
+| **Recording** | Automatic VOD | Stream archival |
+
 ---
-title: Livestreaming (Livepeer)
-description: Deep dive into Spritz livestreaming powered by Livepeer. Learn about WebRTC WHIP ingest, HLS playback, transcoding, and stream management.
-keywords:
-    [
-        livestreaming,
-        Livepeer,
-        WebRTC,
-        WHIP,
-        HLS,
-        video streaming,
-        broadcast,
-        transcoding,
-    ]
-sidebar_label: Livestreaming
-sidebar_position: 6
----
 
-# Livestreaming (Livepeer)
-
-Spritz uses [Livepeer](https://livepeer.studio/) for decentralized livestreaming. Livepeer provides low-latency WebRTC ingest, HLS playback, automatic transcoding, and recording.
-
-## Overview
-
-### Architecture
+## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                              BROADCASTER                                  │
-│  ┌──────────┐     ┌────────────┐     ┌────────────┐     ┌─────────────┐ │
-│  │  Camera  │────▶│  WebRTC    │────▶│  Livepeer  │────▶│  Transcoder │ │
-│  │   Mic    │     │ (Browser)  │     │   WHIP     │     │             │ │
-│  └──────────┘     └────────────┘     └────────────┘     └──────┬──────┘ │
-└──────────────────────────────────────────────────────────────────┼───────┘
-                                                                   │
-                                                                   ▼
-                                                          ┌────────────────┐
-                                                          │      HLS       │
-                                                          │  (720p, 480p,  │
-                                                          │     360p)      │
-                                                          └───────┬────────┘
-                                                                  │
-              ┌───────────────────────────────────────────────────┼─────────┐
-              │                                                   │         │
-              ▼                                                   ▼         ▼
-       ┌─────────────┐                                     ┌─────────────┐
-       │   Viewer 1  │                                     │   Viewer N  │
-       │  (Browser)  │                                     │  (Browser)  │
-       │   HLS.js    │                                     │   HLS.js    │
-       └─────────────┘                                     └─────────────┘
-```
-
-### Key Concepts
-
-| Concept | Description |
-|---------|-------------|
-| **Stream** | Livepeer stream object with unique ID and keys |
-| **Stream Key** | Secret for WHIP ingest |
-| **Playback ID** | Public ID for HLS playback |
-| **WHIP** | WebRTC HTTP Ingest Protocol |
-| **HLS** | HTTP Live Streaming (adaptive bitrate) |
-| **Asset** | Recorded video from a stream |
-
----
-
-## Configuration
-
-### Environment Variables
-
-```env
-# Server-side only (never expose to client!)
-LIVEPEER_API_KEY=your_livepeer_api_key
+┌─────────────────────────────────────────────────────────────┐
+│                    Livestream Architecture                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Broadcaster                                                 │
+│  ┌──────────────┐                                           │
+│  │   Browser    │                                           │
+│  │  ┌────────┐  │                                           │
+│  │  │ Camera │  │                                           │
+│  │  │  +Mic  │  │                                           │
+│  │  └────┬───┘  │                                           │
+│  │       │      │                                           │
+│  │  ┌────▼────────────┐                                     │
+│  │  │ @livepeer/react │                                     │
+│  │  │   Broadcast     │                                     │
+│  │  └────────┬────────┘                                     │
+│  └───────────┼──────────┘                                   │
+│              │                                               │
+│              │ WebRTC/WHIP                                   │
+│              │ livepeer.studio/webrtc/{streamKey}           │
+│              │                                               │
+│              ▼                                               │
+│  ┌───────────────────────────────────────┐                  │
+│  │           Livepeer Network            │                  │
+│  │  ┌─────────────────────────────────┐  │                  │
+│  │  │         Transcoding             │  │                  │
+│  │  │  ┌─────┐ ┌─────┐ ┌─────┐       │  │                  │
+│  │  │  │720p │ │480p │ │360p │       │  │                  │
+│  │  │  │2Mbps│ │1Mbps│ │0.5M │       │  │                  │
+│  │  │  └─────┘ └─────┘ └─────┘       │  │                  │
+│  │  └─────────────────────────────────┘  │                  │
+│  │                  │                     │                  │
+│  │                  ▼                     │                  │
+│  │  ┌─────────────────────────────────┐  │                  │
+│  │  │      HLS Manifest + Segments    │  │                  │
+│  │  │  livepeercdn.studio/hls/{id}/   │  │                  │
+│  │  └─────────────────────────────────┘  │                  │
+│  └───────────────────────────────────────┘                  │
+│                  │                                           │
+│                  ▼                                           │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                    │
+│  │ Viewer 1 │ │ Viewer 2 │ │ Viewer N │                    │
+│  │  (HLS)   │ │  (HLS)   │ │  (HLS)   │                    │
+│  └──────────┘ └──────────┘ └──────────┘                    │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Stream Management
 
-### Creating a Stream
+### Create Stream
 
 ```typescript
 // lib/livepeer.ts
@@ -95,12 +89,6 @@ export type LivepeerStream = {
 };
 
 export async function createLivepeerStream(name: string): Promise<LivepeerStream | null> {
-    if (!LIVEPEER_API_KEY) {
-        console.error("[Livepeer] API key not configured");
-        return null;
-    }
-
-    try {
         const response = await fetch(`${LIVEPEER_API_URL}/stream`, {
             method: "POST",
             headers: {
@@ -109,9 +97,9 @@ export async function createLivepeerStream(name: string): Promise<LivepeerStream
             },
             body: JSON.stringify({
                 name,
-                record: true, // Enable recording for VOD
+            record: true, // Enable automatic recording
                 profiles: [
-                    // Transcoding profiles
+                // Transcoding profiles for adaptive bitrate
                     { name: "720p", bitrate: 2000000, fps: 30, width: 1280, height: 720 },
                     { name: "480p", bitrate: 1000000, fps: 30, width: 854, height: 480 },
                     { name: "360p", bitrate: 500000, fps: 30, width: 640, height: 360 },
@@ -119,10 +107,7 @@ export async function createLivepeerStream(name: string): Promise<LivepeerStream
             }),
         });
 
-        if (!response.ok) {
-            console.error("[Livepeer] Failed to create stream");
-            return null;
-        }
+    if (!response.ok) return null;
 
         const data = await response.json();
         return {
@@ -135,27 +120,18 @@ export async function createLivepeerStream(name: string): Promise<LivepeerStream
             isActive: data.isActive,
             createdAt: data.createdAt,
         };
-    } catch (error) {
-        console.error("[Livepeer] Error creating stream:", error);
-        return null;
-    }
 }
 ```
 
-### Getting Stream Details
+### Get Stream Status
 
 ```typescript
 export async function getLivepeerStream(streamId: string): Promise<LivepeerStream | null> {
-    if (!LIVEPEER_API_KEY) return null;
-
-    try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         
         const response = await fetch(`${LIVEPEER_API_URL}/stream/${streamId}`, {
-            headers: {
-                Authorization: `Bearer ${LIVEPEER_API_KEY}`,
-            },
+        headers: { Authorization: `Bearer ${LIVEPEER_API_KEY}` },
             signal: controller.signal,
         });
         
@@ -174,204 +150,146 @@ export async function getLivepeerStream(streamId: string): Promise<LivepeerStrea
             isActive: data.isActive,
             createdAt: data.createdAt,
         };
-    } catch (error) {
-        console.error("[Livepeer] Error getting stream:", error);
-        return null;
-    }
 }
 ```
 
-### Deleting a Stream
+### Delete Stream
 
 ```typescript
 export async function deleteLivepeerStream(streamId: string): Promise<boolean> {
-    if (!LIVEPEER_API_KEY) return false;
-
-    try {
         const response = await fetch(`${LIVEPEER_API_URL}/stream/${streamId}`, {
             method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${LIVEPEER_API_KEY}`,
-            },
+        headers: { Authorization: `Bearer ${LIVEPEER_API_KEY}` },
         });
-
         return response.ok;
-    } catch (error) {
-        console.error("[Livepeer] Error deleting stream:", error);
-        return false;
-    }
 }
 ```
 
 ---
 
-## API Routes
+## WebRTC Ingestion (WHIP)
 
-### Create Stream Endpoint
+### Protocol Overview
 
-```typescript
-// POST /api/streams
-import { NextRequest, NextResponse } from "next/server";
-import { createLivepeerStream, getPlaybackUrl } from "@/lib/livepeer";
-import { getAuthenticatedUser } from "@/lib/session";
+**WebRTC-HTTP Ingestion Protocol (WHIP)** enables sub-second latency browser-based streaming.
 
-export async function POST(request: NextRequest) {
-    // Authenticate user
-    const session = await getAuthenticatedUser(request);
-    if (!session) {
-        return NextResponse.json(
-            { error: "Authentication required" },
-            { status: 401 }
-        );
-    }
-
-    const { title, description } = await request.json();
-    const userAddress = session.userAddress;
-
-    // Check for existing active stream
-    const { data: existingStream } = await db
-        .from("shout_streams")
-        .select("*")
-        .eq("user_address", userAddress)
-        .in("status", ["idle", "live"])
-        .single();
-
-    if (existingStream) {
-        return NextResponse.json({
-            stream: {
-                ...existingStream,
-                playback_url: existingStream.playback_id 
-                    ? getPlaybackUrl(existingStream.playback_id) 
-                    : null,
-            },
-            existing: true,
-        });
-    }
-
-    // Create Livepeer stream
-    const streamName = `${userAddress}-${Date.now()}`;
-    const livepeerStream = await createLivepeerStream(streamName);
-
-    if (!livepeerStream) {
-        return NextResponse.json(
-            { error: "Failed to create stream on Livepeer" },
-            { status: 500 }
-        );
-    }
-
-    // Save to database
-    const { data: stream, error } = await db
-        .from("shout_streams")
-        .insert({
-            user_address: userAddress,
-            stream_id: livepeerStream.id,
-            stream_key: livepeerStream.streamKey,
-            playback_id: livepeerStream.playbackId,
-            title: title?.trim() || null,
-            description: description?.trim() || null,
-            status: "idle",
-        })
-        .select()
-        .single();
-
-    if (error) {
-        return NextResponse.json(
-            { error: "Failed to save stream" },
-            { status: 500 }
-        );
-    }
-
-    return NextResponse.json({
-        stream: {
-            ...stream,
-            rtmp_url: livepeerStream.rtmpIngestUrl,
-            playback_url: getPlaybackUrl(livepeerStream.playbackId),
-        },
-    });
-}
-```
-
-### Get Streams Endpoint
+### Ingest URL
 
 ```typescript
-// GET /api/streams
-export async function GET(request: NextRequest) {
-    const userAddress = request.nextUrl.searchParams.get("userAddress");
-    const liveOnly = request.nextUrl.searchParams.get("live") === "true";
-    const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
-
-    let query = db
-        .from("shout_streams")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-    if (userAddress) {
-        query = query.eq("user_address", userAddress.toLowerCase());
-    }
-
-    if (liveOnly) {
-        query = query.eq("status", "live");
-    }
-
-    const { data: streams, error } = await query;
-
-    if (error) {
-        return NextResponse.json({ streams: [] });
-    }
-
-    // For live streams, verify with Livepeer
-    let filteredStreams = streams || [];
-    
-    if (liveOnly && filteredStreams.length > 0) {
-        const GRACE_PERIOD_MS = 60000; // 60 seconds for new streams
-        const now = Date.now();
-        
-        const verifiedStreams = await Promise.allSettled(
-            filteredStreams.map(async (stream) => {
-                const startedAt = stream.started_at 
-                    ? new Date(stream.started_at).getTime() 
-                    : 0;
-                const isNewStream = (now - startedAt) < GRACE_PERIOD_MS;
-                
-                if (isNewStream) return stream;
-                
-                if (stream.stream_id) {
-                    const livepeerStream = await getLivepeerStream(stream.stream_id);
-                    if (livepeerStream?.isActive) return stream;
-                }
-                return null;
-            })
-        );
-        
-        filteredStreams = verifiedStreams
-            .filter(r => r.status === "fulfilled" && r.value !== null)
-            .map(r => (r as PromiseFulfilledResult<any>).value);
-    }
-
-    // Add playback URLs
-    const streamsWithUrls = filteredStreams.map(stream => ({
-        ...stream,
-        playback_url: stream.playback_id ? getPlaybackUrl(stream.playback_id) : null,
-    }));
-
-    return NextResponse.json({ streams: streamsWithUrls });
-}
-```
-
----
-
-## URL Helpers
-
-```typescript
-// Playback URL (HLS)
-export function getPlaybackUrl(playbackId: string): string {
-    return `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
-}
-
-// WebRTC ingest URL (WHIP)
+// Generate WebRTC ingest URL
 export function getWebRTCIngestUrl(streamKey: string): string {
     return `https://livepeer.studio/webrtc/${streamKey}`;
+}
+```
+
+### Broadcast Component
+
+```tsx
+import * as Broadcast from "@livepeer/react/broadcast";
+
+function GoLiveModal({ streamKey }: { streamKey: string }) {
+    const ingestUrl = `https://livepeer.studio/webrtc/${streamKey}`;
+    
+    return (
+        <Broadcast.Root ingestUrl={ingestUrl}>
+            <Broadcast.Container>
+                {/* Video preview */}
+                <Broadcast.Video 
+                    title="Live Preview" 
+                    className="w-full h-full object-cover"
+                />
+                
+                {/* Status indicator */}
+                <Broadcast.LoadingIndicator className="absolute top-4 left-4">
+                    <div className="animate-pulse bg-yellow-500 px-2 py-1 rounded">
+                        Connecting...
+                    </div>
+                </Broadcast.LoadingIndicator>
+                
+                {/* Live indicator */}
+                <Broadcast.StatusIndicator matcher="live">
+                    <div className="absolute top-4 left-4 bg-red-500 px-2 py-1 rounded animate-pulse">
+                        🔴 LIVE
+                    </div>
+                </Broadcast.StatusIndicator>
+            </Broadcast.Container>
+            
+            {/* Controls */}
+            <div className="flex gap-2">
+                <Broadcast.EnabledTrigger>
+                    {({ enabled }) => (
+                        <button>
+                            {enabled ? "Stop Streaming" : "Start Streaming"}
+                        </button>
+                    )}
+                </Broadcast.EnabledTrigger>
+                
+                <Broadcast.VideoEnabledTrigger>
+                    {({ videoEnabled }) => (
+                        <button>
+                            {videoEnabled ? "Disable Video" : "Enable Video"}
+                        </button>
+                    )}
+                </Broadcast.VideoEnabledTrigger>
+                
+                <Broadcast.AudioEnabledTrigger>
+                    {({ audioEnabled }) => (
+                        <button>
+                            {audioEnabled ? "Mute" : "Unmute"}
+                        </button>
+                    )}
+                </Broadcast.AudioEnabledTrigger>
+            </div>
+        </Broadcast.Root>
+    );
+}
+```
+
+### Camera Setup
+
+```typescript
+// Start camera preview (before streaming)
+const startCamera = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        audio: true,
+    });
+
+    videoPreviewRef.current.srcObject = stream;
+    await videoPreviewRef.current.play();
+};
+
+// Stop all media tracks
+const stopAllMediaTracks = () => {
+    // Stop tracked stream
+    if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => {
+            track.enabled = false;
+            track.stop();
+        });
+    }
+    
+    // Stop any video element streams
+    document.querySelectorAll("video").forEach(video => {
+        const stream = video.srcObject as MediaStream;
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
+    });
+};
+```
+
+---
+
+## HLS Playback
+
+### Playback URLs
+
+```typescript
+// HLS manifest URL
+export function getPlaybackUrl(playbackId: string): string {
+    return `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
 }
 
 // Thumbnail URL
@@ -380,104 +298,33 @@ export function getThumbnailUrl(playbackId: string): string {
 }
 ```
 
----
-
-## Broadcasting (WebRTC WHIP)
-
-### Using Livepeer React SDK
+### Player Component
 
 ```tsx
-import * as Broadcast from "@livepeer/react/broadcast";
-
-function GoLiveComponent({ streamKey }: { streamKey: string }) {
-    const ingestUrl = getWebRTCIngestUrl(streamKey);
-    
-    return (
-        <Broadcast.Root ingestUrl={ingestUrl}>
-            <Broadcast.Container>
-                <Broadcast.Video />
-            </Broadcast.Container>
-            
-            <Broadcast.Controls>
-                <Broadcast.EnabledTrigger>
-                    {/* Start/Stop Button */}
-                </Broadcast.EnabledTrigger>
-            </Broadcast.Controls>
-        </Broadcast.Root>
-    );
-}
-```
-
-### Manual WebRTC Implementation
-
-```typescript
-async function startBroadcast(streamKey: string): Promise<void> {
-    // Get user media
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: true,
-    });
-
-    // Create peer connection
-    const pc = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    });
-
-    // Add tracks
-    stream.getTracks().forEach(track => {
-        pc.addTrack(track, stream);
-    });
-
-    // Create offer
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
-
-    // Send to Livepeer WHIP endpoint
-    const response = await fetch(getWebRTCIngestUrl(streamKey), {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/sdp",
-        },
-        body: offer.sdp,
-    });
-
-    const answer = await response.text();
-    await pc.setRemoteDescription({
-        type: "answer",
-        sdp: answer,
-    });
-}
-```
-
----
-
-## Playback (HLS)
-
-### Using HLS.js
-
-```typescript
 import Hls from "hls.js";
 
-function LiveStreamPlayer({ playbackId }: { playbackId: string }) {
+function LivestreamPlayer({ playbackId }: { playbackId: string }) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const hlsRef = useRef<Hls | null>(null);
-    const playbackUrl = getPlaybackUrl(playbackId);
+    
+    const playbackUrl = `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
 
     useEffect(() => {
-        if (!videoRef.current) return;
+        const video = videoRef.current;
+        if (!video) return;
 
         if (Hls.isSupported()) {
             const hls = new Hls({
-                enableWorker: true,
+                maxBufferLength: 30,
+                maxMaxBufferLength: 60,
                 lowLatencyMode: true,
-                backBufferLength: 90,
             });
             
             hls.loadSource(playbackUrl);
-            hls.attachMedia(videoRef.current);
+            hls.attachMedia(video);
             
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                videoRef.current?.play();
+                video.play().catch(console.error);
             });
 
             hls.on(Hls.Events.ERROR, (event, data) => {
@@ -497,9 +344,10 @@ function LiveStreamPlayer({ playbackId }: { playbackId: string }) {
             });
 
             hlsRef.current = hls;
-        } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-            // Safari native HLS
-            videoRef.current.src = playbackUrl;
+        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            // Native HLS support (Safari)
+            video.src = playbackUrl;
+            video.play().catch(console.error);
         }
 
         return () => {
@@ -510,16 +358,16 @@ function LiveStreamPlayer({ playbackId }: { playbackId: string }) {
     return (
         <video
             ref={videoRef}
-            autoPlay
-            playsInline
+            className="w-full h-full"
             controls
-            className="w-full aspect-video rounded-lg"
+            playsInline
+            muted
         />
     );
 }
 ```
 
-### Using Livepeer React Player
+### Livepeer React Player
 
 ```tsx
 import { Player } from "@livepeer/react";
@@ -530,8 +378,14 @@ function StreamPlayer({ playbackId }: { playbackId: string }) {
             playbackId={playbackId}
             autoPlay
             muted
+            loop={false}
             showPipButton
             objectFit="cover"
+            theme={{
+                colors: {
+                    accent: "#9333ea",
+                },
+            }}
         />
     );
 }
@@ -539,9 +393,52 @@ function StreamPlayer({ playbackId }: { playbackId: string }) {
 
 ---
 
-## Recordings (VOD Assets)
+## Transcoding Profiles
 
-### Getting Stream Assets
+### Default Configuration
+
+```typescript
+const DEFAULT_PROFILES = [
+    {
+        name: "720p",
+        bitrate: 2000000,  // 2 Mbps
+        fps: 30,
+        width: 1280,
+        height: 720,
+    },
+    {
+        name: "480p",
+        bitrate: 1000000,  // 1 Mbps
+        fps: 30,
+        width: 854,
+        height: 480,
+    },
+    {
+        name: "360p",
+        bitrate: 500000,   // 0.5 Mbps
+        fps: 30,
+        width: 640,
+        height: 360,
+    },
+];
+```
+
+### Adaptive Bitrate (ABR)
+
+The HLS manifest includes all renditions. Players automatically select the best quality based on:
+- Available bandwidth
+- Device capabilities
+- Buffer health
+
+---
+
+## Recording (VOD)
+
+### Automatic Recording
+
+When `record: true` is set during stream creation, Livepeer automatically records the stream.
+
+### Get Recordings
 
 ```typescript
 export type LivepeerAsset = {
@@ -561,19 +458,14 @@ export type LivepeerAsset = {
 };
 
 export async function getLivepeerStreamAssets(streamId: string): Promise<LivepeerAsset[]> {
-    if (!LIVEPEER_API_KEY) return [];
-
-    try {
         const response = await fetch(`${LIVEPEER_API_URL}/stream/${streamId}/assets`, {
-            headers: {
-                Authorization: `Bearer ${LIVEPEER_API_KEY}`,
-            },
+        headers: { Authorization: `Bearer ${LIVEPEER_API_KEY}` },
         });
 
         if (!response.ok) return [];
 
         const assets = await response.json();
-        return assets.map((asset: Record<string, unknown>) => ({
+    return assets.map((asset: any) => ({
             id: asset.id,
             playbackId: asset.playbackId,
             playbackUrl: `https://livepeercdn.studio/hls/${asset.playbackId}/index.m3u8`,
@@ -582,230 +474,233 @@ export async function getLivepeerStreamAssets(streamId: string): Promise<Livepee
             videoSpec: asset.videoSpec,
             size: asset.size,
         }));
-    } catch (error) {
-        console.error("[Livepeer] Error getting assets:", error);
-        return [];
-    }
 }
 ```
 
----
-
-## Stream Status Management
-
-### Database Schema
-
-```sql
-CREATE TABLE shout_streams (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_address TEXT NOT NULL,
-    stream_id TEXT NOT NULL,          -- Livepeer stream ID
-    stream_key TEXT,                   -- Secret ingest key
-    playback_id TEXT,                  -- Public playback ID
-    title TEXT,
-    description TEXT,
-    status TEXT DEFAULT 'idle',        -- idle, live, ended
-    viewer_count INTEGER DEFAULT 0,
-    started_at TIMESTAMPTZ,
-    ended_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    
-    CONSTRAINT valid_status CHECK (status IN ('idle', 'live', 'ended'))
-);
-
-CREATE INDEX idx_streams_user ON shout_streams(user_address);
-CREATE INDEX idx_streams_status ON shout_streams(status);
-CREATE INDEX idx_streams_created ON shout_streams(created_at DESC);
-```
-
-### Updating Status
+### Get Specific Asset
 
 ```typescript
-// Update stream to live status
-async function markStreamLive(streamId: string): Promise<void> {
-    await db
-        .from("shout_streams")
-        .update({
-            status: "live",
-            started_at: new Date().toISOString(),
-        })
-        .eq("id", streamId);
-}
-
-// End stream
-async function endStream(streamId: string): Promise<void> {
-    await db
-        .from("shout_streams")
-        .update({
-            status: "ended",
-            ended_at: new Date().toISOString(),
-        })
-        .eq("id", streamId);
-}
-```
-
----
-
-## Camera/Microphone Management
-
-```typescript
-async function startCamera(): Promise<MediaStream | null> {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user" },
-            audio: true,
-        });
-        return stream;
-    } catch (error) {
-        console.error("[GoLive] Camera error:", error);
-        return null;
-    }
-}
-
-function stopAllMediaTracks(): void {
-    // Stop all tracked streams
-    if (mediaStream) {
-        mediaStream.getTracks().forEach(track => {
-            track.enabled = false;
-            track.stop();
-        });
-    }
-
-    // Also stop any tracks attached to video elements
-    const videoElements = document.querySelectorAll("video");
-    videoElements.forEach(video => {
-        const stream = video.srcObject as MediaStream;
-        if (stream) {
-            stream.getTracks().forEach(track => {
-                track.enabled = false;
-                track.stop();
-            });
-            video.srcObject = null;
-        }
+export async function getLivepeerAsset(assetId: string): Promise<LivepeerAsset | null> {
+    const response = await fetch(`${LIVEPEER_API_URL}/asset/${assetId}`, {
+        headers: { Authorization: `Bearer ${LIVEPEER_API_KEY}` },
     });
+
+    if (!response.ok) return null;
+
+    const asset = await response.json();
+    return {
+        id: asset.id,
+        playbackId: asset.playbackId,
+        playbackUrl: `https://livepeercdn.studio/hls/${asset.playbackId}/index.m3u8`,
+        downloadUrl: asset.downloadUrl,
+        status: asset.status,
+        videoSpec: asset.videoSpec,
+        size: asset.size,
+    };
 }
 ```
 
 ---
 
-## Go Live Modal Flow
+## Stream States
+
+### State Machine
+
+```
+┌──────────┐    create     ┌──────────┐
+│   IDLE   │ ───────────► │  CREATED │
+└──────────┘               └──────────┘
+                                │
+                                │ start streaming
+                                ▼
+                           ┌──────────┐
+                           │   LIVE   │ ◄─── viewers watching
+                           └──────────┘
+                                │
+                                │ stop streaming
+                                ▼
+                           ┌──────────┐
+                           │  ENDED   │ ───► recordings available
+                           └──────────┘
+```
+
+### State Checking
 
 ```typescript
-type StreamStatus = "preview" | "connecting" | "live" | "ending";
-
-function GoLiveModal({ 
-    userAddress,
-    onClose 
-}: { 
-    userAddress: string;
-    onClose: () => void;
-}) {
-    const [status, setStatus] = useState<StreamStatus>("preview");
-    const [title, setTitle] = useState("");
-    const [stream, setStream] = useState<Stream | null>(null);
-
-    async function handleGoLive() {
-        setStatus("connecting");
-
-        // 1. Create stream via API
-        const response = await fetch("/api/streams", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ title }),
-        });
-
-        const { stream: newStream } = await response.json();
-        setStream(newStream);
-
-        // 2. Start WebRTC broadcast
-        // (handled by Livepeer Broadcast component)
-        
-        // 3. Update status to live
-        await fetch(`/api/streams/${newStream.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "live" }),
-        });
-
-        setStatus("live");
+// Poll stream status
+async function waitForStreamActive(streamId: string, timeout = 30000): Promise<boolean> {
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < timeout) {
+        const stream = await getLivepeerStream(streamId);
+        if (stream?.isActive) return true;
+        await new Promise(r => setTimeout(r, 2000));
     }
+    
+    return false;
+}
+```
 
-    async function handleEndStream() {
-        setStatus("ending");
+---
 
-        if (stream) {
-            await fetch(`/api/streams/${stream.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "ended" }),
-            });
+## Alternative Ingestion (RTMP)
+
+For OBS or other streaming software:
+
+### RTMP URL
+
+```typescript
+const rtmpUrl = `rtmp://rtmp.livepeer.com/live/${streamKey}`;
+```
+
+### OBS Configuration
+
+1. **Service**: Custom
+2. **Server**: `rtmp://rtmp.livepeer.com/live`
+3. **Stream Key**: Your stream key from API
+
+---
+
+## API Endpoints
+
+### Spritz Stream API
+
+```typescript
+// POST /api/streams - Create stream
+// GET /api/streams - List user's streams
+// GET /api/streams/[id] - Get stream details
+// DELETE /api/streams/[id] - Delete stream
+// GET /api/streams/[id]/assets - Get recordings
+
+// Public stream access
+// GET /api/public/streams/[id] - Get public stream info
+```
+
+---
+
+## Error Handling
+
+### Common Errors
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `Stream key invalid` | Wrong or expired key | Regenerate stream |
+| `Media access denied` | Browser blocked camera | Request permissions |
+| `HLS manifest not found` | Stream not yet live | Retry with delay |
+| `Transcoding failed` | Invalid input format | Check video codec |
+
+### Error Recovery
+
+```typescript
+// HLS error recovery
+hls.on(Hls.Events.ERROR, (event, data) => {
+    if (data.fatal) {
+        switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+                // Try to recover from network error
+                console.log("Network error, attempting recovery...");
+                hls.startLoad();
+                break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+                // Try to recover from media error
+                console.log("Media error, attempting recovery...");
+                hls.recoverMediaError();
+                break;
+            default:
+                // Fatal error, destroy and reinitialize
+                hls.destroy();
+                break;
         }
-
-        stopAllMediaTracks();
-        onClose();
     }
-
-    return (
-        <div>
-            {status === "preview" && (
-                <>
-                    <VideoPreview />
-                    <input 
-                        value={title} 
-                        onChange={e => setTitle(e.target.value)} 
-                        placeholder="Stream title (optional)"
-                    />
-                    <button onClick={handleGoLive}>Go Live</button>
-                </>
-            )}
-            
-            {status === "live" && stream && (
-                <>
-                    <Broadcast.Root ingestUrl={getWebRTCIngestUrl(stream.stream_key)}>
-                        <Broadcast.Container>
-                            <Broadcast.Video />
-                        </Broadcast.Container>
-                    </Broadcast.Root>
-                    <button onClick={handleEndStream}>End Stream</button>
-                </>
-            )}
-        </div>
-    );
-}
-```
-
----
-
-## Dependencies
-
-```bash
-npm install @livepeer/react hls.js
-```
-
-```typescript
-// Broadcasting
-import * as Broadcast from "@livepeer/react/broadcast";
-import { Player } from "@livepeer/react";
-
-// Playback
-import Hls from "hls.js";
+});
 ```
 
 ---
 
 ## Best Practices
 
-1. **Always stop media tracks** - Prevent microphone/camera staying on after stream ends
-2. **Handle stale streams** - Auto-end streams that have been "idle" for too long
-3. **Verify with Livepeer** - Check `isActive` before showing as live
-4. **Grace period** - Give new streams time to connect (60 seconds)
-5. **Error recovery** - Implement HLS error recovery for playback
+### Broadcasting
+
+1. **Test before going live** - Use camera preview
+2. **Good lighting** - Improves compression efficiency
+3. **Stable internet** - Minimum 5 Mbps upload recommended
+4. **Close other apps** - Reduce CPU/bandwidth competition
+
+### Playback
+
+1. **Start muted** - Avoid autoplay restrictions
+2. **Use poster image** - Show thumbnail while loading
+3. **Handle offline** - Show appropriate message
+4. **Buffer appropriately** - Balance latency vs. stability
+
+### Performance
+
+1. **Lazy load player** - Don't load until needed
+2. **Destroy on unmount** - Clean up HLS instance
+3. **Monitor bandwidth** - Adjust quality if needed
+4. **Use CDN** - Livepeer CDN handles this automatically
 
 ---
 
-## Next Steps
+## Security
 
-- [Video Calls](/docs/developers/video-calls) - Huddle01 integration
-- [Messaging](/docs/developers/messaging) - Logos messaging
-- [API Reference](/docs/api/intro) - Complete API documentation
+### Stream Key Protection
+
+- Stream keys should only be exposed to the broadcaster
+- Never include stream keys in client-side code for viewers
+- Rotate keys after each stream if needed
+
+### Access Control
+
+```typescript
+// Check if user owns the stream before allowing broadcast
+async function canBroadcast(userId: string, streamId: string): Promise<boolean> {
+    const stream = await getStreamFromDB(streamId);
+    return stream?.creator_address === userId;
+}
+```
+
+---
+
+## Integration Example
+
+```typescript
+// Complete streaming flow
+async function startLivestream(title: string) {
+    // 1. Create stream
+    const stream = await createLivepeerStream(title);
+    if (!stream) throw new Error("Failed to create stream");
+    
+    // 2. Save to database
+    await saveStreamToDB({
+        id: stream.id,
+        playbackId: stream.playbackId,
+        streamKey: stream.streamKey,
+        title,
+        creatorAddress: userAddress,
+    });
+    
+    // 3. Return ingest URL for broadcaster
+    return {
+        streamId: stream.id,
+        ingestUrl: getWebRTCIngestUrl(stream.streamKey),
+        playbackUrl: getPlaybackUrl(stream.playbackId),
+    };
+}
+
+// End stream and get recordings
+async function endLivestream(streamId: string) {
+    // Wait for recordings to be available
+    await new Promise(r => setTimeout(r, 5000));
+    
+    // Get recording assets
+    const assets = await getLivepeerStreamAssets(streamId);
+    
+    // Update database with VOD info
+    if (assets.length > 0) {
+        await updateStreamWithRecordings(streamId, assets);
+    }
+    
+    return assets;
+}
+```
