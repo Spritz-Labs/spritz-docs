@@ -72,6 +72,8 @@ const sidebars: SidebarsConfig = {
             'api/intro',
             'api/agents-detailed',
             'api/streaming',
+            'api/error-codes',
+            'api/complete',
           ],
         },
         'architecture/overview',

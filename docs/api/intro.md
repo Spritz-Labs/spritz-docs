@@ -79,12 +79,16 @@ All API responses follow a consistent format:
 
 ## Common Error Codes
 
-- `UNAUTHORIZED`: Authentication required
-- `FORBIDDEN`: Insufficient permissions
-- `NOT_FOUND`: Resource not found
-- `VALIDATION_ERROR`: Invalid request data
-- `RATE_LIMIT_EXCEEDED`: Too many requests
-- `INTERNAL_ERROR`: Server error
+| Code | Description |
+|------|-------------|
+| `UNAUTHORIZED` | Authentication required |
+| `FORBIDDEN` | Insufficient permissions |
+| `NOT_FOUND` | Resource not found |
+| `VALIDATION_ERROR` | Invalid request data |
+| `RATE_LIMIT_EXCEEDED` | Too many requests |
+| `INTERNAL_ERROR` | Server error |
+
+For a complete list of error codes with troubleshooting guidance, see the [Error Reference](/docs/api/error-codes).
 
 ## API Endpoints
 
@@ -322,12 +326,14 @@ const chat = await response.json();
 
 - [Agents API - Detailed Reference](/docs/api/agents-detailed): Complete agent endpoints
 - [Streaming API](/docs/api/streaming): Livestreaming endpoints
-- [Complete API Reference](/docs/api/complete): All endpoints overview
+- [Error Reference](/docs/api/error-codes): Complete error code documentation
+- [Quick Reference](/docs/api/complete): All endpoints overview
 
 ## Next Steps
 
 - Explore [Agents API - Detailed Reference](/docs/api/agents-detailed)
 - Check out [Streaming API](/docs/api/streaming)
-- See [Complete API Reference](/docs/api/complete) for all endpoints
+- Review [Error Codes](/docs/api/error-codes) for troubleshooting
+- See [Quick Reference](/docs/api/complete) for all endpoints
 - Learn about [Architecture](/docs/architecture/overview)
 

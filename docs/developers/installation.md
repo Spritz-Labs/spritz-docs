@@ -110,9 +110,12 @@ Get a key at [Livepeer Studio](https://livepeer.studio/).
 
 ```env
 NEXT_PUBLIC_PIMLICO_API_KEY=your_pimlico_api_key
+NEXT_PUBLIC_PIMLICO_SPONSORSHIP_POLICY_ID=your_sponsorship_policy_id
 ```
 
 Get a key at [Pimlico Dashboard](https://dashboard.pimlico.io/).
+
+**Note**: The sponsorship policy ID is required for gas-free transactions on L2 networks. Without it, users will need to pay gas directly.
 
 ### Optional Variables
 

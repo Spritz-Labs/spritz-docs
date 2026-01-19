@@ -615,9 +615,15 @@ POST /api/agents/detect-api
 
 ## Rate Limiting
 
-- **Standard**: 100 requests/minute
-- **Authenticated**: 1000 requests/minute
-- **x402 Public**: No rate limit (payment required)
+Agent endpoints follow the tiered rate limiting system:
+
+| Endpoint Type | Limit | Tier |
+|---------------|-------|------|
+| `/api/agents/*/chat` | 30/min | AI |
+| Other agent endpoints | 100/min | General |
+| `/api/public/agents/*/chat` (x402) | No limit | Payment required |
+
+See [API Overview](/docs/api/intro#rate-limiting) for complete rate limiting documentation.
 
 ## Best Practices
 
