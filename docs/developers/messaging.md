@@ -193,7 +193,14 @@ async function decryptMessage(
 
 ## Key Backup System
 
-Private keys are stored locally by default. Users can opt-in to cloud backup with recovery phrase + PIN.
+Private keys are stored locally by default. Users can opt-in to **PIN-protected cloud backup** with a 12-word recovery phrase.
+
+:::info Security Model
+- 12-word recovery phrase encodes 96 bits of entropy
+- 6-digit PIN adds an authentication factor
+- Final key = PBKDF2(entropy + PIN, salt, 100,000 iterations)
+- **BOTH** phrase AND PIN are required to restore keys
+:::
 
 ### Recovery Phrase Generation
 

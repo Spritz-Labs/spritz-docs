@@ -10,6 +10,25 @@ Public channels are:
 - **Topic-Based**: Organized around specific topics
 - **Community-Driven**: Built by and for the community
 
+## Official Channels
+
+Spritz includes **96 official channels** across multiple categories, verified by the Spritz team. Official channels are marked with a special badge and appear at the top of search results.
+
+### Channel Categories
+
+| Category | Examples | Count |
+|----------|----------|-------|
+| **Cities** | New York, London, Tokyo, Paris | 20+ |
+| **Crypto** | Bitcoin, Ethereum, DeFi, NFTs | 15+ |
+| **Tech** | AI, Web3, Programming, Startups | 12+ |
+| **Gaming** | PC Gaming, Console, Esports | 10+ |
+| **Sports** | Football, Basketball, Soccer | 10+ |
+| **Music** | Hip Hop, Electronic, Indie | 8+ |
+| **Art** | Digital Art, Photography, Design | 6+ |
+| **Languages** | English, Spanish, Mandarin | 8+ |
+
+Official channels are created and moderated by the Spritz team to ensure quality conversations.
+
 ## Discovering Channels
 
 ### Browse Channels
@@ -85,7 +104,31 @@ Pinned messages are great for:
 ### List Channels
 
 ```typescript
-GET /api/channels?category=tech&limit=20
+GET /api/channels?category=tech&userAddress=0x...
+```
+
+**Query Parameters:**
+- `category` - Filter by category (optional)
+- `userAddress` - Include membership status in response (optional)
+- `joined` - If `true`, only return channels user has joined (optional)
+
+**Response:**
+```json
+{
+  "channels": [
+    {
+      "id": "uuid",
+      "name": "Ethereum",
+      "description": "Discuss Ethereum development",
+      "emoji": "⟠",
+      "category": "crypto",
+      "is_official": true,
+      "member_count": 1250,
+      "message_count": 8420,
+      "is_member": false
+    }
+  ]
+}
 ```
 
 ### Get Channel

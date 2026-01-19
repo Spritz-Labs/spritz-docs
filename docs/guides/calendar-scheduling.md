@@ -129,8 +129,18 @@ POST /api/scheduling/create-shareable
 ### Get Public Schedule
 
 ```typescript
-GET /api/public/schedule/:slug
+GET /api/public/cal/:slug
 ```
+
+Or via the user-friendly URL:
+
+```
+https://spritz.chat/cal/:slug
+```
+
+:::note Route Update
+The scheduling URL has been changed from `/book/` to `/cal/` for brevity.
+:::
 
 ## Best Practices
 

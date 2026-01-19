@@ -27,6 +27,7 @@ const sidebars: SidebarsConfig = {
         'guides/friends',
         'guides/calendar-scheduling',
         'guides/profile-settings',
+        'guides/profile-widgets',
       ],
     },
     {
@@ -59,6 +60,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'developers/authentication',
             'developers/smart-wallets',
+            'developers/vaults',
             'developers/messaging',
             'developers/video-calls',
             'developers/livestreaming',

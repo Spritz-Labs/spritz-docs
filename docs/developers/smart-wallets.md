@@ -1,6 +1,10 @@
-# Smart Wallets Technical Documentation
+# Spritz Wallets Technical Documentation
 
-Complete technical documentation for Spritz Smart Wallets, implementing Safe accounts with ERC-4337 account abstraction.
+Complete technical documentation for Spritz Wallets, implementing Safe accounts with ERC-4337 account abstraction.
+
+:::tip Terminology Update
+"Smart Wallets" have been renamed to **Spritz Wallets** for simplicity. The underlying technology (Safe Smart Accounts) remains the same.
+:::
 
 ## Architecture Overview
 
@@ -8,7 +12,7 @@ Every Spritz user gets a **Safe Smart Account** for on-chain transactions, regar
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Smart Wallet Architecture                 │
+│                    Spritz Wallet Architecture                │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌─────────────────────────────────────────────────────┐    │
