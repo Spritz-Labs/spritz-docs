@@ -415,11 +415,120 @@ CREATE TABLE shout_vault_members (
 
 ---
 
+## Vault Balances API
+
+Fetch token balances for a vault, including native tokens and ERC-20s.
+
+```http
+GET /api/vault/:id/balances
+```
+
+### Response
+
+```typescript
+interface VaultBalanceResponse {
+    vaultId: string;
+    safeAddress: string;
+    chainId: number;
+    nativeBalance: VaultTokenBalance | null;
+    tokens: VaultTokenBalance[];
+    totalUsd: number;
+    lastUpdated: string;
+}
+
+interface VaultTokenBalance {
+    contractAddress: string;  // "native" for native token
+    symbol: string;
+    name: string;
+    decimals: number;
+    balance: string;          // Raw balance
+    balanceFormatted: string; // Human-readable balance
+    balanceUsd: number | null;
+    tokenType: "native" | "erc20";
+    logoUrl?: string;
+}
+```
+
+### Supported Tokens
+
+Only trusted tokens are returned to prevent spam token attacks:
+
+| Chain | Tokens |
+|-------|--------|
+| Ethereum | USDC, USDT, DAI, WBTC, WETH |
+| Base | USDC, DAI, WETH |
+| Arbitrum | USDC, USDT, DAI, WETH |
+| Optimism | USDC, USDT, DAI, WETH |
+| Polygon | USDC, USDT, DAI, WETH |
+
+### Data Sources
+
+1. **Primary**: Blockscout API for indexed balances
+2. **Fallback**: Direct RPC calls when Blockscout indexing is delayed
+
+---
+
+## Vault UI Features
+
+The vault detail view includes four main tabs:
+
+### Assets Tab
+- View native token balance (ETH, MATIC, etc.)
+- View ERC-20 token balances
+- Total USD value calculation
+- Refresh balances button
+
+### Send Tab
+- Select token to send
+- Enter amount with MAX button
+- Recipient address with **ENS support**
+- Transaction proposals require multi-sig approval
+
+```typescript
+// ENS resolution example
+const recipient = "vitalik.eth"; // Resolves to 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+```
+
+### Receive Tab
+- QR code for vault address
+- Copy address to clipboard
+- Chain-specific warning messages
+- Link to block explorer
+
+### Activity Tab
+- Real-time transaction history from Blockscout
+- Incoming/outgoing transaction indicators
+- Token transfer details
+- Timestamps and status
+
+---
+
+## Vault Management
+
+### Edit Vault (Creator Only)
+
+```http
+PATCH /api/vault/:id
+```
+
+Creators can update:
+- Vault name
+- Description
+- Emoji icon
+
+### Vault Status
+
+| Status | Description |
+|--------|-------------|
+| **Pending** | Created but not deployed on-chain |
+| **Active** | Safe contract deployed, ready for transactions |
+
+---
+
 ## Coming Soon
 
 - **Transaction proposals**: Create and sign multi-sig transactions
 - **Spending limits**: Set individual and collective spending limits
-- **Activity history**: View all vault transactions
 - **Member management**: Add/remove members after creation
 - **Push notifications**: Get notified when signatures are needed
 
