@@ -666,13 +666,106 @@ interface TransactionWithConfirmations {
 └─────────────────────────────────────────────────────────────┘
 ```
 
+### Sign, Execute, or Cancel Transaction
+
+```http
+PATCH /api/vault/:id/transactions
+```
+
+#### Request Body
+
+```typescript
+interface TransactionActionRequest {
+    transactionId: string;
+    action: "sign" | "execute" | "cancel";
+}
+```
+
+#### Sign Transaction
+
+Add your signature to a pending transaction:
+
+```typescript
+const response = await fetch(`/api/vault/${vaultId}/transactions`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+        transactionId: "uuid-of-transaction",
+        action: "sign",
+    }),
+});
+
+// Response
+{
+    "success": true,
+    "message": "Signed! 1 more signature(s) needed.",
+    "confirmations": 2,
+    "threshold": 3,
+    "canExecute": false
+}
+```
+
+#### Execute Transaction
+
+Execute a transaction once threshold is reached:
+
+```typescript
+const response = await fetch(`/api/vault/${vaultId}/transactions`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+        transactionId: "uuid-of-transaction",
+        action: "execute",
+    }),
+});
+
+// Response
+{
+    "success": true,
+    "message": "Transaction executed successfully",
+    "txHash": "0x..." // On-chain transaction hash
+}
+```
+
+#### Cancel Transaction
+
+Only the proposer can cancel a pending transaction:
+
+```typescript
+const response = await fetch(`/api/vault/${vaultId}/transactions`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+        transactionId: "uuid-of-transaction",
+        action: "cancel",
+    }),
+});
+
+// Response
+{
+    "success": true,
+    "message": "Transaction cancelled"
+}
+```
+
 ### Transaction Status
 
 | Status | Description |
 |--------|-------------|
 | `pending` | Awaiting signatures or execution |
 | `executed` | Successfully executed on-chain |
-| `cancelled` | Cancelled by proposer or rejected |
+| `cancelled` | Cancelled by proposer |
+
+### Action Permissions
+
+| Action | Who Can Perform |
+|--------|-----------------|
+| **Sign** | Any vault member who hasn't signed yet |
+| **Execute** | Any vault member (when threshold reached) |
+| **Cancel** | Only the transaction proposer |
 
 ---
 
