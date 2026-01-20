@@ -814,6 +814,58 @@ const response = await fetch(`/api/vault/${vaultId}/transactions`, {
 
 Vaults use counterfactual deployment - the address is computed before the Safe contract is deployed on-chain.
 
+### Deployment Methods
+
+Spritz offers two deployment options:
+
+| Method | Gas Cost | Best For |
+|--------|----------|----------|
+| **Smart Wallet (Sponsored)** | Free on L2s | Default, recommended |
+| **EOA (Direct)** | User pays gas | Users who prefer direct control |
+
+#### Sponsored Gas Deployment (Default)
+
+On L2 networks (Base, Arbitrum, Optimism, Polygon), vault deployment is **free** using sponsored gas through your Spritz Wallet:
+
+```typescript
+import { deployVaultViaSponsoredGas } from '@/lib/safeWallet';
+
+const result = await deployVaultViaSponsoredGas(
+    owners,           // Array of owner addresses
+    threshold,        // Number of required signatures
+    chainId,          // Chain ID (8453 for Base, etc.)
+    signerAddress,    // Your EOA address
+    signMessage,      // Wallet sign function
+    signTypedData,    // EIP-712 sign function
+    saltNonce,        // For deterministic address
+);
+
+console.log("Vault deployed:", result.safeAddress);
+console.log("Transaction:", result.txHash);
+```
+
+:::tip L2 Recommendation
+For mainnet vaults with high gas fees (~$5-20), we recommend deploying on an L2 where deployment is free via sponsored gas.
+:::
+
+**UI Indicators:**
+- 🟢 **"Free (Sponsored)"** - L2 networks with paymaster support
+- 🟠 **"~$X.XX estimated"** - Mainnet with gas cost estimate
+
+#### EOA Deployment (Direct)
+
+Users can toggle to pay gas directly from their connected wallet:
+
+```typescript
+// User pays gas directly from EOA
+const tx = await walletClient.writeContract({
+    address: SAFE_PROXY_FACTORY,
+    abi: proxyFactoryAbi,
+    functionName: 'createProxyWithNonce',
+    args: [safeSingleton, setupData, saltNonce],
+});
+```
+
 ### Check Deployment Status
 
 ```http
