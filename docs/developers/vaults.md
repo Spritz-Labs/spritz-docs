@@ -387,6 +387,38 @@ CREATE TABLE shout_vault_members (
     joined_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(vault_id, member_address)
 );
+
+-- Vault transactions table
+CREATE TABLE shout_vault_transactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    vault_id UUID REFERENCES shout_vaults(id) ON DELETE CASCADE,
+    safe_tx_hash TEXT NOT NULL,
+    to_address VARCHAR(42) NOT NULL,
+    value TEXT NOT NULL,
+    data TEXT,
+    operation INTEGER DEFAULT 0,
+    nonce INTEGER NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    description TEXT,
+    created_by VARCHAR(42) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    -- Token details
+    token_symbol TEXT,
+    token_address TEXT,
+    -- Execution details
+    executed_at TIMESTAMP WITH TIME ZONE,
+    executed_tx_hash TEXT
+);
+
+-- Vault transaction confirmations (signatures)
+CREATE TABLE shout_vault_confirmations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    transaction_id UUID REFERENCES shout_vault_transactions(id) ON DELETE CASCADE,
+    signer_address VARCHAR(42) NOT NULL,
+    signature TEXT NOT NULL,
+    signed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(transaction_id, signer_address)
+);
 ```
 
 ---
@@ -624,10 +656,19 @@ interface TransactionWithConfirmations {
     to_address: string;
     value: string;
     data: string;
+    operation: number;
+    nonce: number;
     status: "pending" | "executed" | "cancelled";
     description: string;
     created_by: string;
     created_at: string;
+    // Token transfer details
+    token_symbol?: string;    // e.g., "USDC"
+    token_address?: string;   // ERC-20 contract address
+    // Execution details (when executed)
+    executed_at?: string;
+    executed_tx_hash?: string;
+    // Signatures
     confirmations: Array<{
         id: string;
         signer_address: string;
