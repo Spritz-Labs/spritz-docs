@@ -10,7 +10,7 @@ Video calls in Spritz support:
 -   **Crystal Clear Audio**: Optimized audio codecs
 -   **Group Calls**: Multi-party video conferences
 -   **Screen Sharing**: Share your screen during calls
--   **Recording**: Record calls for later review (coming soon)
+-   **Recording**: Record calls for later review (via Huddle01 dashboard)
 
 ## Starting a Call
 

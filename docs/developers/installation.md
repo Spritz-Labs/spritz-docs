@@ -251,17 +251,73 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 ### 3. Run Migrations
 
-Migrations are in the `/migrations` folder. There are 50+ migration files.
+Migrations are in the `/migrations` folder. There are 50+ migration files that must be run in a specific order.
+
+#### Option A: Automated Script (Recommended)
 
 ```bash
-# Run all migrations in alphabetical order
-for f in migrations/*.sql; do
-    echo "Running $f..."
-    psql -d spritz -f "$f"
+#!/bin/bash
+# run-migrations.sh
+
+set -e  # Exit on error
+
+MIGRATIONS_DIR="migrations"
+DB_NAME="spritz"
+
+# Get sorted list of migration files
+migrations=$(ls -1 "$MIGRATIONS_DIR"/*.sql | sort)
+
+for migration in $migrations; do
+    echo "Running: $migration"
+    psql -d "$DB_NAME" -f "$migration" || {
+        echo "ERROR: Migration failed: $migration"
+        exit 1
+    }
+    echo "✓ Completed: $migration"
 done
+
+echo "All migrations completed successfully!"
 ```
 
-Or run individual migrations using a GUI tool (import in alphabetical order).
+```bash
+chmod +x run-migrations.sh
+./run-migrations.sh
+```
+
+#### Option B: Manual Execution Order
+
+Run migrations in this order (numbered files first, then alphabetical):
+
+```
+1. Core tables (no dependencies):
+   - agents.sql
+   - embeddings.sql
+   - passkey_credentials.sql
+   - email_login.sql
+
+2. Dependent tables:
+   - agents_x402.sql (requires agents.sql)
+   - agents_mcp.sql (requires agents.sql)
+   - agents_tags.sql (requires agents.sql)
+   - favorite_agents.sql (requires agents.sql)
+
+3. Social features:
+   - group_chats.sql
+   - public_channels.sql
+   - friend_tags.sql
+
+4. Numbered migrations (in order):
+   - 041_moderation_system.sql
+   - 042_profile_widgets.sql
+   - 042_wallet_analytics.sql
+   - 043_chat_folders.sql
+   - 043_custom_avatar.sql
+   - 044_agent_avatar.sql
+   - 045_usernames.sql
+
+5. Security (run last):
+   - security_rls_sensitive_tables.sql
+```
 
 **Key Migration Categories:**
 
@@ -275,8 +331,8 @@ Or run individual migrations using a GUI tool (import in alphabetical order).
 | **Payments** | `agents_x402.sql` | x402 monetization |
 | **Security** | `security_rls_sensitive_tables.sql` | Row-level security |
 
-:::tip
-Run migrations in alphabetical order. Some migrations depend on others (e.g., `agents_x402.sql` requires `agents.sql`).
+:::warning Migration Dependencies
+Some migrations depend on others. If you see a foreign key error, check that the referenced table exists first.
 :::
 
 See [Database Schema](/docs/database/schema) for complete documentation.

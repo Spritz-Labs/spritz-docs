@@ -68,7 +68,9 @@ Every Spritz user gets a **Safe Smart Account** for on-chain transactions, regar
 
 ### Counterfactual Addresses
 
-Safe addresses are computed deterministically **before deployment**:
+Safe addresses are computed deterministically **before deployment**. There are two methods depending on the authentication type:
+
+#### EOA Wallet Users
 
 ```typescript
 import { toSafeSmartAccount } from "permissionless/accounts";
@@ -89,6 +91,67 @@ export async function getSafeAddress(
             version: "0.7",
         },
         saltNonce: BigInt(0), // Deterministic
+    });
+
+    return safeAccount.address;
+}
+```
+
+#### Passkey Users
+
+:::warning Critical: Passkey Address Calculation
+Passkey users **must** use `getPasskeySafeAddress()` instead of `getSafeAddress()`. The passkey-based Safe uses a WebAuthn account as the owner, which produces a **different address** than an EOA-based calculation.
+:::
+
+```typescript
+import { toSafeSmartAccount } from "permissionless/accounts";
+import { toWebAuthnAccount } from "viem/account-abstraction";
+import { entryPoint07Address } from "viem/account-abstraction";
+
+/**
+ * Calculate the Safe address for a passkey user.
+ * 
+ * IMPORTANT: This MUST use the same calculation as createPasskeySafeAccountClient
+ * to ensure the displayed address matches where transactions are sent from.
+ */
+export async function getPasskeySafeAddress(
+    publicKeyX: string, 
+    publicKeyY: string, 
+    chainId: number = 8453
+): Promise<Address> {
+    const publicClient = getPublicClient(chainId);
+
+    // Format public key (64 bytes: x || y)
+    const xPadded = publicKeyX.replace(/^0x/i, '').padStart(64, '0');
+    const yPadded = publicKeyY.replace(/^0x/i, '').padStart(64, '0');
+    const formattedPublicKey = `0x${xPadded}${yPadded}` as Hex;
+
+    // Determine rpId based on environment
+    const rpId = typeof window !== "undefined" 
+        ? window.location.hostname 
+        : "spritz.chat";
+
+    // Create WebAuthn account (credential ID doesn't affect address)
+    const webAuthnAccount = toWebAuthnAccount({
+        credential: {
+            id: "address-calculation-only",
+            publicKey: formattedPublicKey,
+        },
+        rpId,
+    });
+
+    // Create Safe account with WebAuthn owner
+    const safeAccount = await toSafeSmartAccount({
+        client: publicClient,
+        owners: [webAuthnAccount],
+        version: "1.4.1",
+        entryPoint: {
+            address: entryPoint07Address,
+            version: "0.7",
+        },
+        saltNonce: BigInt(0),
+        safeWebAuthnSharedSignerAddress: "0x94a4F6affBd8975951142c3999aEAB7ecee555c2" as Address,
+        safeP256VerifierAddress: "0xA86e0054C51E4894D88762a017ECc5E5235f5DBA" as Address,
     });
 
     return safeAccount.address;

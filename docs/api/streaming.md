@@ -10,7 +10,18 @@ https://app.spritz.chat/api/streams
 
 ## Authentication
 
-All endpoints require authentication via SIWE/SIWS unless otherwise noted.
+All endpoints require authentication unless otherwise noted. Include credentials in fetch requests:
+
+```typescript
+const response = await fetch('https://app.spritz.chat/api/streams', {
+    credentials: 'include', // Required for session cookies
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+```
+
+See [API Introduction](/docs/api/intro#authentication) for complete authentication setup.
 
 ## Endpoints
 
@@ -39,9 +50,9 @@ GET /api/streams?userAddress=0x...&live=true&limit=20
       "description": "Stream description",
       "status": "live",
       "viewer_count": 5,
-      "started_at": "2024-01-01T00:00:00Z",
+      "started_at": "2026-01-15T14:30:00Z",
       "ended_at": null,
-      "created_at": "2024-01-01T00:00:00Z",
+      "created_at": "2026-01-15T14:30:00Z",
       "playback_url": "https://livepeercdn.studio/hls/{id}/index.m3u8"
     }
   ]
@@ -96,7 +107,7 @@ GET /api/streams/:id
     "status": "live",
     "viewer_count": 10,
     "playback_url": "...",
-    "started_at": "2024-01-01T00:00:00Z"
+    "started_at": "2026-01-15T14:30:00Z"
   }
 }
 ```
@@ -135,7 +146,7 @@ GET /api/streams/:id/assets
       },
       "duration_seconds": 1234,
       "size_bytes": 12345678,
-      "created_at": "2024-01-01T00:00:00Z"
+      "created_at": "2026-01-15T14:30:00Z"
     }
   ]
 }
@@ -163,7 +174,7 @@ GET /api/streams/:id/chat?limit=50
       "id": "uuid",
       "user_address": "0x...",
       "content": "Hello!",
-      "created_at": "2024-01-01T00:00:00Z"
+      "created_at": "2026-01-15T14:30:00Z"
     }
   ]
 }

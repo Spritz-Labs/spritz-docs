@@ -203,12 +203,48 @@ See our [Developer Installation Guide](/docs/developers/installation) for deploy
 
 Yes! Contributions are welcome. Check out our [GitHub repository](https://github.com/Spritz-Labs/spritz) and open an issue or pull request.
 
+## Troubleshooting
+
+### Messages aren't sending
+
+1. Check your internet connection
+2. Ensure you're connected to peers (the app shows connection status)
+3. Try refreshing the page
+4. Check if your session is still valid (you may need to sign in again)
+
+See the [Troubleshooting Guide](/docs/developers/troubleshooting#messaging-issues) for more details.
+
+### Video calls won't connect
+
+1. Allow camera and microphone permissions when prompted
+2. Check that you're using a supported browser (Chrome, Firefox, Safari, Edge)
+3. Try disabling browser extensions that might block WebRTC
+4. Check your firewall settings
+
+### Authentication keeps failing
+
+1. Ensure your wallet is connected to a supported network
+2. Try signing the message again
+3. Clear your browser cache and cookies
+4. Check if popup blockers are interfering
+
+See the [Troubleshooting Guide](/docs/developers/troubleshooting#authentication-issues) for detailed solutions.
+
+### AI agent responses are slow
+
+1. Check your internet connection
+2. Some queries take longer if web search is enabled
+3. Large knowledge bases may increase response time
+4. Try a simpler query first
+
 ## Support
 
 ### Where can I get help?
 
--   Check our documentation
--   Open an issue on [GitHub](https://github.com/Spritz-Labs/spritz/issues)
+-   Check our [documentation](/)
+-   Review the [Troubleshooting Guide](/docs/developers/troubleshooting)
+-   Search [existing issues](https://github.com/Spritz-Labs/spritz/issues) on GitHub
+-   Open a new issue on [GitHub](https://github.com/Spritz-Labs/spritz/issues)
 -   Contact support at connect@spritz.chat
 
 ### How do I report a bug?
@@ -219,7 +255,19 @@ Open an issue on [GitHub](https://github.com/Spritz-Labs/spritz/issues) with:
 -   Steps to reproduce
 -   Expected vs actual behavior
 -   Browser/device information
+-   Console errors (if any)
 
 ### Can I request a feature?
 
-Yes! Open a feature request on [GitHub](https://github.com/Spritz-Labs/spritz/issues).
+Yes! Open a feature request on [GitHub](https://github.com/Spritz-Labs/spritz/issues). Please include:
+
+-   A clear description of the feature
+-   Use cases and benefits
+-   Any technical considerations
+
+## Related Documentation
+
+- [Getting Started](/docs/getting-started) - First steps with Spritz
+- [Troubleshooting Guide](/docs/developers/troubleshooting) - Debug common issues
+- [API Reference](/docs/api/intro) - Complete API documentation
+- [Error Codes](/docs/api/error-codes) - API error reference

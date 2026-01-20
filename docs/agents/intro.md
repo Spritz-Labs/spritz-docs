@@ -97,17 +97,39 @@ Monetize your agents by enabling x402 payments:
 External developers can integrate your agent:
 
 ```typescript
-import { wrapFetch } from "x402-fetch";
+import { wrapFetchWithPayment } from 'x402-fetch';
+import { createWalletClient, http } from 'viem';
+import { base } from 'viem/chains';
+import { privateKeyToAccount } from 'viem/accounts';
 
-const paidFetch = wrapFetch(fetch, wallet);
+// Setup wallet client for payments
+const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
+const walletClient = createWalletClient({
+    account,
+    chain: base,
+    transport: http(),
+});
+
+// Wrap fetch to handle x402 payments automatically
+const paidFetch = wrapFetchWithPayment(fetch, walletClient);
+
+// Make paid request - payment handled automatically on 402 response
 const response = await paidFetch(
-  "https://app.spritz.chat/api/public/agents/{id}/chat",
-  {
-    method: "POST",
-    body: JSON.stringify({ message: "Hello!" }),
-  }
+    'https://app.spritz.chat/api/public/agents/{agentId}/chat',
+    {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Hello!' }),
+    }
 );
+
+const data = await response.json();
+console.log('Agent response:', data.message);
 ```
+
+:::tip Test First
+Test your agent integration on Base Sepolia before using real funds on Base mainnet.
+:::
 
 ## MCP Servers & API Tools
 

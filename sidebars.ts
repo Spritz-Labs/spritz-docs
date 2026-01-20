@@ -53,6 +53,8 @@ const sidebars: SidebarsConfig = {
       label: 'Developers',
       items: [
         'developers/installation',
+        'developers/sdk',
+        'developers/troubleshooting',
         {
           type: 'category',
           label: 'Technical Deep Dives',
@@ -81,6 +83,7 @@ const sidebars: SidebarsConfig = {
         'architecture/overview',
         'database/schema',
         'guides/admin',
+        'changelog',
       ],
     },
   ],

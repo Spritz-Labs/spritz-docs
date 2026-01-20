@@ -565,10 +565,35 @@ const securityHeaders = {
 };
 ```
 
+## Security Checklist
+
+Before deploying, verify:
+
+- [ ] `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set
+- [ ] JWT secret is cryptographically strong (32+ bytes)
+- [ ] HttpOnly cookies are enabled for sessions
+- [ ] CORS is configured for allowed origins only
+- [ ] Rate limiting is enabled on API routes
+- [ ] RLS policies are enabled on sensitive tables
+- [ ] No sensitive data in client-side code or logs
+- [ ] Security headers are configured in production
+
+## Reporting Security Issues
+
+If you discover a security vulnerability:
+
+1. **Do NOT** open a public issue
+2. Email security@spritz.chat with details
+3. Include steps to reproduce
+4. Allow 90 days for fix before disclosure
+
+We take security seriously and will acknowledge reports within 48 hours.
+
 ## Related Documentation
 
 - [Authentication](/docs/developers/authentication) - SIWE/SIWS and passkey flows
 - [Spritz Wallets](/docs/developers/smart-wallets) - Wallet security
 - [Social Vaults](/docs/developers/vaults) - Multi-sig security
 - [Database Schema](/docs/database/schema) - Data model and constraints
+- [Troubleshooting](/docs/developers/troubleshooting) - Debug common issues
 

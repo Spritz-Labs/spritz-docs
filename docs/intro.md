@@ -59,7 +59,7 @@ High-quality video and voice calls powered by Huddle01. Support for group calls 
 -   **Google Calendar Sync**: Connect your calendar to sync availability
 -   **Availability Windows**: Set up recurring availability windows
 -   **Scheduling Links**: Create shareable scheduling links
--   **x402 Payments**: Charge for scheduled calls (coming soon)
+-   **x402 Payments**: Charge for scheduled calls using the [x402 protocol](/docs/agents/x402)
 
 ### 🔐 Authentication
 
@@ -158,10 +158,39 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 
 -   **[FAQ](/docs/faq)**: Frequently asked questions
 
+## Learning Paths
+
+Choose the path that matches your goals:
+
+### 🚀 New User
+1. [Getting Started](/docs/getting-started) - Create your account
+2. [Messaging](/docs/guides/messaging) - Send your first message
+3. [Friends](/docs/guides/friends) - Add friends and start chatting
+4. [Video Calls](/docs/guides/video-calls) - Make your first call
+
+### 🤖 AI Agent Builder
+1. [AI Agents Introduction](/docs/agents/intro) - Understand agent basics
+2. [RAG Technical Guide](/docs/agents/rag-technical) - Add knowledge to agents
+3. [MCP Servers](/docs/agents/mcp-servers) - Connect external tools
+4. [x402 Monetization](/docs/agents/x402) - Earn from your agents
+
+### 👨‍💻 Developer
+1. [Installation](/docs/developers/installation) - Set up development environment
+2. [SDK & Types](/docs/developers/sdk) - TypeScript integration
+3. [Authentication](/docs/developers/authentication) - Implement auth flows
+4. [API Reference](/docs/api/intro) - Explore all endpoints
+
+### 🏗️ System Architect
+1. [Architecture Overview](/docs/architecture/overview) - Understand the system
+2. [Database Schema](/docs/database/schema) - Data models and relationships
+3. [Security](/docs/developers/security) - Security best practices
+4. [Troubleshooting](/docs/developers/troubleshooting) - Debug common issues
+
 ## Getting Help
 
 -   Check out our [Getting Started Guide](/docs/getting-started)
 -   Browse the [API Documentation](/docs/api/intro)
+-   Review the [Troubleshooting Guide](/docs/developers/troubleshooting)
 -   Visit our [GitHub repository](https://github.com/Spritz-Labs/spritz)
 -   Open an [issue](https://github.com/Spritz-Labs/spritz/issues) for bugs or feature requests
 

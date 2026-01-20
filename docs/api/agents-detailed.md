@@ -1,15 +1,30 @@
 # Agents API - Detailed Reference
 
+Complete reference for AI agent endpoints including creation, chat, knowledge bases, and x402 monetization.
+
 ## Authentication
 
-All agent endpoints (except public endpoints) require authentication via SIWE/SIWS:
+All agent endpoints (except public endpoints) require authentication. Spritz uses HTTP-only session cookies for authentication.
 
 ```typescript
+// Browser requests - include credentials for cookie-based auth
+const response = await fetch('/api/agents', {
+    credentials: 'include', // Required for session cookies
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+// Server-to-server requests - use Authorization header
 headers: {
-    'Authorization': `Bearer ${token}`,
+    'Authorization': `Bearer ${sessionToken}`,
     'Content-Type': 'application/json'
 }
 ```
+
+:::tip Authentication Flow
+See the [API Introduction](/docs/api/intro#authentication) for complete authentication examples including SIWE setup.
+:::
 
 ## List Agents
 
@@ -42,8 +57,8 @@ GET /api/agents?userAddress=0x...&visibility=public&limit=20
             "message_count": 123,
             "tags": ["helpful", "technical"],
             "x402_enabled": false,
-            "created_at": "2024-01-01T00:00:00Z",
-            "updated_at": "2024-01-01T00:00:00Z"
+            "created_at": "2026-01-15T10:30:00Z",
+            "updated_at": "2026-01-15T10:30:00Z"
         }
     ]
 }
@@ -82,7 +97,7 @@ POST /api/agents
         "id": "uuid",
         "owner_address": "0x...",
         "name": "My Agent",
-        "created_at": "2024-01-01T00:00:00Z"
+        "created_at": "2026-01-15T10:30:00Z"
     }
 }
 ```
@@ -119,7 +134,7 @@ GET /api/agents/:id
             }
         ],
         "api_tools": [],
-        "created_at": "2024-01-01T00:00:00Z",
+        "created_at": "2026-01-15T10:30:00Z",
         "updated_at": "2024-01-01T00:00:00Z"
     }
 }
@@ -184,7 +199,7 @@ GET /api/agents/:id/chat?sessionId=session-id&limit=20
             "id": "uuid",
             "role": "user",
             "content": "Hello!",
-            "created_at": "2024-01-01T00:00:00Z"
+            "created_at": "2026-01-15T10:30:00Z"
         },
         {
             "id": "uuid",
@@ -222,7 +237,7 @@ GET /api/agents/:id/knowledge
             "content_type": "webpage",
             "status": "indexed",
             "chunk_count": 15,
-            "created_at": "2024-01-01T00:00:00Z",
+            "created_at": "2026-01-15T10:30:00Z",
             "indexed_at": "2024-01-01T00:00:05Z"
         }
     ]
@@ -322,7 +337,7 @@ GET /api/agents/discover?tags=helpful,technical&limit=20&offset=0
             "avatar_emoji": "🤖",
             "tags": ["helpful", "technical"],
             "message_count": 123,
-            "created_at": "2024-01-01T00:00:00Z"
+            "created_at": "2026-01-15T10:30:00Z"
         }
     ],
     "total": 50,

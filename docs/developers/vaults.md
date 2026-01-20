@@ -816,16 +816,49 @@ Vaults use counterfactual deployment - the address is computed before the Safe c
 
 ### Deployment Methods
 
-Spritz offers two deployment options:
+Spritz offers three deployment options:
 
 | Method | Gas Cost | Best For |
 |--------|----------|----------|
-| **Smart Wallet (Sponsored)** | Free on L2s | Default, recommended |
+| **Passkey Smart Wallet** | Free on L2s | Passkey-only users (no connected wallet) |
+| **Wallet Smart Wallet** | Free on L2s | Users with connected wallets |
 | **EOA (Direct)** | User pays gas | Users who prefer direct control |
 
-#### Sponsored Gas Deployment (Default)
+:::tip Passkey Users
+Passkey users can deploy vaults using their passkey-based Smart Wallet with sponsored gas. No external wallet connection is required.
+:::
 
-On L2 networks (Base, Arbitrum, Optimism, Polygon), vault deployment is **free** using sponsored gas through your Spritz Wallet:
+#### Passkey-Based Deployment (Recommended for Passkey Users)
+
+Passkey users can deploy vaults using their passkey-based Smart Wallet. No external wallet connection is required:
+
+```typescript
+import { deployVaultViaPasskey, type PasskeyCredential } from '@/lib/safeWallet';
+
+// Load passkey credential from your auth system
+const passkeyCredential: PasskeyCredential = {
+    credentialId: "base64url-credential-id",
+    publicKey: {
+        x: "0x..." as `0x${string}`,  // P-256 X coordinate
+        y: "0x..." as `0x${string}`,  // P-256 Y coordinate
+    },
+};
+
+const result = await deployVaultViaPasskey(
+    owners,              // Array of owner addresses (smart wallet addresses)
+    threshold,           // Number of required signatures
+    chainId,             // Chain ID (8453 for Base, etc.)
+    passkeyCredential,   // User's passkey credential
+    saltNonce,           // For deterministic address (default: BigInt(0))
+);
+
+console.log("Vault deployed:", result.safeAddress);
+console.log("Transaction:", result.txHash);
+```
+
+#### Wallet-Based Sponsored Deployment
+
+For users with connected wallets, deployment uses sponsored gas through the wallet's signing capabilities:
 
 ```typescript
 import { deployVaultViaSponsoredGas } from '@/lib/safeWallet';
@@ -968,7 +1001,11 @@ Users can also click the **"Sync"** button next to the "Not Deployed" badge in t
 
 ## Multi-sig Execution Flow
 
-For threshold > 1 vaults, use the `useVaultExecution` hook:
+For threshold > 1 vaults, use the `useVaultExecution` hook. The hook supports both wallet-connected users and passkey-only users.
+
+:::tip Passkey Support
+Passkey users can now sign and execute vault transactions directly using their passkey-based Smart Wallet. No external wallet connection is required.
+:::
 
 ### Sign Transaction
 
@@ -976,7 +1013,8 @@ For threshold > 1 vaults, use the `useVaultExecution` hook:
 import { useVaultExecution } from '@/hooks/useVaultExecution';
 
 function VaultTransactionSigner() {
-    const { signTransaction, status, error } = useVaultExecution();
+    // Pass passkeyUserAddress for passkey-only users
+    const { signTransaction, status, error } = useVaultExecution(passkeyUserAddress);
 
     const handleSign = async () => {
         const result = await signTransaction({
@@ -1007,10 +1045,10 @@ function VaultTransactionSigner() {
 
 ### Execute with Signatures
 
-Once threshold is reached:
+Once threshold is reached, any vault member can execute the transaction. The hook automatically detects whether to use a connected wallet or passkey:
 
 ```typescript
-const { executeWithSignatures } = useVaultExecution();
+const { executeWithSignatures } = useVaultExecution(passkeyUserAddress);
 
 const result = await executeWithSignatures({
     safeAddress: "0x...",
@@ -1028,6 +1066,40 @@ if (result.success) {
     console.log("Transaction hash:", result.txHash);
 }
 ```
+
+### Passkey Execution (Direct)
+
+For programmatic access, passkey users can execute vault transactions directly:
+
+```typescript
+import { executeVaultViaPasskey, type PasskeyCredential } from '@/lib/safeWallet';
+
+const passkeyCredential: PasskeyCredential = {
+    credentialId: "base64url-credential-id",
+    publicKey: {
+        x: "0x..." as `0x${string}`,
+        y: "0x..." as `0x${string}`,
+    },
+};
+
+// Execute with collected signatures
+const txHash = await executeVaultViaPasskey(
+    vaultAddress,       // The vault (Safe) address
+    chainId,            // Chain ID
+    to,                 // Destination address
+    value,              // ETH value in wei (BigInt)
+    data,               // Call data (0x for ETH transfer)
+    combinedSignatures, // Collected signatures meeting threshold
+    passkeyCredential,  // Passkey credential for execution
+);
+
+console.log("Executed via passkey:", txHash);
+```
+
+This function:
+1. Creates a passkey-based Smart Account Client
+2. Encodes the `execTransaction` call for the vault Safe
+3. Sends it through the passkey Smart Wallet via ERC-4337 with sponsored gas
 
 ### Signature Format
 

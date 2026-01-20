@@ -33,7 +33,7 @@ Groups in Spritz enable:
 - Start video calls with all members
 - Support for large groups
 - Screen sharing during calls
-- Record calls (coming soon)
+- Record calls (via Huddle01 dashboard)
 
 ### Group Invitations
 

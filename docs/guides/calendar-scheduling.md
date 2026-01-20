@@ -8,8 +8,8 @@ Calendar features include:
 - **Google Calendar Sync**: Connect your Google Calendar
 - **Availability Windows**: Set recurring availability
 - **Scheduling Links**: Create shareable booking links
-- **Call Scheduling**: Schedule calls with friends (coming soon)
-- **x402 Payments**: Charge for scheduled calls (coming soon)
+- **Call Scheduling**: Schedule calls with friends
+- **x402 Payments**: Charge for scheduled calls using the [x402 protocol](/docs/agents/x402)
 
 ## Connecting Google Calendar
 

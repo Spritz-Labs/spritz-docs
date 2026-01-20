@@ -339,6 +339,22 @@ type AuthMethod =
     | "solana";
 ```
 
+### Wallet Type Tracking
+
+The system tracks `wallet_type` in the database to determine how to calculate Safe addresses and execute transactions:
+
+| Auth Method | Wallet Type | Safe Address Calculation |
+|-------------|-------------|--------------------------|
+| EVM Wallet | `eoa` | `getSafeAddress(walletAddress)` |
+| Passkey | `passkey` | `getPasskeySafeAddress(publicKeyX, publicKeyY)` |
+| World ID | `world_id` | Requires passkey creation → `passkey` |
+| Alien ID | `alien_id` | Requires passkey creation → `passkey` |
+| Email | `email` | Requires passkey creation → `passkey` |
+
+:::info Auto-fix on Login
+For existing users with missing `wallet_type`, the system automatically sets the correct value on login based on the authentication method used.
+:::
+
 ### Session Verification
 
 ```typescript
@@ -386,6 +402,19 @@ CREATE TABLE shout_sessions (
     user_agent TEXT,
     ip_address INET
 );
+```
+
+### User Settings Storage
+
+User wallet type is stored in the user settings table:
+
+```sql
+-- wallet_type column in shout_user_settings
+ALTER TABLE shout_user_settings 
+ADD COLUMN wallet_type TEXT;
+
+-- Possible values: 'eoa', 'passkey', 'world_id', 'alien_id', 'email'
+-- This determines how Safe addresses are calculated
 ```
 
 ---

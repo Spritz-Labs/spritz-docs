@@ -27,10 +27,56 @@ https://app.spritz.chat/api
 
 ## Authentication
 
-Most endpoints require authentication via Sign-In with Ethereum (SIWE/SIWS). Include your authentication token in the request headers:
+Most endpoints require authentication via Sign-In with Ethereum (SIWE/SIWS). Sessions are managed via HTTP-only cookies.
+
+### Quick Start Authentication
+
+```typescript
+import { SiweMessage } from 'siwe';
+
+// 1. Get a nonce from the server
+const { nonce } = await fetch('https://app.spritz.chat/api/auth/nonce', {
+    credentials: 'include',
+}).then(r => r.json());
+
+// 2. Create and sign the SIWE message
+const message = new SiweMessage({
+    domain: 'app.spritz.chat',
+    address: walletAddress,
+    statement: 'Sign in to Spritz',
+    uri: 'https://app.spritz.chat',
+    version: '1',
+    chainId: 8453, // Base
+    nonce: nonce,
+    issuedAt: new Date().toISOString(),
+    expirationTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+});
+
+const messageToSign = message.prepareMessage();
+const signature = await wallet.signMessage(messageToSign);
+
+// 3. Verify signature and create session
+await fetch('https://app.spritz.chat/api/auth/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', // Required for cookies
+    body: JSON.stringify({ message: messageToSign, signature }),
+});
+
+// 4. Make authenticated requests (session cookie sent automatically)
+const agents = await fetch('https://app.spritz.chat/api/agents', {
+    credentials: 'include',
+}).then(r => r.json());
+```
+
+:::tip Cookie-Based Auth
+Spritz uses HTTP-only session cookies for security. Always include `credentials: 'include'` in your fetch requests.
+:::
+
+For server-to-server requests, you can also use the `Authorization` header:
 
 ```
-Authorization: Bearer <token>
+Authorization: Bearer <session_token>
 ```
 
 ## Rate Limiting

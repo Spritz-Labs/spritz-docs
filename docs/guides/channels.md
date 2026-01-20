@@ -59,7 +59,7 @@ Official channels are created and moderated by the Spritz team to ensure quality
 - Send messages to all channel members
 - Share links and media
 - React to messages with emojis
-- Reply in threads (coming soon)
+- Reply with message quotes
 
 ### Pinned Messages
 
