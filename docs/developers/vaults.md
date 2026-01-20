@@ -911,6 +911,59 @@ POST /api/vault/:id/deploy
 }
 ```
 
+### Deployment Sync
+
+ERC-4337 bundler transactions can have slight delays. The UI polls for on-chain confirmation:
+
+```typescript
+// Poll for deployment confirmation (up to 30 seconds)
+for (let i = 0; i < 10; i++) {
+    await new Promise(r => setTimeout(r, 3000));
+    const deployed = await isSafeDeployed(safeAddress, chainId);
+    if (deployed) break;
+}
+```
+
+**Auto-detection of existing vaults:**
+
+If a Create2 deployment fails with "Create2 call failed", it means the Safe already exists at that address. The system auto-detects this and marks the vault as deployed.
+
+### Admin Sync Endpoint
+
+For vaults stuck in "Not Deployed" state, admins can force-sync:
+
+```http
+POST /api/admin/vault/sync-deployment
+```
+
+**Request Body (optional):**
+```json
+{
+    "vaultId": "uuid"  // Omit to sync all undeployed vaults
+}
+```
+
+**Response:**
+```json
+{
+    "message": "Synced 3 of 5 vaults",
+    "checked": 5,
+    "synced": 3,
+    "details": [
+        {
+            "id": "uuid",
+            "name": "Family Vault",
+            "safeAddress": "0x...",
+            "wasDeployed": false,
+            "nowDeployed": true,
+            "updated": true
+        }
+    ]
+}
+```
+
+Users can also click the **"Sync"** button next to the "Not Deployed" badge in the vault details UI.
+
 ---
 
 ## Multi-sig Execution Flow

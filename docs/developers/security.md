@@ -424,6 +424,37 @@ response.cookies.set('spritz_session', token, {
 - Session tokens: 7 days
 - Passkey challenges: 5 minutes
 - Verification codes: 10 minutes
+- **SIWE nonces: 5 minutes**
+
+### Nonce Verification (Fail Closed)
+
+SIWE/SIWS nonces are stored in Redis and verified atomically (one-time use):
+
+```typescript
+// Production behavior: FAIL CLOSED
+if (!redis && isProduction) {
+    console.error("CRITICAL: Redis not configured in production!");
+    return false; // Reject auth request
+}
+
+// Development: Allow without verification (with warning)
+if (!redis) {
+    console.warn("Redis not configured - nonce verification disabled (dev mode)");
+    return true;
+}
+```
+
+**Security Requirements:**
+- `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` **must** be set in production
+- Without Redis, all authentication requests are **rejected** in production
+- This prevents replay attacks when nonce storage is unavailable
+
+| Environment | Redis Available | Behavior |
+|-------------|-----------------|----------|
+| Production | ✅ Yes | Normal verification |
+| Production | ❌ No | **Reject all auth** |
+| Development | ✅ Yes | Normal verification |
+| Development | ❌ No | Allow (with warning) |
 
 ## Cryptographically Secure Randomness
 
