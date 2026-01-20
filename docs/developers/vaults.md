@@ -525,9 +525,159 @@ Creators can update:
 
 ---
 
+## Transaction Proposals
+
+Vault transactions require multiple signatures based on the threshold. The proposal flow:
+
+1. **Propose**: Any member creates a transaction proposal
+2. **Sign**: Other members sign the proposal
+3. **Execute**: Once threshold is reached, any signer can execute
+
+### Create Transaction Proposal
+
+```http
+POST /api/vault/:id/transactions
+```
+
+#### Request Body
+
+```typescript
+interface CreateTransactionRequest {
+    toAddress: string;        // Recipient address
+    amount: string;           // Amount as string (e.g., "1.5")
+    tokenAddress?: string;    // ERC-20 contract address (null for native token)
+    tokenDecimals?: number;   // Token decimals (default: 18)
+    tokenSymbol?: string;     // Token symbol for display
+    description?: string;     // Optional description
+}
+```
+
+#### Example: Send ETH
+
+```typescript
+const response = await fetch(`/api/vault/${vaultId}/transactions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+        toAddress: "0x1234...5678",
+        amount: "0.5",
+        tokenSymbol: "ETH",
+        description: "Payment for services",
+    }),
+});
+```
+
+#### Example: Send USDC
+
+```typescript
+const response = await fetch(`/api/vault/${vaultId}/transactions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({
+        toAddress: "0x1234...5678",
+        amount: "100",
+        tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC on Base
+        tokenDecimals: 6,
+        tokenSymbol: "USDC",
+    }),
+});
+```
+
+#### Response
+
+```typescript
+interface CreateTransactionResponse {
+    success: boolean;
+    transaction: {
+        id: string;
+        vault_id: string;
+        safe_tx_hash: string;
+        to_address: string;
+        value: string;
+        data: string;
+        operation: number;
+        nonce: number;
+        status: "pending" | "executed" | "cancelled";
+        description: string;
+        created_by: string;
+        created_at: string;
+    };
+    message: string;  // e.g., "Transaction proposed. 1 more signature(s) needed."
+}
+```
+
+### List Transaction Proposals
+
+```http
+GET /api/vault/:id/transactions
+```
+
+Returns all transactions for the vault with confirmation status:
+
+```typescript
+interface TransactionWithConfirmations {
+    id: string;
+    vault_id: string;
+    safe_tx_hash: string;
+    to_address: string;
+    value: string;
+    data: string;
+    status: "pending" | "executed" | "cancelled";
+    description: string;
+    created_by: string;
+    created_at: string;
+    confirmations: Array<{
+        id: string;
+        signer_address: string;
+        signed_at: string;
+    }>;
+}
+```
+
+### Transaction Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Transaction Proposal Flow                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. PROPOSE                                                  │
+│     ┌──────────────────┐                                    │
+│     │  Member creates  │───► Auto-signed by proposer        │
+│     │  transaction     │                                    │
+│     └──────────────────┘                                    │
+│              │                                               │
+│              ▼                                               │
+│  2. SIGN                                                     │
+│     ┌──────────────────┐                                    │
+│     │ Other members    │───► Signatures collected           │
+│     │ review & sign    │     (threshold - 1 more needed)    │
+│     └──────────────────┘                                    │
+│              │                                               │
+│              ▼                                               │
+│  3. EXECUTE (when threshold reached)                         │
+│     ┌──────────────────┐                                    │
+│     │ Any signer       │───► On-chain execution             │
+│     │ executes tx      │     via Safe contract              │
+│     └──────────────────┘                                    │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Transaction Status
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Awaiting signatures or execution |
+| `executed` | Successfully executed on-chain |
+| `cancelled` | Cancelled by proposer or rejected |
+
+---
+
 ## Coming Soon
 
-- **Transaction proposals**: Create and sign multi-sig transactions
 - **Spending limits**: Set individual and collective spending limits
 - **Member management**: Add/remove members after creation
 - **Push notifications**: Get notified when signatures are needed
