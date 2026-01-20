@@ -120,6 +120,19 @@ Get a key at [Pimlico Dashboard](https://dashboard.pimlico.io/).
 ### Optional Variables
 
 <details>
+<summary>WebAuthn / Passkeys</summary>
+
+```env
+# WebAuthn Configuration (Required for passkey auth)
+NEXT_PUBLIC_WEBAUTHN_RP_ID=spritz.chat
+NEXT_PUBLIC_WEBAUTHN_RP_NAME=Spritz
+```
+
+Set `RP_ID` to your domain (without protocol). For local development, use `localhost`.
+
+</details>
+
+<details>
 <summary>Push Notifications</summary>
 
 ```env
