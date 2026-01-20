@@ -1,9 +1,11 @@
 ---
-title: Security - URL Validation, Input Sanitization & Best Practices
-description: Security practices in Spritz including URL validation, input sanitization, reserved usernames, and protection against XSS and malicious content.
+title: Security - Session Management, Cryptography & Best Practices
+description: Security practices in Spritz including session timeout, cryptographically secure randomness, URL validation, input sanitization, and protection against XSS.
 keywords:
     [
         Spritz security,
+        session timeout,
+        cryptographic security,
         URL validation,
         input sanitization,
         XSS prevention,
@@ -343,6 +345,50 @@ localStorage.setItem('spritz_debug', 'true');
 
 ## Session Security
 
+### Session Timeout & Lock Screen
+
+Spritz implements automatic session locking to protect users who leave their devices unattended.
+
+**Default Timeouts:**
+| Scenario | Timeout |
+|----------|---------|
+| Active session (no activity) | 15 minutes |
+| App backgrounded | 1 minute |
+| Warning before lock | 1 minute |
+
+```typescript
+import { useInactivityMonitor, useSessionLock } from '@/hooks/useInactivityMonitor';
+
+function App() {
+    const { lock, unlock, isLocked, lockReason } = useSessionLock();
+    
+    const { resetActivity, isWarningShown, timeRemaining } = useInactivityMonitor({
+        timeout: 15 * 60 * 1000,       // 15 minutes
+        backgroundTimeout: 60 * 1000,   // 1 minute when backgrounded
+        warningThreshold: 60 * 1000,    // Show warning 1 min before lock
+        onInactive: () => lock('inactivity'),
+        onWarning: () => console.log('Session will lock soon'),
+    });
+
+    // Show lock screen when session is locked
+    if (isLocked) {
+        return <SessionLockScreen onUnlock={unlock} reason={lockReason} />;
+    }
+    
+    // Show warning banner when about to lock
+    if (isWarningShown && timeRemaining) {
+        return <div>Session locking in {timeRemaining}s</div>;
+    }
+    
+    return <MainApp />;
+}
+```
+
+**Unlock Options:**
+- Re-authenticate with passkey
+- Sign with connected wallet
+- Manual unlock (if recently authenticated)
+
 ### CSRF Protection
 
 Sessions include origin validation:
@@ -378,6 +424,78 @@ response.cookies.set('spritz_session', token, {
 - Session tokens: 7 days
 - Passkey challenges: 5 minutes
 - Verification codes: 10 minutes
+
+## Cryptographically Secure Randomness
+
+Spritz uses `crypto.getRandomValues()` for all security-sensitive random generation. **Never use `Math.random()` for security purposes.**
+
+### Available Functions
+
+```typescript
+import { 
+    secureRandomString,
+    secureVerificationCode,
+    secureRandomHex,
+    secureUUID,
+    secureRecoveryToken,
+    secureInviteCode,
+} from '@/lib/secureRandom';
+```
+
+### Verification Codes
+
+6-digit numeric codes with rejection sampling to avoid modulo bias:
+
+```typescript
+const code = secureVerificationCode();
+// Returns: "847291" (6 digits, always padded)
+```
+
+Uses rejection sampling: if the random number falls in the "bias zone" (0.02% of cases), it retries for uniform distribution.
+
+### Invite Codes
+
+URL-safe codes without ambiguous characters (0, O, I, 1, L excluded):
+
+```typescript
+const invite = secureInviteCode(8);
+// Returns: "KJ7HNPRQ"
+```
+
+### Recovery Tokens
+
+URL-safe base64 tokens for password reset, etc.:
+
+```typescript
+const token = secureRecoveryToken(32);
+// Returns: "aB3dEfGh1jKlMnOp..."
+```
+
+### Hex Strings
+
+For cryptographic keys and hashes:
+
+```typescript
+const hex = secureRandomHex(32);
+// Returns: "0x8a7b3c..."  (64 hex chars = 32 bytes)
+```
+
+### Usage Guidelines
+
+| Use Case | Function | Example |
+|----------|----------|---------|
+| Email verification | `secureVerificationCode()` | "847291" |
+| Invite codes | `secureInviteCode(8)` | "KJ7HNPRQ" |
+| Password reset | `secureRecoveryToken(32)` | URL-safe string |
+| Transaction nonces | `secureRandomHex(32)` | "0x..." |
+| UUIDs | `secureUUID()` | RFC 4122 UUID |
+
+**DO use `Math.random()` for:**
+- UI animations
+- Non-security log IDs
+- Shuffle for display only
+
+---
 
 ## Best Practices
 
@@ -419,6 +537,7 @@ const securityHeaders = {
 ## Related Documentation
 
 - [Authentication](/docs/developers/authentication) - SIWE/SIWS and passkey flows
-- [Smart Wallets](/docs/developers/smart-wallets) - Wallet security
+- [Spritz Wallets](/docs/developers/smart-wallets) - Wallet security
+- [Social Vaults](/docs/developers/vaults) - Multi-sig security
 - [Database Schema](/docs/database/schema) - Data model and constraints
 

@@ -810,6 +810,147 @@ const response = await fetch(`/api/vault/${vaultId}/transactions`, {
 
 ---
 
+## Vault Deployment
+
+Vaults use counterfactual deployment - the address is computed before the Safe contract is deployed on-chain.
+
+### Check Deployment Status
+
+```http
+GET /api/vault/:id/deploy
+```
+
+Returns deployment status and details needed to deploy:
+
+```typescript
+interface DeploymentStatusResponse {
+    isDeployed: boolean;       // On-chain status
+    isDeployedInDb: boolean;   // Database status
+    safeAddress: string;
+    chainId: number;
+    threshold: number;
+    saltNonce: string;
+    owners: string[];          // Smart wallet addresses of all members
+}
+```
+
+### Mark Vault as Deployed
+
+After deploying the Safe contract on-chain:
+
+```http
+POST /api/vault/:id/deploy
+```
+
+**Request Body:**
+```json
+{
+    "txHash": "0x..."  // Deployment transaction hash
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Vault deployed successfully",
+    "safeAddress": "0x...",
+    "txHash": "0x..."
+}
+```
+
+---
+
+## Multi-sig Execution Flow
+
+For threshold > 1 vaults, use the `useVaultExecution` hook:
+
+### Sign Transaction
+
+```typescript
+import { useVaultExecution } from '@/hooks/useVaultExecution';
+
+function VaultTransactionSigner() {
+    const { signTransaction, status, error } = useVaultExecution();
+
+    const handleSign = async () => {
+        const result = await signTransaction({
+            safeAddress: "0x...",
+            chainId: 8453,
+            to: "0x...",
+            value: "1000000000000000000", // 1 ETH in wei
+            data: "0x",
+            nonce: 0,
+        });
+
+        if (result.success) {
+            // Send signature to backend
+            await fetch(`/api/vault/${vaultId}/transactions`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    transactionId,
+                    action: 'sign',
+                    signature: result.signature,
+                    signerAddress: result.signerAddress,
+                    safeTxHash: result.safeTxHash,
+                }),
+            });
+        }
+    };
+}
+```
+
+### Execute with Signatures
+
+Once threshold is reached:
+
+```typescript
+const { executeWithSignatures } = useVaultExecution();
+
+const result = await executeWithSignatures({
+    safeAddress: "0x...",
+    chainId: 8453,
+    to: "0x...",
+    value: "1000000000000000000",
+    data: "0x",
+    signatures: [
+        { signerAddress: "0xabc...", signature: "0x123..." },
+        { signerAddress: "0xdef...", signature: "0x456..." },
+    ],
+});
+
+if (result.success) {
+    console.log("Transaction hash:", result.txHash);
+}
+```
+
+### Signature Format
+
+Safe requires signatures sorted by signer address:
+
+```typescript
+// Signatures are sorted and concatenated
+const sortedSigs = signatures.sort((a, b) => 
+    a.signerAddress.toLowerCase().localeCompare(b.signerAddress.toLowerCase())
+);
+
+// Each signature is 65 bytes (r: 32, s: 32, v: 1)
+const concatenated = "0x" + sortedSigs.map(s => s.signature.slice(2)).join("");
+```
+
+### Execution States
+
+| Status | Description |
+|--------|-------------|
+| `idle` | Ready for action |
+| `checking` | Verifying Safe deployment and ownership |
+| `signing` | Waiting for wallet signature |
+| `executing` | Transaction being sent |
+| `success` | Transaction confirmed |
+| `error` | Something went wrong |
+
+---
+
 ## Coming Soon
 
 - **Spending limits**: Set individual and collective spending limits
