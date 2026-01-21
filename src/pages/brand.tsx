@@ -54,6 +54,11 @@ function LogoCard({ asset }: { asset: typeof logoAssets[0] }) {
       <div className={`${styles.logoPreview} ${isDark ? styles.darkBg : styles.lightBg}`}>
         {(isRighteous || isPoppins) ? (
           <div className={styles.wordmarkPreview}>
+            <img 
+              src="/img/brand/logo-icon-transparent.svg" 
+              alt="Spritz Logo" 
+              className={styles.wordmarkLogo}
+            />
             <span 
               className={styles.wordmarkText}
               style={{
