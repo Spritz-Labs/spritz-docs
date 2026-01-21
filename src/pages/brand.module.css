@@ -349,6 +349,58 @@
   font-size: 0.875rem;
 }
 
+/* Enhanced Weight Showcase */
+.weightShowcase {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.weightShowcase h4 {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  color: var(--ifm-color-emphasis-800);
+  font-weight: 600;
+}
+
+.weightCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.weightCard {
+  background: var(--ifm-card-background-color);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.weightCard .weightLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #FF5500;
+  margin-bottom: 0.25rem;
+}
+
+.weightCard .weightNumber {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-500);
+  margin-bottom: 0.5rem;
+}
+
+.weightCard p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-900);
+}
+
 .fontMeta {
   display: flex;
   flex-wrap: wrap;
@@ -605,6 +657,27 @@
 
 :global([data-theme="dark"]) .weightGrid div {
   background: #1a1a1a;
+  color: #e5e5e5;
+}
+
+:global([data-theme="dark"]) .weightShowcase {
+  background: #141414;
+}
+
+:global([data-theme="dark"]) .weightShowcase h4 {
+  color: #e5e5e5;
+}
+
+:global([data-theme="dark"]) .weightCard {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+:global([data-theme="dark"]) .weightCard .weightNumber {
+  color: #737373;
+}
+
+:global([data-theme="dark"]) .weightCard p {
   color: #e5e5e5;
 }
 

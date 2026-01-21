@@ -268,14 +268,65 @@ export default function BrandKit(): JSX.Element {
             </div>
 
             {/* Weight Examples */}
-            <div className={styles.weightExamples}>
+            <div className={styles.weightShowcase}>
               <h4>Font Weights</h4>
-              <div className={styles.weightGrid}>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 300 }}>Light (300)</div>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>Regular (400)</div>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>Medium (500)</div>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>SemiBold (600)</div>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Bold (700)</div>
+              <div className={styles.weightCards}>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Thin</span>
+                  <span className={styles.weightNumber}>100</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 100 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Light</span>
+                  <span className={styles.weightNumber}>300</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 300 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Regular</span>
+                  <span className={styles.weightNumber}>400</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Medium</span>
+                  <span className={styles.weightNumber}>500</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Semi-Bold</span>
+                  <span className={styles.weightNumber}>600</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Bold</span>
+                  <span className={styles.weightNumber}>700</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Extra-Bold</span>
+                  <span className={styles.weightNumber}>800</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+                <div className={styles.weightCard}>
+                  <span className={styles.weightLabel}>Black</span>
+                  <span className={styles.weightNumber}>900</span>
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
               </div>
             </div>
             
