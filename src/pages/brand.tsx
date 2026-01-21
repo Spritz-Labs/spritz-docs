@@ -16,13 +16,8 @@ const logoAssets = [
   { name: 'Logo Icon (Cream BG)', file: 'logo-icon.svg', desc: 'Primary app icon with cream background' },
   { name: 'Logo Icon (Transparent)', file: 'logo-icon-transparent.svg', desc: 'Icon without background for overlays' },
   { name: 'Logo Icon (Dark BG)', file: 'logo-dark-bg.svg', desc: 'Icon with forest green background' },
-  { name: 'Wordmark - DM Sans', file: 'logo-wordmark-dark.svg', desc: 'Clean sans-serif (current app font)' },
-  { name: 'Wordmark - Lobster', file: 'wordmark-lobster.svg', desc: 'Bold retro script' },
-  { name: 'Wordmark - Fredoka', file: 'wordmark-fredoka.svg', desc: 'Playful, bubbly rounded' },
-  { name: 'Wordmark - Quicksand', file: 'wordmark-quicksand.svg', desc: 'Clean, modern rounded' },
-  { name: 'Wordmark - Righteous', file: 'wordmark-righteous.svg', desc: 'Retro geometric display' },
-  { name: 'Wordmark - Satisfy', file: 'wordmark-satisfy.svg', desc: 'Elegant flowing script' },
-  { name: 'Wordmark - Poppins', file: 'wordmark-poppins.svg', desc: 'Modern geometric sans' },
+  { name: 'Wordmark - Righteous', file: 'wordmark-righteous.svg', desc: 'Primary display font - retro geometric' },
+  { name: 'Wordmark - Poppins', file: 'wordmark-poppins.svg', desc: 'Secondary font - modern geometric sans' },
 ];
 
 function ColorSwatch({ color }: { color: typeof colors[0] }) {
@@ -174,30 +169,148 @@ export default function BrandKit(): JSX.Element {
 
         <section className={styles.section}>
           <h2>Typography</h2>
-          <div className={styles.typeGrid}>
-            <div className={styles.typeCard}>
-              <h3 style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>DM Sans</h3>
-              <p className={styles.typeSample} style={{ fontFamily: 'DM Sans, system-ui, sans-serif' }}>
-                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
-                abcdefghijklmnopqrstuvwxyz<br />
-                0123456789
-              </p>
-              <p>Primary typeface for UI text, headings, and body copy.</p>
-              <a href="https://fonts.google.com/specimen/DM+Sans" target="_blank" rel="noopener noreferrer">
-                Download from Google Fonts
+          <p className={styles.sectionDesc}>
+            Spritz uses two primary fonts: <strong>Righteous</strong> for display headings and branding, 
+            and <strong>Poppins</strong> for body text and UI elements.
+          </p>
+          
+          {/* Righteous - Display Font */}
+          <div className={styles.typeShowcase}>
+            <h3 className={styles.fontTitle}>Righteous</h3>
+            <p className={styles.fontRole}>Display & Branding</p>
+            
+            <div className={styles.fontModeGrid}>
+              {/* Light Mode */}
+              <div className={styles.fontModeCard}>
+                <div className={styles.fontModeLabel}>Light Mode</div>
+                <div className={styles.fontPreviewLight}>
+                  <p className={styles.fontSampleLarge} style={{ fontFamily: 'Righteous, cursive', color: '#1a1a1a' }}>
+                    Spritz
+                  </p>
+                  <p className={styles.fontSampleMedium} style={{ fontFamily: 'Righteous, cursive', color: '#1a1a1a' }}>
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                  </p>
+                  <p className={styles.fontSampleSmall} style={{ fontFamily: 'Righteous, cursive', color: '#1a1a1a' }}>
+                    abcdefghijklmnopqrstuvwxyz 0123456789
+                  </p>
+                </div>
+              </div>
+              
+              {/* Dark Mode */}
+              <div className={styles.fontModeCard}>
+                <div className={styles.fontModeLabel}>Dark Mode</div>
+                <div className={styles.fontPreviewDark}>
+                  <p className={styles.fontSampleLarge} style={{ fontFamily: 'Righteous, cursive', color: '#ffffff' }}>
+                    Spritz
+                  </p>
+                  <p className={styles.fontSampleMedium} style={{ fontFamily: 'Righteous, cursive', color: '#ffffff' }}>
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                  </p>
+                  <p className={styles.fontSampleSmall} style={{ fontFamily: 'Righteous, cursive', color: '#e5e5e5' }}>
+                    abcdefghijklmnopqrstuvwxyz 0123456789
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className={styles.fontMeta}>
+              <span><strong>Weight:</strong> 400 (Regular only)</span>
+              <span><strong>Style:</strong> Retro geometric display</span>
+              <a href="https://fonts.google.com/specimen/Righteous" target="_blank" rel="noopener noreferrer">
+                Download from Google Fonts →
               </a>
             </div>
-            <div className={styles.typeCard}>
-              <h3 style={{ fontFamily: 'JetBrains Mono, monospace' }}>JetBrains Mono</h3>
-              <p className={styles.typeSample} style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                ABCDEFGHIJKLMNOPQRSTUVWXYZ<br />
-                abcdefghijklmnopqrstuvwxyz<br />
-                0123456789
-              </p>
-              <p>Monospace typeface for code, addresses, and technical content.</p>
-              <a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" rel="noopener noreferrer">
-                Download from Google Fonts
+          </div>
+
+          {/* Poppins - Body Font */}
+          <div className={styles.typeShowcase}>
+            <h3 className={styles.fontTitle}>Poppins</h3>
+            <p className={styles.fontRole}>Body Text & UI</p>
+            
+            <div className={styles.fontModeGrid}>
+              {/* Light Mode */}
+              <div className={styles.fontModeCard}>
+                <div className={styles.fontModeLabel}>Light Mode</div>
+                <div className={styles.fontPreviewLight}>
+                  <p className={styles.fontSampleLarge} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, color: '#1a1a1a' }}>
+                    Spritz Chat
+                  </p>
+                  <p className={styles.fontSampleMedium} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500, color: '#1a1a1a' }}>
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                  </p>
+                  <p className={styles.fontSampleSmall} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, color: '#1a1a1a' }}>
+                    abcdefghijklmnopqrstuvwxyz 0123456789
+                  </p>
+                  <p className={styles.fontSampleBody} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, color: '#4a4a4a' }}>
+                    The quick brown fox jumps over the lazy dog. Spritz is a censorship-resistant messaging app for Web3.
+                  </p>
+                </div>
+              </div>
+              
+              {/* Dark Mode */}
+              <div className={styles.fontModeCard}>
+                <div className={styles.fontModeLabel}>Dark Mode</div>
+                <div className={styles.fontPreviewDark}>
+                  <p className={styles.fontSampleLarge} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, color: '#ffffff' }}>
+                    Spritz Chat
+                  </p>
+                  <p className={styles.fontSampleMedium} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500, color: '#ffffff' }}>
+                    ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                  </p>
+                  <p className={styles.fontSampleSmall} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, color: '#e5e5e5' }}>
+                    abcdefghijklmnopqrstuvwxyz 0123456789
+                  </p>
+                  <p className={styles.fontSampleBody} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, color: '#a3a3a3' }}>
+                    The quick brown fox jumps over the lazy dog. Spritz is a censorship-resistant messaging app for Web3.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Weight Examples */}
+            <div className={styles.weightExamples}>
+              <h4>Font Weights</h4>
+              <div className={styles.weightGrid}>
+                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 300 }}>Light (300)</div>
+                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>Regular (400)</div>
+                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>Medium (500)</div>
+                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>SemiBold (600)</div>
+                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Bold (700)</div>
+              </div>
+            </div>
+            
+            <div className={styles.fontMeta}>
+              <span><strong>Weights:</strong> 100-900</span>
+              <span><strong>Styles:</strong> Normal & Italic</span>
+              <a href="https://fonts.google.com/specimen/Poppins" target="_blank" rel="noopener noreferrer">
+                Download from Google Fonts →
               </a>
+            </div>
+          </div>
+
+          {/* Usage Guidelines */}
+          <div className={styles.typeUsage}>
+            <h3>Typography Usage</h3>
+            <div className={styles.usageGrid}>
+              <div className={styles.usageCard}>
+                <h4>Righteous</h4>
+                <ul>
+                  <li>Logo and wordmarks</li>
+                  <li>Hero headlines</li>
+                  <li>Marketing headers</li>
+                  <li>Brand statements</li>
+                </ul>
+              </div>
+              <div className={styles.usageCard}>
+                <h4>Poppins</h4>
+                <ul>
+                  <li>Body text</li>
+                  <li>UI elements</li>
+                  <li>Navigation</li>
+                  <li>Buttons and labels</li>
+                  <li>Documentation</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>

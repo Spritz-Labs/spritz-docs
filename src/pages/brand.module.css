@@ -242,6 +242,173 @@
 }
 
 /* Typography Section */
+.typeShowcase {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fontTitle {
+  font-size: 1.75rem;
+  margin: 0 0 0.25rem;
+  color: #FF5500;
+}
+
+.fontRole {
+  color: var(--ifm-color-emphasis-600);
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.fontModeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.fontModeCard {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fontModeLabel {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ifm-color-emphasis-600);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.fontPreviewLight {
+  background: #ffffff;
+  padding: 1.5rem;
+  border: 1px solid #e5e5e5;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.fontPreviewDark {
+  background: #0a0a0a;
+  padding: 1.5rem;
+  border: 1px solid #2a2a2a;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.fontSampleLarge {
+  font-size: 2.5rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+.fontSampleMedium {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.fontSampleSmall {
+  font-size: 0.875rem;
+  margin: 0 0 0.75rem;
+}
+
+.fontSampleBody {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.weightExamples {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.weightExamples h4 {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.weightGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.weightGrid div {
+  padding: 0.5rem 1rem;
+  background: var(--ifm-card-background-color);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.fontMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.fontMeta a {
+  color: #FF5500;
+  font-weight: 500;
+}
+
+.fontMeta a:hover {
+  text-decoration: underline;
+}
+
+.typeUsage {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.typeUsage h3 {
+  margin: 0 0 1.5rem;
+  color: #FF5500;
+}
+
+.usageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.usageCard {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.usageCard h4 {
+  margin: 0 0 0.75rem;
+  color: var(--ifm-color-emphasis-900);
+}
+
+.usageCard ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.usageCard li {
+  margin-bottom: 0.25rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* Legacy type styles (kept for compatibility) */
 .typeGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -403,6 +570,63 @@
 }
 
 :global([data-theme="dark"]) .colorInfo p {
+  color: #a3a3a3;
+}
+
+:global([data-theme="dark"]) .typeShowcase {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+:global([data-theme="dark"]) .fontRole {
+  color: #a3a3a3;
+}
+
+:global([data-theme="dark"]) .fontModeLabel {
+  background: #141414;
+  color: #a3a3a3;
+}
+
+:global([data-theme="dark"]) .fontPreviewLight {
+  border-color: #3a3a3a;
+}
+
+:global([data-theme="dark"]) .fontPreviewDark {
+  border-color: #3a3a3a;
+}
+
+:global([data-theme="dark"]) .weightExamples {
+  background: #141414;
+}
+
+:global([data-theme="dark"]) .weightExamples h4 {
+  color: #a3a3a3;
+}
+
+:global([data-theme="dark"]) .weightGrid div {
+  background: #1a1a1a;
+  color: #e5e5e5;
+}
+
+:global([data-theme="dark"]) .fontMeta {
+  border-top-color: #2a2a2a;
+  color: #a3a3a3;
+}
+
+:global([data-theme="dark"]) .typeUsage {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+:global([data-theme="dark"]) .usageCard {
+  background: #141414;
+}
+
+:global([data-theme="dark"]) .usageCard h4 {
+  color: #ffffff;
+}
+
+:global([data-theme="dark"]) .usageCard li {
   color: #a3a3a3;
 }
 
