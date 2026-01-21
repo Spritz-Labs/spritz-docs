@@ -102,6 +102,19 @@
   height: auto;
 }
 
+.wordmarkPreview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.wordmarkText {
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
 .darkBg {
   background: #1a1a2e;
 }

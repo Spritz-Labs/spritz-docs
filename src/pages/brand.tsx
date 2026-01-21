@@ -39,14 +39,38 @@ function ColorSwatch({ color }: { color: typeof colors[0] }) {
 
 function LogoCard({ asset }: { asset: typeof logoAssets[0] }) {
   const isDark = asset.file.includes('dark-bg') || asset.file.includes('wordmark-dark');
+  const isRighteous = asset.file.includes('righteous');
+  const isPoppins = asset.file.includes('poppins');
+  
+  // Apply the actual font to wordmark cards
+  const fontStyle = isRighteous 
+    ? { fontFamily: '"Righteous", cursive' }
+    : isPoppins 
+    ? { fontFamily: '"Poppins", sans-serif', fontWeight: 600 }
+    : {};
   
   return (
     <div className={styles.logoCard}>
       <div className={`${styles.logoPreview} ${isDark ? styles.darkBg : styles.lightBg}`}>
-        <img src={`/img/brand/${asset.file}`} alt={asset.name} />
+        {(isRighteous || isPoppins) ? (
+          <div className={styles.wordmarkPreview}>
+            <span 
+              className={styles.wordmarkText}
+              style={{
+                ...fontStyle,
+                fontSize: '2.5rem',
+                color: '#FF5500',
+              }}
+            >
+              Spritz
+            </span>
+          </div>
+        ) : (
+          <img src={`/img/brand/${asset.file}`} alt={asset.name} />
+        )}
       </div>
       <div className={styles.logoInfo}>
-        <h4>{asset.name}</h4>
+        <h4 style={fontStyle}>{asset.name}</h4>
         <p>{asset.desc}</p>
         <a 
           href={`/img/brand/${asset.file}`} 
