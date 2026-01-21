@@ -137,8 +137,16 @@
   margin-bottom: 1rem;
 }
 
+.downloadBtns {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 .downloadBtn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #FF5500;
   color: white;
   padding: 0.5rem 1rem;
@@ -146,13 +154,27 @@
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  flex: 1;
+  text-align: center;
 }
 
 .downloadBtn:hover {
   background: #E04D00;
   color: white;
   text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.downloadBtnAlt {
+  background: transparent;
+  color: #FF5500;
+  border: 2px solid #FF5500;
+}
+
+.downloadBtnAlt:hover {
+  background: #FF5500;
+  color: white;
 }
 
 /* Guidelines */
@@ -545,6 +567,35 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.downloadAllGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.downloadAllCard {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.downloadAllCard h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--ifm-heading-color);
+}
+
+:global([data-theme="dark"]) .downloadAllCard {
+  background: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+:global([data-theme="dark"]) .downloadAllCard h4 {
+  color: #ffffff;
 }
 
 .primaryBtn {

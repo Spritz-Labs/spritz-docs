@@ -13,11 +13,11 @@ const colors = [
 ];
 
 const logoAssets = [
-  { name: 'Logo Icon (Cream BG)', file: 'logo-icon.svg', desc: 'Primary app icon with cream background' },
-  { name: 'Logo Icon (Transparent)', file: 'logo-icon-transparent.svg', desc: 'Icon without background for overlays' },
-  { name: 'Logo Icon (Dark BG)', file: 'logo-dark-bg.svg', desc: 'Icon with forest green background' },
-  { name: 'Wordmark - Righteous', file: 'wordmark-righteous.svg', desc: 'Primary display font - retro geometric' },
-  { name: 'Wordmark - Poppins', file: 'wordmark-poppins.svg', desc: 'Secondary font - modern geometric sans' },
+  { name: 'Logo Icon (Cream BG)', file: 'logo-icon', desc: 'Primary app icon with cream background' },
+  { name: 'Logo Icon (Transparent)', file: 'logo-icon-transparent', desc: 'Icon without background for overlays' },
+  { name: 'Logo Icon (Dark BG)', file: 'logo-dark-bg', desc: 'Icon with forest green background' },
+  { name: 'Wordmark - Righteous', file: 'wordmark-righteous', desc: 'Primary display font - retro geometric' },
+  { name: 'Wordmark - Poppins', file: 'wordmark-poppins', desc: 'Secondary font - modern geometric sans' },
 ];
 
 function ColorSwatch({ color }: { color: typeof colors[0] }) {
@@ -66,19 +66,28 @@ function LogoCard({ asset }: { asset: typeof logoAssets[0] }) {
             </span>
           </div>
         ) : (
-          <img src={`/img/brand/${asset.file}`} alt={asset.name} />
+          <img src={`/img/brand/${asset.file}.svg`} alt={asset.name} />
         )}
       </div>
       <div className={styles.logoInfo}>
         <h4 style={fontStyle}>{asset.name}</h4>
         <p>{asset.desc}</p>
-        <a 
-          href={`/img/brand/${asset.file}`} 
-          download={asset.file}
-          className={styles.downloadBtn}
-        >
-          Download SVG
-        </a>
+        <div className={styles.downloadBtns}>
+          <a 
+            href={`/img/brand/${asset.file}.svg`} 
+            download={`${asset.file}.svg`}
+            className={styles.downloadBtn}
+          >
+            SVG
+          </a>
+          <a 
+            href={`/img/brand/${asset.file}.png`} 
+            download={`${asset.file}.png`}
+            className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}
+          >
+            PNG
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -432,16 +441,42 @@ export default function BrandKit(): JSX.Element {
             Need all brand assets at once? Download our complete brand kit including logos 
             in SVG and PNG formats, color palette files, and usage guidelines.
           </p>
-          <div className={styles.downloadSection}>
-            <a href="/img/brand/logo-icon.svg" download="spritz-logo.svg" className={styles.primaryBtn}>
-              Download Logo (SVG)
-            </a>
-            <a href="/img/brand/logo-wordmark-dark.svg" download="spritz-wordmark-dark.svg" className={styles.secondaryBtn}>
-              Download Wordmark - Dark (SVG)
-            </a>
-            <a href="/img/brand/logo-wordmark-light.svg" download="spritz-wordmark-light.svg" className={styles.secondaryBtn}>
-              Download Wordmark - Light (SVG)
-            </a>
+          <div className={styles.downloadAllGrid}>
+            <div className={styles.downloadAllCard}>
+              <h4>Logo Icon</h4>
+              <div className={styles.downloadBtns}>
+                <a href="/img/brand/logo-icon.svg" download="spritz-logo.svg" className={styles.downloadBtn}>SVG</a>
+                <a href="/img/brand/logo-icon.png" download="spritz-logo.png" className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}>PNG</a>
+              </div>
+            </div>
+            <div className={styles.downloadAllCard}>
+              <h4>Logo (Transparent)</h4>
+              <div className={styles.downloadBtns}>
+                <a href="/img/brand/logo-icon-transparent.svg" download="spritz-logo-transparent.svg" className={styles.downloadBtn}>SVG</a>
+                <a href="/img/brand/logo-icon-transparent.png" download="spritz-logo-transparent.png" className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}>PNG</a>
+              </div>
+            </div>
+            <div className={styles.downloadAllCard}>
+              <h4>Logo (Dark BG)</h4>
+              <div className={styles.downloadBtns}>
+                <a href="/img/brand/logo-dark-bg.svg" download="spritz-logo-dark.svg" className={styles.downloadBtn}>SVG</a>
+                <a href="/img/brand/logo-dark-bg.png" download="spritz-logo-dark.png" className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}>PNG</a>
+              </div>
+            </div>
+            <div className={styles.downloadAllCard}>
+              <h4>Wordmark (Righteous)</h4>
+              <div className={styles.downloadBtns}>
+                <a href="/img/brand/wordmark-righteous.svg" download="spritz-wordmark-righteous.svg" className={styles.downloadBtn}>SVG</a>
+                <a href="/img/brand/wordmark-righteous.png" download="spritz-wordmark-righteous.png" className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}>PNG</a>
+              </div>
+            </div>
+            <div className={styles.downloadAllCard}>
+              <h4>Wordmark (Poppins)</h4>
+              <div className={styles.downloadBtns}>
+                <a href="/img/brand/wordmark-poppins.svg" download="spritz-wordmark-poppins.svg" className={styles.downloadBtn}>SVG</a>
+                <a href="/img/brand/wordmark-poppins.png" download="spritz-wordmark-poppins.png" className={`${styles.downloadBtn} ${styles.downloadBtnAlt}`}>PNG</a>
+              </div>
+            </div>
           </div>
         </section>
       </main>
