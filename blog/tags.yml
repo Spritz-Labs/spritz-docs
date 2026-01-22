@@ -77,3 +77,8 @@ global:
     label: Global
     permalink: /global
     description: Posts about global connectivity and access
+
+wallets:
+    label: Wallets
+    permalink: /wallets
+    description: Posts about Web3 wallets, account abstraction, and self-custody
