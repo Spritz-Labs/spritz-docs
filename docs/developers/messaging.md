@@ -9,100 +9,436 @@ Spritz messaging uses **Logos Messaging** (formerly Waku) for decentralized peer
 | Component | Technology | Purpose |
 |-----------|------------|---------|
 | **Transport** | Logos Messaging Light Node | P2P message relay |
-| **Encryption** | ECDH P-256 + AES-256-GCM | End-to-end encryption |
+| **Encryption** | X25519 + AES-256-GCM | End-to-end encryption |
+| **Key Derivation** | Deterministic MEK v3 | Cross-device key sync |
 | **Serialization** | Protocol Buffers | Message encoding |
 | **Persistence** | Hybrid (P2P + Supabase + Local) | Message storage |
 
 ---
 
-## Encryption Architecture
+## Deterministic Messaging Encryption Keys (MEK v3)
 
-### ECDH Key Exchange (P-256)
+:::tip Key Innovation
+MEK v3 uses **deterministic key derivation** - the same keypair is generated on any device with the same authentication. **No backup needed** for wallet and passkey users!
+:::
 
-Direct messages use **Elliptic Curve Diffie-Hellman** key exchange on the P-256 curve to derive a shared encryption key.
+### How It Works
 
-**Security Model**: The shared key is derived from both parties' keypairs, meaning an attacker who only knows the wallet addresses cannot compute the encryption key.
-
-#### Key Generation
-
-Each user generates a P-256 ECDH keypair on first message:
-
-```typescript
-// Generate new ECDH keypair using P-256 curve
-const keyPair = await crypto.subtle.generateKey(
-    { name: "ECDH", namedCurve: "P-256" },
-    true, // extractable (for storage)
-    ["deriveBits"]
-);
-
-// Export for storage
-const publicKeyBuffer = await crypto.subtle.exportKey("raw", keyPair.publicKey);
-const privateKeyBuffer = await crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
-
-// Store as base64
-const publicKey = btoa(String.fromCharCode(...new Uint8Array(publicKeyBuffer)));
-const privateKey = btoa(String.fromCharCode(...new Uint8Array(privateKeyBuffer)));
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  Device A                              Device B                 │
+│  ────────                              ────────                 │
+│  Sign message with wallet              Sign SAME message        │
+│         ↓                                    ↓                  │
+│  Get signature (deterministic)         Get SAME signature       │
+│         ↓                                    ↓                  │
+│  Derive key from signature             Derive SAME key          │
+│         ↓                                    ↓                  │
+│  SAME KEYPAIR!                         SAME KEYPAIR!            │
+│                                                                 │
+│  ✅ No backup needed                                            │
+│  ✅ No sync needed                                              │
+│  ✅ No server storage of private keys                          │
+│  ✅ Works automatically across all devices                      │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-#### Public Key Distribution
+### Key Derivation by User Type
 
-Public keys are stored in Supabase for other users to fetch:
+| Auth Type | Derivation Method | Cross-Device | Deterministic |
+|-----------|-------------------|--------------|---------------|
+| **EOA Wallet** | Wallet signature | ✅ Yes | ✅ Yes |
+| **Passkey** | PRF extension | ✅ Yes (synced passkeys) | ✅ Yes |
+| **Passkey (no PRF)** | Random + backup | ❌ Manual | ❌ No |
+| **Email/World ID/Solana** | Requires passkey | ✅ With passkey | ✅ With passkey |
 
-```typescript
-// Store public key in user settings
-await supabase
-    .from("shout_user_settings")
-    .upsert({
-        wallet_address: userAddress.toLowerCase(),
-        messaging_public_key: publicKeyBase64,
-        updated_at: new Date().toISOString(),
-    }, { onConflict: "wallet_address" });
-```
+---
 
-#### Shared Secret Derivation
+## User Flows by Authentication Type
 
-When initiating a DM, both parties derive the same shared secret:
+### Flow 1: EOA Wallet Users
+
+Wallet users get fully deterministic keys via wallet signature:
 
 ```typescript
-// Import peer's public key
-async function importPublicKey(publicKeyBase64: string): Promise<CryptoKey> {
-    const publicKeyBytes = Uint8Array.from(atob(publicKeyBase64), c => c.charCodeAt(0));
-    return crypto.subtle.importKey(
-        "raw",
-        publicKeyBytes,
-        { name: "ECDH", namedCurve: "P-256" },
-        false,
-        []
-    );
+const MEK_DOMAIN = "spritz.chat";
+const MEK_VERSION = 3;
+const MEK_CONTEXT = `${MEK_DOMAIN}:messaging-key:v${MEK_VERSION}`;
+
+/**
+ * Deterministic signing message - MUST NEVER CHANGE
+ */
+function getEoaSigningMessage(userAddress: Address): string {
+    return [
+        `${MEK_DOMAIN} Messaging Key`,
+        "",
+        "Sign this message to generate your encryption key.",
+        "This key will be the same on all your devices.",
+        "",
+        `Account: ${userAddress.toLowerCase()}`,
+        `Version: ${MEK_VERSION}`,
+    ].join("\n");
 }
 
-// Import own private key
-async function importPrivateKey(privateKeyBase64: string): Promise<CryptoKey> {
-    const privateKeyBytes = Uint8Array.from(atob(privateKeyBase64), c => c.charCodeAt(0));
-    return crypto.subtle.importKey(
-        "pkcs8",
-        privateKeyBytes,
-        { name: "ECDH", namedCurve: "P-256" },
+/**
+ * Derive DETERMINISTIC messaging key from EOA wallet
+ * Same wallet = Same signature = Same key (on ANY device)
+ */
+export async function deriveMekFromEoa(
+    walletClient: WalletClient,
+    userAddress: Address
+): Promise<MessagingKeyResult> {
+    const message = getEoaSigningMessage(userAddress);
+    
+    // Get deterministic signature
+    const signature = await walletClient.signMessage({
+        account: userAddress,
+        message,
+    });
+    
+    // Convert signature to bytes
+    const signatureBytes = hexToBytes(signature);
+    
+    // Derive deterministic seed using HKDF
+    const seed = await deriveSeedFromSignature(signatureBytes, userAddress);
+    
+    // Generate deterministic X25519 keypair
+    const keypair = generateDeterministicKeypair(seed);
+    
+    // Upload public key to Supabase for ECDH
+    await uploadPublicKeyToSupabase(userAddress, keypair.publicKey);
+    
+    return { success: true, keypair };
+}
+```
+
+**User Experience:**
+1. User opens chat → sees "Enable Secure Messaging" prompt
+2. Signs one message with wallet
+3. Done! Same key works on all devices with this wallet
+
+---
+
+### Flow 2: Passkey Users (PRF Supported)
+
+Passkey users with PRF-compatible authenticators get fully deterministic keys:
+
+```typescript
+/**
+ * Derive DETERMINISTIC messaging key from Passkey PRF
+ * Same passkey + same salt = Same PRF = Same key
+ * Works across devices with synced passkeys (iCloud/Google)
+ */
+export async function deriveMekFromPasskeyPrf(
+    credentialId: string,
+    rpId: string,
+    userAddress: string
+): Promise<MessagingKeyResult> {
+    // Deterministic PRF salt
+    const prfSalt = new TextEncoder().encode(
+        `${MEK_CONTEXT}:prf-salt:${userAddress.toLowerCase()}`
+    );
+    
+    // Request passkey with PRF extension
+    const credential = await navigator.credentials.get({
+        publicKey: {
+            challenge: crypto.getRandomValues(new Uint8Array(32)),
+            rpId,
+            allowCredentials: [{
+                id: base64UrlToArrayBuffer(credentialId),
+                type: "public-key",
+                transports: ["internal"],
+            }],
+            userVerification: "required",
+            extensions: {
+                prf: {
+                    eval: { first: prfSalt },
+                },
+            },
+        },
+    });
+    
+    // Extract PRF result (deterministic output)
+    const extensionResults = credential.getClientExtensionResults();
+    const prfOutput = extensionResults.prf?.results?.first;
+    
+    if (!prfOutput) {
+        return { success: false, prfNotSupported: true };
+    }
+    
+    // Use PRF output as deterministic seed
+    let seed = new Uint8Array(prfOutput);
+    if (seed.length !== 32) {
+        const hashBuffer = await crypto.subtle.digest("SHA-256", seed);
+        seed = new Uint8Array(hashBuffer);
+    }
+    
+    // Generate deterministic X25519 keypair
+    const keypair = generateDeterministicKeypair(seed);
+    
+    return { success: true, keypair, derivedFrom: "passkey-prf" };
+}
+```
+
+**User Experience:**
+1. User opens chat → sees "Enable Secure Messaging" prompt
+2. Authenticates with Face ID / Touch ID
+3. Done! Same key on all devices with synced passkey
+
+---
+
+### Flow 3: Email / World ID / Solana Users
+
+These users don't have signing capabilities, so they **must create a passkey first**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                Email/World ID/Solana User Flow                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. User tries to send message                                   │
+│     └─► "Add a passkey to enable secure messaging"               │
+│                                                                  │
+│  2. User creates passkey                                         │
+│     ├─► Face ID / Touch ID / Windows Hello                       │
+│     └─► Passkey syncs to iCloud / Google                         │
+│                                                                  │
+│  3. User authenticates with passkey                              │
+│     └─► Deterministic key derived (same as Flow 2)               │
+│                                                                  │
+│  Result: Cross-device messaging with passkey sync!               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+```typescript
+/**
+ * Unified key derivation - handles all auth types
+ */
+export async function getOrDeriveMessagingKey(
+    params: GetMessagingKeyParams
+): Promise<MessagingKeyResult> {
+    const { authType, userAddress, walletClient, passkeyCredentialId, rpId, hasPasskey } = params;
+    
+    switch (authType) {
+        case "wallet":
+            if (!walletClient) return { success: false, error: "Wallet not connected" };
+            return deriveMekFromEoa(walletClient, userAddress);
+        
+        case "passkey":
+            if (!passkeyCredentialId || !rpId) {
+                return { success: false, error: "Passkey credentials required" };
+            }
+            // Try PRF first, fallback to random if not supported
+            const prfResult = await deriveMekFromPasskeyPrf(passkeyCredentialId, rpId, userAddress);
+            if (prfResult.success) return prfResult;
+            if (prfResult.prfNotSupported) {
+                return deriveMekFromPasskeySignature(passkeyCredentialId, rpId, userAddress);
+            }
+            return prfResult;
+        
+        case "email":
+        case "digitalid":
+        case "solana":
+            // These users MUST create a passkey first
+            if (hasPasskey && passkeyCredentialId && rpId) {
+                return deriveMekFromPasskeyPrf(passkeyCredentialId, rpId, userAddress);
+            }
+            return {
+                success: false,
+                requiresPasskey: true,
+                error: "Add a passkey to enable secure messaging",
+            };
+        
+        default:
+            return { success: false, error: "Unknown auth type" };
+    }
+}
+```
+
+---
+
+## React Hook: `useMessagingKey`
+
+```typescript
+import { useMessagingKey } from "@/hooks/useMessagingKey";
+
+function ChatComponent() {
+    const {
+        isReady,              // Key is derived and ready
+        isLoading,            // Currently deriving key
+        requiresPasskey,      // User needs to create passkey first
+        requiresActivation,   // User needs to activate (sign/authenticate)
+        error,
+        keypair,              // Current keypair (if ready)
+        publicKey,            // Convenience accessor
+        activateMessaging,    // Trigger key derivation
+        deactivate,           // Clear session key
+        derivedFrom,          // "eoa" | "passkey-prf" | "passkey-fallback" | "legacy"
+    } = useMessagingKey({
+        userAddress,
+        authType,             // "wallet" | "passkey" | "email" | etc.
+        passkeyCredentialId,  // For passkey users
+    });
+    
+    if (requiresPasskey) {
+        return <AddPasskeyPrompt />;
+    }
+    
+    if (requiresActivation) {
+        return (
+            <EnableMessagingPrompt
+                authType={authType}
+                onEnable={activateMessaging}
+                isLoading={isLoading}
+            />
+        );
+    }
+    
+    if (!isReady) {
+        return <LoadingSpinner />;
+    }
+    
+    return <ChatUI keypair={keypair} />;
+}
+```
+
+---
+
+## Key Derivation Implementation
+
+### TypeScript Types
+
+```typescript
+export interface DerivedMessagingKey {
+    publicKey: string;   // Base64 encoded X25519 public key
+    privateKey: string;  // Base64 encoded X25519 private key
+    derivedFrom: "eoa" | "passkey-prf" | "passkey-fallback" | "legacy";
+}
+
+export interface MessagingKeyResult {
+    success: boolean;
+    keypair?: DerivedMessagingKey;
+    requiresPasskey?: boolean;
+    prfNotSupported?: boolean;
+    error?: string;
+    isNewKey?: boolean;
+}
+
+export type AuthType = "wallet" | "passkey" | "email" | "digitalid" | "solana";
+```
+
+### HKDF Seed Derivation
+
+```typescript
+/**
+ * Derive a 32-byte seed from signature using HKDF
+ * Ensures the seed is uniformly distributed
+ */
+async function deriveSeedFromSignature(
+    signature: Uint8Array,
+    userAddress: string
+): Promise<Uint8Array> {
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        signature,
+        "HKDF",
         false,
         ["deriveBits"]
     );
-}
-
-// Derive shared secret
-async function deriveSharedSecret(
-    myPrivateKey: CryptoKey,
-    theirPublicKey: CryptoKey
-): Promise<Uint8Array> {
-    const sharedBits = await crypto.subtle.deriveBits(
-        { name: "ECDH", public: theirPublicKey },
-        myPrivateKey,
-        256 // 256 bits = 32 bytes for AES-256
+    
+    const derivedBits = await crypto.subtle.deriveBits(
+        {
+            name: "HKDF",
+            hash: "SHA-256",
+            salt: new TextEncoder().encode(MEK_CONTEXT),
+            info: new TextEncoder().encode(`x25519-seed:${userAddress.toLowerCase()}`),
+        },
+        keyMaterial,
+        256 // 32 bytes for X25519
     );
-    return new Uint8Array(sharedBits);
+    
+    return new Uint8Array(derivedBits);
 }
 ```
 
-**Key Property**: `ECDH(A_private, B_public) === ECDH(B_private, A_public)`
+### Deterministic X25519 Keypair
+
+```typescript
+import nacl from "tweetnacl";
+
+/**
+ * Generate DETERMINISTIC X25519 keypair from seed
+ * SAME SEED = SAME KEYPAIR (always, on any device)
+ */
+function generateDeterministicKeypair(seed: Uint8Array): {
+    publicKey: string;
+    privateKey: string;
+} {
+    if (seed.length !== 32) {
+        throw new Error("Seed must be exactly 32 bytes");
+    }
+    
+    // TweetNaCl deterministically generates keypair from seed
+    const keyPair = nacl.box.keyPair.fromSecretKey(seed);
+    
+    return {
+        publicKey: btoa(String.fromCharCode(...keyPair.publicKey)),
+        privateKey: btoa(String.fromCharCode(...keyPair.secretKey)),
+    };
+}
+```
+
+---
+
+## Session Caching
+
+Keys are cached in memory for the session to avoid re-signing:
+
+```typescript
+// Session cache (survives page navigation, cleared on refresh)
+const sessionKeyCache = new Map<string, DerivedMessagingKey>();
+
+export function hasCachedKey(userAddress: string): boolean {
+    return sessionKeyCache.has(userAddress.toLowerCase());
+}
+
+export function getCachedKey(userAddress: string): DerivedMessagingKey | null {
+    return sessionKeyCache.get(userAddress.toLowerCase()) || null;
+}
+
+export function clearCachedKey(userAddress: string): void {
+    sessionKeyCache.delete(userAddress.toLowerCase());
+}
+
+export function clearAllCachedKeys(): void {
+    sessionKeyCache.clear();
+}
+```
+
+---
+
+## Encryption Architecture
+
+### X25519 Key Exchange
+
+Direct messages use **X25519** (Curve25519) for key exchange:
+
+```typescript
+import nacl from "tweetnacl";
+
+/**
+ * Derive shared secret using X25519
+ */
+function deriveSharedSecret(
+    myPrivateKey: Uint8Array,   // 32 bytes
+    theirPublicKey: Uint8Array  // 32 bytes
+): Uint8Array {
+    return nacl.box.before(theirPublicKey, myPrivateKey);
+}
+```
+
+**Key Property**: `X25519(A_private, B_public) === X25519(B_private, A_public)`
 
 ---
 
@@ -191,9 +527,9 @@ async function decryptMessage(
 
 ---
 
-## Key Backup System
+## Legacy Key Backup System (Fallback)
 
-Private keys are stored locally by default. Users can opt-in to **PIN-protected cloud backup** with a 12-word recovery phrase.
+For users whose passkeys don't support PRF, or who want manual backup:
 
 :::info Security Model
 - 12-word recovery phrase encodes 96 bits of entropy
@@ -262,8 +598,34 @@ async function deriveKeyFromPhraseAndPin(
 {
     wallet_address: string,
     messaging_public_key: string,              // Always stored (for ECDH)
-    messaging_private_key_encrypted: string,   // Encrypted with phrase+PIN
-    // Salt is stored in localStorage (not cloud)
+    messaging_backup_encrypted: string,        // Encrypted with phrase+PIN
+    messaging_backup_salt: string,             // Base64 salt
+    messaging_backup_enabled: boolean,
+}
+```
+
+---
+
+## Public Key Distribution
+
+Public keys are stored in Supabase for other users to fetch:
+
+```typescript
+/**
+ * Upload ONLY the public key to Supabase
+ * Required for key exchange with other users
+ */
+async function uploadPublicKeyToSupabase(
+    userAddress: string,
+    publicKey: string
+): Promise<void> {
+    await supabase
+        .from("shout_user_settings")
+        .upsert({
+            wallet_address: userAddress.toLowerCase(),
+            messaging_public_key: publicKey,
+            updated_at: new Date().toISOString(),
+        }, { onConflict: "wallet_address" });
 }
 ```
 
@@ -407,49 +769,90 @@ function persistMessages(topic: string, messages: Message[]) {
 
 ## Legacy Key Compatibility
 
-For messages sent before ECDH migration (backwards compatibility):
+For messages sent before MEK v3 migration (backwards compatibility):
 
-### Legacy Key Derivation (DEPRECATED)
+### Legacy P-256 ECDH Keys
 
 ```typescript
-// Old deterministic key - INSECURE, kept for decryption only
-async function computeLegacyDmKey(
-    userAddress: string,
-    peerAddress: string
-): Promise<Uint8Array> {
-    const sorted = [userAddress.toLowerCase(), peerAddress.toLowerCase()].sort();
-    const seed = `spritz-dm-key-v1:${sorted[0]}:${sorted[1]}`;
-    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(seed));
-    return new Uint8Array(hashBuffer);
+// Old P-256 key generation - still supported for decryption
+const keyPair = await crypto.subtle.generateKey(
+    { name: "ECDH", namedCurve: "P-256" },
+    true,
+    ["deriveBits"]
+);
+```
+
+### Legacy Key Import
+
+```typescript
+// Import legacy keys from localStorage
+const LEGACY_KEYPAIR_STORAGE = "waku_messaging_keypair";
+
+function importLegacyKeypair(userAddress: string): DerivedMessagingKey | null {
+    const legacyJson = localStorage.getItem(LEGACY_KEYPAIR_STORAGE);
+    if (!legacyJson) return null;
+    
+    try {
+        const legacy = JSON.parse(legacyJson);
+        if (legacy.publicKey && legacy.privateKey) {
+            return {
+                ...legacy,
+                derivedFrom: "legacy" as const,
+            };
+        }
+    } catch {
+        return null;
+    }
+    return null;
 }
 ```
 
-### Dual-Key Decryption
+---
+
+## Upgrade Banner for Wallet Users
+
+Wallet users with legacy keys see an upgrade prompt:
 
 ```typescript
-interface DmKeyResult {
-    encryptionKey: Uint8Array;  // Primary key (ECDH)
-    legacyKey: Uint8Array;      // Fallback (legacy)
-    isSecure: boolean;          // true if ECDH available
-}
-
-async function decryptWithFallback(
-    encryptedBase64: string,
-    keys: DmKeyResult
-): Promise<{ content: string; usedLegacy: boolean }> {
-    // Try ECDH key first
-    if (keys.isSecure) {
-        try {
-            const content = await decryptMessage(encryptedBase64, keys.ecdhKey);
-            return { content, usedLegacy: false };
-        } catch {
-            // Fall through to legacy
-        }
-    }
+/**
+ * Shows for WALLET users with legacy (non-deterministic) keys
+ * Prompts them to upgrade to deterministic key derivation
+ */
+export function MessagingKeyUpgradeBanner({
+    userAddress,
+    authType,
+}: MessagingKeyUpgradeBannerProps) {
+    // Only show for wallet users with legacy keys
+    if (authType !== "wallet") return null;
     
-    // Fallback to legacy key
-    const content = await decryptMessage(encryptedBase64, keys.legacyKey);
-    return { content, usedLegacy: true };
+    const handleUpgrade = async () => {
+        // Clear old key
+        localStorage.removeItem(MESSAGING_KEYPAIR_STORAGE);
+        clearCachedKey(userAddress);
+        
+        // Derive new deterministic key
+        const result = await getOrDeriveMessagingKey({
+            authType: "wallet",
+            userAddress,
+            walletClient,
+        });
+        
+        if (result.success) {
+            // Save with source indicator
+            localStorage.setItem(MESSAGING_KEY_SOURCE_STORAGE, result.keypair.derivedFrom);
+        }
+    };
+    
+    return (
+        <Banner
+            title="Upgrade Available"
+            description="Enable seamless cross-device messaging. Sign once, works everywhere."
+            onUpgrade={handleUpgrade}
+            onDismiss={() => {
+                localStorage.setItem(UPGRADE_DISMISSED_KEY, userAddress);
+            }}
+        />
+    );
 }
 ```
 
@@ -462,20 +865,29 @@ async function decryptWithFallback(
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `Decryption failed` | Wrong key or corrupted data | Try legacy key fallback |
-| `Peer public key not found` | Peer hasn't messaged anyone yet | Wait for peer to initialize |
+| `Peer public key not found` | Peer hasn't enabled messaging | Show "waiting for peer" UI |
 | `Waku connection failed` | Network issues | Retry with exponential backoff |
+| `PRF not supported` | Old passkey/browser | Fall back to backup system |
+| `Passkey required` | Email/Solana user | Prompt to create passkey |
 
 ### Error Recovery
 
 ```typescript
 try {
-    await sendMessage(content, recipient);
+    const result = await activateMessaging();
+    if (!result.success) {
+        if (result.requiresPasskey) {
+            showPasskeyPrompt();
+        } else if (result.prfNotSupported) {
+            showBackupOption();
+        } else {
+            showError(result.error);
+        }
+    }
 } catch (error) {
-    if (error.message.includes("public key not found")) {
-        // Peer hasn't set up messaging yet
-        // Fall back to legacy key derivation
-        const legacyKey = await computeLegacyDmKey(myAddress, recipient);
-        await sendMessageWithKey(content, recipient, legacyKey);
+    if (error.message.includes("cancelled") || error.message.includes("denied")) {
+        // User cancelled signing/auth
+        showRetryPrompt();
     } else {
         throw error;
     }
@@ -490,8 +902,8 @@ try {
 
 1. **Never export private keys** to server-side code
 2. **Use Web Crypto API** for all cryptographic operations
-3. **Store keys in localStorage** with secure context
-4. **Offer backup option** for key recovery across devices
+3. **Cache keys in memory** for the session (not localStorage for deterministic keys)
+4. **Prefer deterministic derivation** over backup when available
 
 ### Message Security
 
@@ -512,30 +924,47 @@ try {
 ## Integration Example
 
 ```typescript
+import { useMessagingKey } from "@/hooks/useMessagingKey";
 import { useWaku } from "@/hooks/useWaku";
 
 function ChatComponent({ recipientAddress }) {
     const { 
+        isReady: keyReady,
+        requiresActivation,
+        requiresPasskey,
+        activateMessaging,
+        keypair,
+    } = useMessagingKey({ userAddress, authType, passkeyCredentialId });
+    
+    const { 
         sendMessage, 
         messages, 
         isConnected,
-        connectionStatus 
     } = useWaku();
     
-    const handleSend = async (content: string) => {
-        try {
-            await sendMessage(recipientAddress, content);
-        } catch (error) {
-            console.error("Failed to send:", error);
-        }
-    };
+    // Handle messaging not ready states
+    if (requiresPasskey) {
+        return <AddPasskeyFlow onComplete={() => activateMessaging()} />;
+    }
     
+    if (requiresActivation) {
+        return <EnableMessagingModal onActivate={activateMessaging} />;
+    }
+    
+    if (!keyReady) {
+        return <LoadingSpinner />;
+    }
+    
+    // Ready to chat!
     return (
         <div>
             {messages.map(msg => (
                 <Message key={msg.id} {...msg} />
             ))}
-            <MessageInput onSend={handleSend} disabled={!isConnected} />
+            <MessageInput 
+                onSend={(content) => sendMessage(recipientAddress, content)} 
+                disabled={!isConnected} 
+            />
         </div>
     );
 }
