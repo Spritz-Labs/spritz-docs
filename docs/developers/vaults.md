@@ -1410,6 +1410,119 @@ function encodeContractSignature(
 }
 ```
 
+### Nested Contract Signatures (Passkey Vault Members)
+
+When a vault member is a **Passkey Smart Wallet**, we need TWO levels of contract signatures:
+
+1. **INNER**: For the Smart Wallet's `checkNSignatures`
+   - `r` = SafeWebAuthnSharedSigner address
+   - `s` = 65 (offset to WebAuthn data within inner signature)
+   - `v` = 0
+   - dynamic = WebAuthn ABI-encoded signature
+
+2. **OUTER**: For the Vault's `checkNSignatures`
+   - `r` = Smart Wallet address  
+   - `s` = offset to inner signature within final signature
+   - `v` = 0
+   - dynamic = the complete INNER signature
+
+```typescript
+// SafeWebAuthnSharedSigner - used as the "owner" in Safe's checkNSignatures for WebAuthn
+const SAFE_WEBAUTHN_SHARED_SIGNER = "0x94a4F6affBd8975951142c3999aEAB7ecee555c2" as Address;
+
+/**
+ * Build a NESTED contract signature for passkey/Smart Wallet owners of a vault.
+ */
+function buildNestedContractSignature(
+    smartWalletAddress: Address,
+    webAuthnSignature: string,
+    dynamicOffset: number
+): { staticPart: string; dynamicPart: string; dynamicLength: number } {
+    // === INNER SIGNATURE (for Smart Wallet's checkNSignatures) ===
+    // Points to SafeWebAuthnSharedSigner and contains WebAuthn data
+    const innerStaticOffset = 65; // Offset within inner signature to its dynamic part
+    
+    // Inner static: r = SafeWebAuthnSharedSigner, s = 65, v = 0
+    const innerR = SAFE_WEBAUTHN_SHARED_SIGNER.slice(2).toLowerCase().padStart(64, "0");
+    const innerS = innerStaticOffset.toString(16).padStart(64, "0");
+    const innerV = "00";
+    const innerStaticPart = innerR + innerS + innerV; // 65 bytes = 130 hex chars
+    
+    // Inner dynamic: length + WebAuthn signature
+    const webAuthnHex = webAuthnSignature.startsWith("0x") 
+        ? webAuthnSignature.slice(2) 
+        : webAuthnSignature;
+    const webAuthnLength = webAuthnHex.length / 2;
+    const innerDynamicLengthHex = webAuthnLength.toString(16).padStart(64, "0");
+    const innerDynamicPart = innerDynamicLengthHex + webAuthnHex;
+    
+    // Complete inner signature
+    const innerSignature = innerStaticPart + innerDynamicPart;
+    const innerSignatureLength = innerSignature.length / 2;
+    
+    // === OUTER SIGNATURE (for Vault's checkNSignatures) ===
+    // Points to Smart Wallet and contains complete inner signature
+    const outerR = smartWalletAddress.slice(2).toLowerCase().padStart(64, "0");
+    const outerS = dynamicOffset.toString(16).padStart(64, "0");
+    const outerV = "00";
+    const outerStaticPart = outerR + outerS + outerV;
+    
+    // Outer dynamic: length of inner signature + inner signature
+    const outerDynamicLengthHex = innerSignatureLength.toString(16).padStart(64, "0");
+    const outerDynamicPart = outerDynamicLengthHex + innerSignature;
+    
+    return {
+        staticPart: outerStaticPart,
+        dynamicPart: outerDynamicPart,
+        dynamicLength: 32 + innerSignatureLength, // length field + inner signature
+    };
+}
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    Nested Contract Signature Structure                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  VAULT execTransaction(... signatures)                                   │
+│      │                                                                   │
+│      ▼                                                                   │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  OUTER SIGNATURE (v=0, contract signature)                          │ │
+│  │  ┌────────────────────────────────────────────────────────────────┐│ │
+│  │  │ r: Smart Wallet Address (32 bytes)                             ││ │
+│  │  │ s: Offset to inner signature (32 bytes)                        ││ │
+│  │  │ v: 0 (contract signature indicator)                            ││ │
+│  │  └────────────────────────────────────────────────────────────────┘│ │
+│  │  ┌────────────────────────────────────────────────────────────────┐│ │
+│  │  │ Dynamic Data: Length + Complete Inner Signature                ││ │
+│  │  └────────────────────────────────────────────────────────────────┘│ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│      │                                                                   │
+│      │ Vault calls smartWallet.isValidSignature(hash, innerSig)         │
+│      ▼                                                                   │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  INNER SIGNATURE (v=0, contract signature)                          │ │
+│  │  ┌────────────────────────────────────────────────────────────────┐│ │
+│  │  │ r: SafeWebAuthnSharedSigner (32 bytes)                         ││ │
+│  │  │ s: 65 (offset to WebAuthn data)                                ││ │
+│  │  │ v: 0 (contract signature indicator)                            ││ │
+│  │  └────────────────────────────────────────────────────────────────┘│ │
+│  │  ┌────────────────────────────────────────────────────────────────┐│ │
+│  │  │ Dynamic Data: WebAuthn ABI-encoded signature                   ││ │
+│  │  │ (authenticatorData, clientDataFields, r, s)                    ││ │
+│  │  └────────────────────────────────────────────────────────────────┘│ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│      │                                                                   │
+│      │ Smart Wallet calls SafeWebAuthnSharedSigner.isValidSignature()   │
+│      ▼                                                                   │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  WebAuthn P-256 signature verification via SafeP256Verifier        │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ### EIP-1271 Contract Signature Verification

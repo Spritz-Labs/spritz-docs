@@ -117,6 +117,28 @@ Get a key at [Pimlico Dashboard](https://dashboard.pimlico.io/).
 
 **Note**: The sponsorship policy ID is required for gas-free transactions on L2 networks. Without it, users will need to pay gas directly.
 
+### RPC Configuration (dRPC)
+
+```env
+# dRPC - Reliable, load-balanced RPC endpoints (recommended)
+NEXT_PUBLIC_DRPC_API_KEY=your_drpc_api_key
+DRPC_API_KEY=your_drpc_api_key  # Server-side fallback
+```
+
+Get a key at [dRPC Dashboard](https://drpc.org/). dRPC provides reliable, load-balanced RPC endpoints for supported chains. If not configured, the app falls back to public RPCs (LlamaRPC, official chain RPCs).
+
+**Supported Chains via dRPC:**
+| Chain | Chain ID | dRPC Name |
+|-------|----------|-----------|
+| Ethereum | 1 | `ethereum` |
+| Base | 8453 | `base` |
+| Arbitrum | 42161 | `arbitrum` |
+| Optimism | 10 | `optimism` |
+| Polygon | 137 | `polygon` |
+| BNB Chain | 56 | `bsc` |
+| Avalanche | 43114 | `avalanche` |
+| Unichain | 130 | `unichain` (fallback only) |
+
 ### Optional Variables
 
 <details>
@@ -400,6 +422,20 @@ npm run type-check
 | Video | Huddle01, Livepeer |
 | Messaging | Logos Messaging (Waku) |
 | AI | Google Gemini |
+| RPC | dRPC (with fallback to public RPCs) |
+
+### Supported Chains
+
+| Chain | Chain ID | Gas Sponsorship |
+|-------|----------|-----------------|
+| Ethereum | 1 | USDC (paid) |
+| Base | 8453 | Free |
+| Arbitrum | 42161 | Free |
+| Optimism | 10 | Free |
+| Polygon | 137 | Free |
+| BNB Chain | 56 | Free |
+| Unichain | 130 | Free |
+| Avalanche | 43114 | Free |
 
 ## Deployment
 

@@ -569,6 +569,27 @@ address constant P256_VERIFIER = 0x0000000000000000000000000000000000000100;
 
 ## Session Management
 
+### Session Duration Constants
+
+```typescript
+// From src/lib/constants.ts
+/** Session duration in seconds (7 days) */
+export const SESSION_DURATION_SECONDS = 7 * 24 * 60 * 60;
+
+/** Frontend session token duration in seconds (30 days) */
+export const FRONTEND_TOKEN_DURATION_SECONDS = 30 * 24 * 60 * 60;
+
+/** Auth credentials TTL in milliseconds (7 days) */
+export const AUTH_CREDENTIALS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** Nonce expiry in seconds (5 minutes) */
+export const NONCE_EXPIRY_SECONDS = 300;
+```
+
+:::info Persistent Sessions
+Sessions persist for **7 days** and include auto-detection on app return. When a user returns to the app after closing it, the session is automatically restored if still valid.
+:::
+
 ### JWT Structure
 
 ```typescript
@@ -672,15 +693,42 @@ ADD COLUMN wallet_type TEXT;
 
 ## Rate Limiting
 
+### Rate Limit Constants
+
+```typescript
+// From src/lib/constants.ts
+/** Auth endpoint rate limit (requests per minute) */
+export const RATE_LIMIT_AUTH = 10;
+
+/** AI chat rate limit (requests per minute) */
+export const RATE_LIMIT_AI = 30;
+
+/** Messaging rate limit (requests per minute) */
+export const RATE_LIMIT_MESSAGING = 60;
+
+/** General API rate limit (requests per minute) */
+export const RATE_LIMIT_GENERAL = 100;
+
+/** Strict rate limit for sensitive operations (requests per minute) */
+export const RATE_LIMIT_STRICT = 5;
+
+/** Contact form rate limit (requests per minute) */
+export const RATE_LIMIT_CONTACT = 3;
+
+/** Rescue flow rate limit per address (attempts per hour) */
+export const RATE_LIMIT_RESCUE_PER_ADDRESS = 3;
+```
+
 ### Implementation
 
 ```typescript
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { RATE_LIMIT_AUTH } from "@/lib/constants";
 
 const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(10, "1 m"), // 10 requests per minute
+    limiter: Ratelimit.slidingWindow(RATE_LIMIT_AUTH, "1 m"),
     analytics: true,
 });
 
@@ -701,13 +749,16 @@ export async function rateLimitMiddleware(
 
 ### Rate Limits by Endpoint
 
-| Endpoint               | Limit | Window   |
-| ---------------------- | ----- | -------- |
-| `/api/auth/nonce`      | 10    | 1 minute |
-| `/api/auth/verify`     | 5     | 1 minute |
-| `/api/auth/webauthn/*` | 10    | 1 minute |
-| `/api/agents/*/chat`   | 20    | 1 minute |
-| `/api/streams`         | 5     | 1 minute |
+| Endpoint               | Limit | Window   | Constant |
+| ---------------------- | ----- | -------- | -------- |
+| `/api/auth/nonce`      | 10    | 1 minute | `RATE_LIMIT_AUTH` |
+| `/api/auth/verify`     | 5     | 1 minute | `RATE_LIMIT_STRICT` |
+| `/api/auth/webauthn/*` | 10    | 1 minute | `RATE_LIMIT_AUTH` |
+| `/api/agents/*/chat`   | 30    | 1 minute | `RATE_LIMIT_AI` |
+| `/api/streams`         | 5     | 1 minute | `RATE_LIMIT_STRICT` |
+| `/api/messages/*`      | 60    | 1 minute | `RATE_LIMIT_MESSAGING` |
+| `/api/contact`         | 3     | 1 minute | `RATE_LIMIT_CONTACT` |
+| General API routes     | 100   | 1 minute | `RATE_LIMIT_GENERAL` |
 
 ---
 

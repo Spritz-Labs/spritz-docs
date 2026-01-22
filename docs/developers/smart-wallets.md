@@ -176,6 +176,149 @@ export async function isSafeDeployed(
 
 ---
 
+## React Hooks & Address Management
+
+### The `useSmartWallet` Hook
+
+The primary React hook for interacting with Spritz Wallets:
+
+```typescript
+import { useSmartWallet } from "@/hooks/useSmartWallet";
+
+type SmartWalletInfo = {
+    spritzId: Address;                    // User's identity address
+    smartWalletAddress: Address | null;   // Safe counterfactual address
+    isDeployed: boolean;                  // Whether Safe is deployed on-chain
+    walletType: "passkey" | "email" | "wallet" | "digitalid";
+    canSign: boolean;                     // Can user sign transactions?
+    signerType: "eoa" | "passkey" | "none";
+    supportedChains: {
+        chainId: number;
+        name: string;
+        sponsorship?: "free" | "usdc";
+    }[];
+    needsPasskey?: boolean;               // User needs to create passkey first
+    passkeyCredentialId?: string | null;  // Credential ID for passkey users
+    warning?: string;                     // Warning message if applicable
+};
+
+// Usage
+function WalletComponent() {
+    const { smartWallet, isLoading, error, refresh } = useSmartWallet(userAddress);
+    
+    if (isLoading) return <Loading />;
+    if (error) return <Error message={error} />;
+    
+    return (
+        <div>
+            <p>Spritz ID: {smartWallet?.spritzId}</p>
+            <p>Wallet: {smartWallet?.smartWalletAddress}</p>
+            <p>Type: {smartWallet?.walletType}</p>
+        </div>
+    );
+}
+```
+
+### Dual Address System
+
+Spritz uses a dual-address system:
+
+| Address | Purpose | Source |
+|---------|---------|--------|
+| **Spritz ID** | Social identity (profiles, friends, messages, database records) | Auth method-dependent |
+| **Smart Wallet** | Token storage, on-chain transactions | Safe counterfactual address |
+
+```
+User Authentication
+        │
+        ▼
+┌───────────────────────────────────────┐
+│              Spritz ID                │
+│  (wallet address, passkey hash, etc.) │
+└───────────────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────────────┐
+│          Smart Wallet Address         │
+│    (Safe counterfactual, for tokens)  │
+└───────────────────────────────────────┘
+```
+
+### Address Caching
+
+Smart wallet addresses are cached in localStorage for improved UX:
+
+```typescript
+const SMART_WALLET_CACHE_KEY = "spritz_smart_wallet_cache";
+
+// Get cached address (for immediate display)
+function getCachedSmartWallet(userAddress: string): Address | null {
+    if (typeof window === "undefined") return null;
+    try {
+        const cache = localStorage.getItem(SMART_WALLET_CACHE_KEY);
+        if (!cache) return null;
+        const parsed = JSON.parse(cache);
+        return parsed[userAddress.toLowerCase()] || null;
+    } catch {
+        return null;
+    }
+}
+
+// Cache address after server fetch
+function setCachedSmartWallet(userAddress: string, smartWalletAddress: Address): void {
+    if (typeof window === "undefined") return;
+    try {
+        const cache = localStorage.getItem(SMART_WALLET_CACHE_KEY);
+        const parsed = cache ? JSON.parse(cache) : {};
+        parsed[userAddress.toLowerCase()] = smartWalletAddress;
+        localStorage.setItem(SMART_WALLET_CACHE_KEY, JSON.stringify(parsed));
+    } catch {
+        // Ignore cache errors
+    }
+}
+```
+
+**Caching benefits:**
+- Immediate display on page load (no flicker)
+- Offline fallback when session expires
+- Reduced API calls for returning users
+
+### API Endpoint
+
+The `/api/wallet/smart-wallet` endpoint returns the authenticated user's wallet info:
+
+```typescript
+// GET /api/wallet/smart-wallet
+// Requires: authenticated session (spritz_session cookie)
+
+// Success Response
+{
+    spritzId: "0x...",
+    smartWalletAddress: "0x...",
+    isDeployed: true,
+    walletType: "passkey",
+    canSign: true,
+    signerType: "passkey",
+    supportedChains: [
+        { chainId: 8453, name: "Base", sponsorship: "free" },
+        // ...
+    ],
+    passkeyCredentialId: "base64url..."
+}
+
+// Needs Passkey Response (for email/World ID users)
+{
+    needsPasskey: true,
+    walletType: "email",
+    canSign: false,
+    signerType: "none",
+    smartWalletAddress: "0x...",  // May have stored address (lost passkey case)
+    warning: "Create a passkey to enable wallet features"
+}
+```
+
+---
+
 ## EOA Wallet Integration
 
 ### Create Safe Account Client
@@ -911,6 +1054,7 @@ export async function verifyWebAuthnSignature(
 For WebAuthn transactions, explicit gas limits are required because simulation often fails due to the complexity of P-256 verification:
 
 ```typescript
+// From src/lib/constants.ts
 const WEBAUTHN_GAS_LIMITS = {
     // Safe deployment + P-256 signature verification
     verificationGasLimit: BigInt(800000),
