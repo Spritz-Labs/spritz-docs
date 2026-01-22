@@ -178,6 +178,7 @@ For a complete list of error codes with troubleshooting guidance, see the [Error
 
 ### Authentication
 
+- `GET /api/auth/nonce` - Get a fresh nonce for SIWE/SIWS signing
 - `GET /api/auth/verify` - Verify SIWE signature
 - `POST /api/auth/verify` - Verify SIWE signature
 - `GET /api/auth/verify-solana` - Verify SIWS signature

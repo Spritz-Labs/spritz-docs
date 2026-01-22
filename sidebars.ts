@@ -52,6 +52,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Developers',
       items: [
+        'developers/login-flow',
         'developers/installation',
         'developers/sdk',
         'developers/troubleshooting',

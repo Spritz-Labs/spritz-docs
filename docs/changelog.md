@@ -89,7 +89,7 @@ All notable changes to Spritz are documented here.
 ## [1.0.0] - 2025-09-01
 
 ### Added
-- **Core Messaging**: End-to-end encrypted DMs via Waku
+- **Core Messaging**: End-to-end encrypted DMs via [Logos Messaging](https://logos.co/tech-stack)
 - **Group Chats**: Private group conversations
 - **Video Calls**: 1:1 and group video via Huddle01
 - **Smart Wallets**: Account abstraction with Safe
@@ -102,9 +102,9 @@ All notable changes to Spritz are documented here.
 - **Friend System**: Add friends, organize with tags
 
 ### Technical
-- Next.js 14+ with App Router
+- Next.js 15 with App Router
 - Supabase for database and auth
-- Tailwind CSS for styling
+- Tailwind CSS 3.4 for styling
 - TypeScript throughout
 
 ---
@@ -149,4 +149,4 @@ Spritz follows [Semantic Versioning](https://semver.org/):
 
 ## Contributing
 
-See our [contribution guidelines](https://github.com/spritz-chat/spritz/CONTRIBUTING.md) for how to submit changes.
+See our [contribution guidelines](https://github.com/Spritz-Labs/spritz/blob/main/CONTRIBUTING.md) for how to submit changes.

@@ -367,6 +367,18 @@ SELECT table_name
 FROM information_schema.tables 
 WHERE table_schema = 'public' 
 AND table_name LIKE 'shout_%';
+
+-- Verify pgvector extension is installed
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+
+-- Verify core tables exist with expected columns
+SELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'shout_agents' 
+ORDER BY ordinal_position;
+
+-- Test vector search is working (should return 0 for new installations)
+SELECT COUNT(*) FROM shout_knowledge_chunks;
 ```
 
 ## Project Structure
@@ -410,9 +422,9 @@ npm run type-check
 
 | Category | Technology |
 |----------|------------|
-| Framework | Next.js 16 (App Router) |
+| Framework | Next.js 15 (App Router) |
 | Language | TypeScript |
-| Styling | Tailwind CSS 4 |
+| Styling | Tailwind CSS 3.4 |
 | Database | PostgreSQL + pgvector |
 | Realtime | PostgreSQL Realtime |
 | Web3 (EVM) | viem, wagmi |

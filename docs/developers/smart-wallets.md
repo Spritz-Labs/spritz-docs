@@ -706,6 +706,12 @@ Spritz uses Safe's WebAuthn signer contracts for on-chain signature verification
 | **SafeWebAuthnSharedSigner** | `0x94a4F6affBd8975951142c3999aEAB7ecee555c2` | Shared signer module for all WebAuthn-based Safes |
 | **SafeP256Verifier** | `0xA86e0054C51E4894D88762a017ECc5E5235f5DBA` | P-256 signature verification (uses RIP-7212 precompile when available) |
 
+:::tip Verify Contract Addresses
+Always verify contract addresses on a block explorer before use in production. These addresses are deployed by Safe and are the same across all supported EVM chains. You can verify them at:
+- [Safe Deployments Repository](https://github.com/safe-global/safe-deployments)
+- [Etherscan](https://etherscan.io/address/0x94a4F6affBd8975951142c3999aEAB7ecee555c2)
+:::
+
 #### RIP-7212: P256 Precompile
 
 Some chains support [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md), a native P-256 verification precompile at address `0x0000000000000000000000000000000000000100`:

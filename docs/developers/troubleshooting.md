@@ -242,7 +242,11 @@ USING (owner_address = auth.jwt() ->> 'sub');
 
 ## Messaging Issues
 
-### Waku Messages Not Delivering
+### Logos Messaging (Waku) - Messages Not Delivering
+
+:::info Terminology
+Spritz uses [Logos Messaging](https://logos.co/tech-stack) (built on the Waku protocol) for decentralized peer-to-peer messaging. In code, you may see references to `@waku/sdk` as Logos Messaging uses Waku under the hood.
+:::
 
 **Symptoms:**
 - Messages sent but not received
@@ -564,6 +568,19 @@ useEffect(() => {
 ```
 
 ---
+
+## Common Error Code Reference
+
+For a complete list of API error codes and their meanings, see the [Error Codes Reference](/docs/api/error-codes).
+
+| HTTP Status | Common Cause | Quick Fix |
+|-------------|--------------|-----------|
+| **401** | Session expired or missing credentials | Ensure `credentials: 'include'` in fetch |
+| **402** | x402 payment required | Provide valid X-Payment header |
+| **403** | Access denied / RLS policy | Check permissions and ownership |
+| **404** | Resource not found | Verify ID exists and is accessible |
+| **429** | Rate limit exceeded | Implement exponential backoff |
+| **500** | Server error | Check logs and retry |
 
 ## Getting Help
 

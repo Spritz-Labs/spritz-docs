@@ -640,6 +640,39 @@ Agent endpoints follow the tiered rate limiting system:
 
 See [API Overview](/docs/api/intro#rate-limiting) for complete rate limiting documentation.
 
+## Parameter Validation Rules
+
+When creating or updating agents, the following validation rules apply:
+
+| Parameter | Type | Constraints |
+|-----------|------|-------------|
+| `name` | string | Required. 1-100 characters |
+| `personality` | string | Required. 1-1000 characters |
+| `system_instructions` | string | Optional. Max 4000 characters |
+| `model` | enum | Must be: `gemini-2.0-flash`, `gemini-2.0-flash-lite`, or `gemini-1.5-pro` |
+| `avatar_emoji` | string | Optional. Single emoji character |
+| `visibility` | enum | Must be: `private`, `friends`, or `public` |
+| `web_search_enabled` | boolean | Optional. Default: `false` |
+| `use_knowledge_base` | boolean | Optional. Default: `false` |
+| `tags` | array | Optional. Max 10 tags, each 1-30 characters |
+| `x402_price_cents` | number | Optional. Min: 1, Max: 10000 (for x402-enabled agents) |
+| `x402_network` | string | Must be: `base` or `base-sepolia` (when x402_enabled) |
+
+### Knowledge Base Validation
+
+| Parameter | Type | Constraints |
+|-----------|------|-------------|
+| `url` | string | Required. Valid HTTPS URL |
+| `title` | string | Required. 1-200 characters |
+| `content_type` | enum | Must be: `webpage`, `github`, or `docs` |
+
+### Chat Validation
+
+| Parameter | Type | Constraints |
+|-----------|------|-------------|
+| `message` | string | Required. 1-10000 characters |
+| `sessionId` | string | Optional. UUID format |
+
 ## Best Practices
 
 1. **Session Management**: Use `sessionId` to maintain conversation context

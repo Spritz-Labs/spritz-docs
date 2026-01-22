@@ -17,8 +17,8 @@ sidebar_position: 2
 
 This guide provides TypeScript types and a reference client implementation for integrating with the Spritz API.
 
-:::info Official SDK Coming Soon
-An official SDK is in development. In the meantime, use these types and patterns for type-safe integration.
+:::info SDK Status
+An official SDK is planned for a future release. Track progress on the [GitHub repository](https://github.com/Spritz-Labs/spritz/issues). In the meantime, use the types and patterns below for type-safe integration with the Spritz API.
 :::
 
 ## Installation
