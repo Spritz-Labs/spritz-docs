@@ -809,9 +809,139 @@ function importLegacyKeypair(userAddress: string): DerivedMessagingKey | null {
 
 ---
 
-## Upgrade Banner for Wallet Users
+## Key Restore & Upgrade Banners
 
-Wallet users with legacy keys see an upgrade prompt:
+### Auto-Detection System
+
+Spritz automatically detects when users need to restore or upgrade their messaging keys:
+
+| Scenario | Banner | Action |
+|----------|--------|--------|
+| **No key** (site data cleared) | Restore Banner | Sign/authenticate to restore |
+| **Legacy key** (non-deterministic) | Upgrade Banner | Sign to get deterministic key |
+| **Key mismatch** (not in Supabase) | Sync Banner | Re-upload public key |
+| **Passkey fallback** (no PRF) | Upgrade Check | Try PRF again (may now be supported) |
+
+### MessagingKeyRestoreBanner
+
+Auto-prompts users to restore their encryption key:
+
+```typescript
+/**
+ * Banner that prompts users to restore their messaging key when:
+ * 1. They have no key (site data was cleared)
+ * 2. They have a "legacy" or "passkey-fallback" key instead of deterministic
+ * 3. Their public key isn't in Supabase (needed for ECDH)
+ * 
+ * For EOA users: Sign with wallet to derive deterministic key
+ * For Passkey users: Authenticate to check PRF support and derive key if possible
+ */
+export function MessagingKeyRestoreBanner({
+    userAddress,
+    authType,
+    passkeyCredentialId,
+    rpId,
+    onOpenSettings,
+}: MessagingKeyRestoreBannerProps) {
+    const [showBanner, setShowBanner] = useState(false);
+    const [bannerReason, setBannerReason] = useState<
+        "no_key" | "legacy_key" | "key_mismatch" | "passkey_upgrade"
+    >("no_key");
+    
+    useEffect(() => {
+        // Only for wallet (EOA) and passkey users - they can restore via signing
+        if (authType !== "wallet" && authType !== "passkey") {
+            setShowBanner(false);
+            return;
+        }
+        
+        const checkKeyStatus = async () => {
+            const storedJson = localStorage.getItem(MESSAGING_KEYPAIR_STORAGE);
+            const storedSource = localStorage.getItem(MESSAGING_KEY_SOURCE_STORAGE);
+            
+            if (!storedJson) {
+                setBannerReason("no_key");
+                setShowBanner(true);
+                return;
+            }
+            
+            // Check for legacy keys
+            if (authType === "wallet" && (!storedSource || storedSource === "legacy")) {
+                setBannerReason("legacy_key");
+                setShowBanner(true);
+                return;
+            }
+            
+            // Check for passkey-fallback (might be able to upgrade to PRF)
+            if (authType === "passkey" && storedSource === "passkey-fallback") {
+                setBannerReason("passkey_upgrade");
+                setShowBanner(true);
+                return;
+            }
+            
+            // Check if public key is in Supabase
+            if (storedSource === "eoa" || storedSource === "passkey-prf") {
+                const { data } = await supabase
+                    .from("shout_user_settings")
+                    .select("messaging_public_key")
+                    .eq("wallet_address", userAddress.toLowerCase())
+                    .single();
+                
+                if (!data?.messaging_public_key || data.messaging_public_key !== stored.publicKey) {
+                    setBannerReason("key_mismatch");
+                    setShowBanner(true);
+                    return;
+                }
+            }
+        };
+        
+        checkKeyStatus();
+    }, [userAddress, authType]);
+    
+    const handleRestore = async () => {
+        // Clear old key and derive fresh
+        localStorage.removeItem(MESSAGING_KEYPAIR_STORAGE);
+        localStorage.removeItem(MESSAGING_KEY_SOURCE_STORAGE);
+        
+        const result = await getOrDeriveMessagingKey({
+            authType,
+            userAddress,
+            walletClient: authType === "wallet" ? walletClient : undefined,
+            passkeyCredentialId: authType === "passkey" ? passkeyCredentialId : undefined,
+            rpId,
+        });
+        
+        if (result.success && result.keypair) {
+            // Store and upload to Supabase
+            localStorage.setItem(MESSAGING_KEYPAIR_STORAGE, JSON.stringify(result.keypair));
+            localStorage.setItem(MESSAGING_KEY_SOURCE_STORAGE, result.keypair.derivedFrom);
+            
+            // Reload to decrypt messages with restored key
+            window.location.reload();
+        }
+    };
+    
+    // Message varies by scenario
+    const getMessage = () => {
+        switch (bannerReason) {
+            case "no_key":
+                return "Sign to restore your message encryption key and decrypt your messages.";
+            case "legacy_key":
+                return "Upgrade to a deterministic key for seamless cross-device messaging.";
+            case "passkey_upgrade":
+                return "Your passkey may now support better encryption. Try upgrading.";
+            case "key_mismatch":
+                return "Your encryption key needs to be synced. Sign to restore access.";
+        }
+    };
+    
+    return showBanner ? <Banner message={getMessage()} onRestore={handleRestore} /> : null;
+}
+```
+
+### MessagingKeyUpgradeBanner
+
+For wallet users with legacy keys:
 
 ```typescript
 /**
@@ -855,6 +985,69 @@ export function MessagingKeyUpgradeBanner({
     );
 }
 ```
+
+---
+
+## Passkey Selection
+
+When deriving keys from passkeys, the browser shows a picker with ALL available passkeys for the site (not just the one used for login). This matches login/signing behavior and provides better UX:
+
+```typescript
+// Request passkey with PRF extension
+// Don't specify allowCredentials - let user choose from ALL their passkeys
+const credential = await navigator.credentials.get({
+    publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rpId: effectiveRpId,
+        // No allowCredentials = browser shows picker with all available passkeys
+        userVerification: "required",
+        extensions: {
+            prf: {
+                eval: { first: prfSalt },
+            },
+        },
+    },
+});
+```
+
+### rpId Normalization
+
+The `rpId` is normalized to handle subdomains:
+
+```typescript
+// Normalize rpId - use parent domain for subdomains
+let effectiveRpId = rpId;
+if (rpId.includes("spritz.chat")) {
+    effectiveRpId = "spritz.chat";  // Works for app.spritz.chat, spritz.chat, etc.
+} else if (rpId === "localhost" || rpId === "127.0.0.1") {
+    effectiveRpId = "localhost";
+}
+```
+
+---
+
+## UI Components
+
+### MessagingStatus
+
+Displays current encryption status in settings:
+
+```typescript
+import { MessagingStatus } from "@/components/MessagingStatus";
+
+// Full card for settings
+<MessagingStatus showDetails={true} />
+
+// Compact badge for inline use  
+<MessagingStatus compact={true} />
+```
+
+| Status | Display |
+|--------|---------|
+| Active (deterministic) | 🟢 "Secure" - "Key derived from wallet/passkey" |
+| Active (legacy) | 🟢 "Active" - "Legacy backup" |
+| Needs activation | 🔵 "Enable" |
+| Needs passkey | 🟡 "Add Passkey" |
 
 ---
 
