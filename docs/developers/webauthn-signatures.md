@@ -1,834 +1,535 @@
-# WebAuthn & Passkey Signatures Deep Dive
+# WebAuthn & Passkey Signatures
 
-Complete technical documentation for WebAuthn-based signatures in Spritz, including P-256 ECDSA cryptography, Safe integration, and transaction signing.
+Complete technical reference for WebAuthn signature generation, verification, and blockchain integration in Spritz.
+
+:::tip Quick Links
+- [Smart Wallets](/docs/developers/smart-wallets) - Safe integration with WebAuthn
+- [Authentication](/docs/developers/authentication) - Passkey registration and login
+- [Vaults](/docs/developers/vaults) - Multi-sig with passkey signatures
+:::
 
 ## Overview
 
-Spritz uses **WebAuthn passkeys** as an alternative to EOA wallets for signing transactions. This provides:
+Spritz uses **WebAuthn passkeys** with **P-256 (secp256r1)** elliptic curve cryptography for:
 
-- **Device-native security** - Biometric/PIN protected credentials
-- **Phishing resistance** - rpId binding prevents credential use on fake sites
-- **Account abstraction** - P-256 signatures verified on-chain via Safe modules
+1. **Passwordless Authentication** - Sign in with biometrics (Face ID, Touch ID, Windows Hello)
+2. **Transaction Signing** - Sign blockchain transactions directly with your passkey
+3. **Multi-Sig Participation** - Sign vault proposals as a Smart Wallet owner
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    WebAuthn in the Spritz Stack                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌───────────────┐    ┌───────────────┐    ┌───────────────────────────┐│
+│  │   WebAuthn    │    │    Safe       │    │     ERC-4337              ││
+│  │   Passkey     │───►│  Smart Wallet │───►│     EntryPoint            ││
+│  │   (P-256)     │    │   (Account)   │    │   (Execution)             ││
+│  └───────────────┘    └───────────────┘    └───────────────────────────┘│
+│         │                    │                        │                  │
+│         │                    │                        │                  │
+│         ▼                    ▼                        ▼                  │
+│  ┌───────────────┐    ┌───────────────┐    ┌───────────────────────────┐│
+│  │ P-256 ECDSA   │    │ EIP-1271      │    │   Pimlico Bundler         ││
+│  │ Signature     │    │ Verification  │    │   + Paymaster             ││
+│  └───────────────┘    └───────────────┘    └───────────────────────────┘│
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## P-256 ECDSA Cryptography
+## P-256 Elliptic Curve
+
+WebAuthn mandates support for the **P-256** curve (NIST standardized), which differs from Ethereum's native **secp256k1**:
+
+| Property | P-256 (WebAuthn) | secp256k1 (Ethereum) |
+|----------|------------------|----------------------|
+| **Standardization** | NIST P-256 | Koblitz curve |
+| **Browser Support** | Native WebAuthn | Requires library |
+| **Hardware Support** | Secure Enclave, TPM, Yubikey | Software only |
+| **EVM Verification** | RIP-7212 precompile or contract | Native `ecrecover` |
+| **Security Level** | 128-bit | 128-bit |
+| **Signature Format** | DER-encoded (r, s) | Compact (r, s, v) |
 
 ### Curve Parameters
 
-WebAuthn uses the **NIST P-256** (secp256r1) elliptic curve, different from Ethereum's secp256k1:
-
-| Parameter | P-256 (WebAuthn) | secp256k1 (Ethereum) |
-|-----------|------------------|----------------------|
-| **Prime (p)** | 2²⁵⁶ - 2²²⁴ + 2¹⁹² + 2⁹⁶ - 1 | 2²⁵⁶ - 2³² - 977 |
-| **Order (n)** | 0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551 | 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 |
-| **Cofactor** | 1 | 1 |
-| **Generator (G)** | (Gx, Gy) defined by NIST | (Gx, Gy) defined by SECG |
-
-### Key Generation
-
-When a user registers a passkey, the authenticator generates a P-256 keypair:
-
 ```typescript
-// Passkey registration returns a COSE-encoded public key
-interface PasskeyPublicKey {
-    x: Uint8Array;  // 32-byte X coordinate
-    y: Uint8Array;  // 32-byte Y coordinate
-}
-
-// The public key point (X, Y) satisfies: Y² = X³ + aX + b (mod p)
-// Where a = -3 and b is the P-256 curve parameter
-```
-
-### Signature Format
-
-WebAuthn produces **DER-encoded ECDSA signatures** which must be converted to raw format for on-chain verification:
-
-```typescript
-/**
- * WebAuthn signature structure (DER encoded):
- * 
- * 0x30 [total-length]
- *   0x02 [r-length] [r-value]
- *   0x02 [s-length] [s-value]
- * 
- * Each value may have leading 0x00 if high bit is set (to indicate positive integer)
- */
-
-interface ECDSASignature {
-    r: bigint;  // 32 bytes when normalized
-    s: bigint;  // 32 bytes when normalized
-}
-
-/**
- * Parse DER-encoded signature to raw (r, s) values
- */
-export function parseDERSignature(derSig: Uint8Array): ECDSASignature {
-    // Verify DER structure
-    if (derSig[0] !== 0x30) {
-        throw new Error('Invalid DER signature: missing SEQUENCE tag');
-    }
+// P-256 (secp256r1/prime256v1) curve parameters
+const P256 = {
+    // Prime field
+    p: 0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff,
     
-    let offset = 2; // Skip SEQUENCE tag and length
+    // Curve coefficients (y² = x³ + ax + b)
+    a: 0xffffffff00000001000000000000000000000000fffffffffffffffffffffffc,
+    b: 0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b,
     
-    // Parse R value
-    if (derSig[offset] !== 0x02) {
-        throw new Error('Invalid DER signature: missing INTEGER tag for R');
-    }
-    offset++;
+    // Generator point
+    Gx: 0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296,
+    Gy: 0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5,
     
-    const rLength = derSig[offset++];
-    let rStart = offset;
-    
-    // Skip leading zero if present (indicates positive integer)
-    if (derSig[rStart] === 0x00 && rLength > 32) {
-        rStart++;
-    }
-    
-    const r = BigInt('0x' + Buffer.from(derSig.slice(rStart, offset + rLength)).toString('hex'));
-    offset += rLength;
-    
-    // Parse S value
-    if (derSig[offset] !== 0x02) {
-        throw new Error('Invalid DER signature: missing INTEGER tag for S');
-    }
-    offset++;
-    
-    const sLength = derSig[offset++];
-    let sStart = offset;
-    
-    if (derSig[sStart] === 0x00 && sLength > 32) {
-        sStart++;
-    }
-    
-    const s = BigInt('0x' + Buffer.from(derSig.slice(sStart, offset + sLength)).toString('hex'));
-    
-    return { r, s };
-}
-```
-
-### Signature Malleability
-
-ECDSA signatures have a malleability property: for any valid signature (r, s), the signature (r, n - s) is also valid. Safe's P-256 verifier requires **low-S normalization**:
-
-```typescript
-// P-256 curve order
-const P256_N = BigInt('0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551');
-const HALF_N = P256_N / BigInt(2);
-
-/**
- * Normalize signature to low-S form
- * Required for Safe's P256Verifier contract
- */
-export function normalizeSignature(sig: ECDSASignature): ECDSASignature {
-    let { r, s } = sig;
-    
-    // If s > n/2, use s' = n - s
-    if (s > HALF_N) {
-        s = P256_N - s;
-    }
-    
-    return { r, s };
-}
-
-/**
- * Convert normalized signature to 64-byte raw format
- */
-export function signatureToRaw(sig: ECDSASignature): `0x${string}` {
-    const normalized = normalizeSignature(sig);
-    
-    const rHex = normalized.r.toString(16).padStart(64, '0');
-    const sHex = normalized.s.toString(16).padStart(64, '0');
-    
-    return `0x${rHex}${sHex}`;
-}
-```
-
----
-
-## WebAuthn Authentication Data
-
-### Authenticator Data Structure
-
-Every WebAuthn assertion includes **authenticatorData** containing:
-
-```typescript
-/**
- * Authenticator Data structure (variable length):
- * 
- * | Bytes | Field                    | Description                           |
- * |-------|--------------------------|---------------------------------------|
- * | 32    | rpIdHash                 | SHA-256 hash of relying party ID      |
- * | 1     | flags                    | Bit flags (UP, UV, AT, ED)            |
- * | 4     | signCount                | 32-bit big-endian signature counter   |
- * | var   | attestedCredentialData   | (if AT flag set) credential details   |
- * | var   | extensions               | (if ED flag set) extension data       |
- */
-
-interface AuthenticatorData {
-    rpIdHash: Uint8Array;      // 32 bytes
-    flags: {
-        userPresent: boolean;   // UP: User was present
-        userVerified: boolean;  // UV: User was verified (biometric/PIN)
-        attestedCredentialData: boolean;  // AT: Contains credential data
-        extensionData: boolean; // ED: Contains extension data
-    };
-    signCount: number;
-}
-
-export function parseAuthenticatorData(authData: Uint8Array): AuthenticatorData {
-    const rpIdHash = authData.slice(0, 32);
-    const flags = authData[32];
-    const signCount = new DataView(authData.buffer, 33, 4).getUint32(0, false);
-    
-    return {
-        rpIdHash,
-        flags: {
-            userPresent: (flags & 0x01) !== 0,
-            userVerified: (flags & 0x04) !== 0,
-            attestedCredentialData: (flags & 0x40) !== 0,
-            extensionData: (flags & 0x80) !== 0,
-        },
-        signCount,
-    };
-}
-```
-
-### Client Data JSON
-
-WebAuthn includes a **clientDataJSON** structure that binds the signature to the request context:
-
-```typescript
-interface ClientDataJSON {
-    type: 'webauthn.get' | 'webauthn.create';
-    challenge: string;        // Base64URL encoded challenge
-    origin: string;           // e.g., "https://app.spritz.chat"
-    crossOrigin?: boolean;
-}
-
-// Example clientDataJSON
-const clientData: ClientDataJSON = {
-    type: 'webauthn.get',
-    challenge: 'dGVzdC1jaGFsbGVuZ2U',  // Base64URL of challenge bytes
-    origin: 'https://app.spritz.chat',
+    // Order of the curve
+    n: 0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551,
 };
 ```
 
-### Signature Verification Hash
+---
 
-The WebAuthn signature is computed over:
+## Passkey Key Structure
 
-```
-signedData = authenticatorData || SHA-256(clientDataJSON)
-signature = ECDSA_Sign(privateKey, SHA-256(signedData))
-```
+### Public Key Format
 
 ```typescript
-/**
- * Reconstruct the message that was signed by the authenticator
- */
-export function buildSignedMessage(
-    authenticatorData: Uint8Array,
-    clientDataJSON: Uint8Array
-): Uint8Array {
-    // Hash the clientDataJSON
-    const clientDataHash = sha256(clientDataJSON);
+interface P256PublicKey {
+    // X coordinate (32 bytes)
+    x: `0x${string}`;
     
-    // Concatenate: authenticatorData || clientDataHash
-    const signedData = new Uint8Array(authenticatorData.length + 32);
-    signedData.set(authenticatorData, 0);
-    signedData.set(clientDataHash, authenticatorData.length);
-    
-    return signedData;
+    // Y coordinate (32 bytes)  
+    y: `0x${string}`;
 }
 
-/**
- * The actual message hash that ECDSA signs
- */
-export function getSignatureMessageHash(
-    authenticatorData: Uint8Array,
-    clientDataJSON: Uint8Array
-): Uint8Array {
-    const signedData = buildSignedMessage(authenticatorData, clientDataJSON);
-    return sha256(signedData);
+// Uncompressed format (65 bytes): 0x04 || x || y
+// Used by noble-curves and most libraries
+const uncompressed = new Uint8Array(65);
+uncompressed[0] = 0x04;  // Uncompressed point indicator
+uncompressed.set(hexToBytes(publicKey.x), 1);   // x: bytes 1-32
+uncompressed.set(hexToBytes(publicKey.y), 33);  // y: bytes 33-64
+
+// Concatenated format (64 bytes): x || y
+// Used by viem/permissionless
+const concatenated = `0x${publicKey.x.slice(2)}${publicKey.y.slice(2)}`;
+```
+
+### COSE Key Format
+
+WebAuthn attestation returns the public key in COSE (CBOR Object Signing and Encryption) format:
+
+```typescript
+// COSE Key Map for P-256
+// {
+//   1: 2,      // kty (key type): EC2
+//   3: -7,     // alg (algorithm): ES256
+//   -1: 1,     // crv (curve): P-256
+//   -2: x,     // x-coordinate (32 bytes)
+//   -3: y      // y-coordinate (32 bytes)
+// }
+
+import { decodeFirst } from 'cbor';
+
+function parseCOSEKey(coseKeyBytes: Uint8Array): P256PublicKey {
+    const decoded = decodeFirst(coseKeyBytes);
+    
+    // Verify key type and algorithm
+    if (decoded.get(1) !== 2) throw new Error('Not an EC key');
+    if (decoded.get(3) !== -7) throw new Error('Not ES256 algorithm');
+    if (decoded.get(-1) !== 1) throw new Error('Not P-256 curve');
+    
+    const x = decoded.get(-2) as Uint8Array;
+    const y = decoded.get(-3) as Uint8Array;
+    
+    return {
+        x: `0x${Buffer.from(x).toString('hex')}`,
+        y: `0x${Buffer.from(y).toString('hex')}`,
+    };
 }
 ```
 
 ---
 
-## Safe WebAuthn Integration
+## Signature Generation
 
-### Contract Architecture
+### WebAuthn Assertion Flow
 
-Safe uses a modular architecture for WebAuthn signature verification:
+When signing with a passkey, the browser's WebAuthn API:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Safe WebAuthn Stack                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │              Safe Proxy v1.4.1                       │    │
-│  │  Address: User's Safe smart account                 │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                          │                                   │
-│                          ▼                                   │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │       SafeWebAuthnSharedSigner                       │    │
-│  │  Address: 0x94a4F6affBd8975951142c3999aEAB7ecee555c2│    │
-│  │                                                      │    │
-│  │  - Validates WebAuthn signature format               │    │
-│  │  - Extracts authenticatorData and clientDataJSON    │    │
-│  │  - Delegates P-256 verification to verifier         │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                          │                                   │
-│                          ▼                                   │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │              P256Verifier                            │    │
-│  │  Address: 0xA86e0054C51E4894D88762a017ECc5E5235f5DBA│    │
-│  │                                                      │    │
-│  │  - Pure P-256 ECDSA signature verification          │    │
-│  │  - Uses precompiled contract (EIP-7212) if available│    │
-│  │  - Falls back to Solidity implementation            │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Contract Addresses
-
-These contracts are deployed at the same addresses across all supported chains:
+1. Prompts for user verification (biometric/PIN)
+2. Signs the challenge with the private key
+3. Returns authenticatorData, clientDataJSON, and signature
 
 ```typescript
-export const SAFE_WEBAUTHN_CONTRACTS = {
-    // Shared signer that processes WebAuthn assertions
-    safeWebAuthnSharedSignerAddress: '0x94a4F6affBd8975951142c3999aEAB7ecee555c2' as const,
-    
-    // P-256 signature verifier
-    safeP256VerifierAddress: '0xA86e0054C51E4894D88762a017ECc5E5235f5DBA' as const,
-} as const;
-```
-
-### WebAuthn Signature Encoding for Safe
-
-Safe requires a specific encoding for WebAuthn signatures:
-
-```typescript
-import { encodeAbiParameters } from 'viem';
-
 /**
- * Encode WebAuthn signature for Safe contract consumption
- * 
- * The Safe WebAuthn module expects:
- * - authenticatorData: Raw bytes from WebAuthn assertion
- * - clientDataJSON: UTF-8 string (not the raw bytes)
- * - challengeIndex: Position of challenge in clientDataJSON
- * - typeIndex: Position of "type" field in clientDataJSON
- * - r: Signature R value (32 bytes)
- * - s: Signature S value (32 bytes, low-S normalized)
+ * Request a WebAuthn signature for a given challenge
  */
-export function encodeWebAuthnSignature(
-    authenticatorData: Uint8Array,
-    clientDataJSON: string,
-    signature: ECDSASignature
-): `0x${string}` {
-    // Normalize signature to low-S
-    const normalizedSig = normalizeSignature(signature);
-    
-    // Find challenge position in clientDataJSON
-    // Challenge appears as: "challenge":"<base64url>"
-    const challengeIndex = clientDataJSON.indexOf('"challenge"');
-    const challengeValueStart = clientDataJSON.indexOf(':', challengeIndex) + 2; // Skip ":"
-    
-    // Find type position
-    const typeIndex = clientDataJSON.indexOf('"type"');
-    const typeValueStart = clientDataJSON.indexOf(':', typeIndex) + 2;
-    
-    return encodeAbiParameters(
-        [
-            { name: 'authenticatorData', type: 'bytes' },
-            { name: 'clientDataJSON', type: 'string' },
-            { name: 'challengeIndex', type: 'uint256' },
-            { name: 'typeIndex', type: 'uint256' },
-            { name: 'r', type: 'uint256' },
-            { name: 's', type: 'uint256' },
-        ],
-        [
-            `0x${Buffer.from(authenticatorData).toString('hex')}`,
-            clientDataJSON,
-            BigInt(challengeValueStart),
-            BigInt(typeValueStart),
-            normalizedSig.r,
-            normalizedSig.s,
-        ]
-    );
-}
-```
-
-### Full WebAuthn Signing Flow
-
-```typescript
-import { toWebAuthnAccount } from 'viem/account-abstraction';
-
-/**
- * Complete flow for signing a Safe transaction with WebAuthn
- */
-export async function signSafeTransactionWithPasskey(
-    safeTxHash: `0x${string}`,
-    credential: {
-        id: string;
-        publicKey: { x: `0x${string}`; y: `0x${string}` };
-    }
-): Promise<`0x${string}`> {
-    // 1. Create WebAuthn account from credential
-    const xHex = credential.publicKey.x.replace(/^0x/i, '').padStart(64, '0');
-    const yHex = credential.publicKey.y.replace(/^0x/i, '').padStart(64, '0');
-    const formattedPublicKey = `0x${xHex}${yHex}` as `0x${string}`;
-    
-    const webAuthnAccount = toWebAuthnAccount({
-        credential: {
-            id: credential.id,
-            publicKey: formattedPublicKey,
-        },
-        rpId: getRpId(),
-    });
-    
-    // 2. The safeTxHash becomes the WebAuthn challenge
-    // Convert to ArrayBuffer for WebAuthn API
-    const challenge = hexToArrayBuffer(safeTxHash);
-    
-    // 3. Request WebAuthn assertion
-    const assertion = await navigator.credentials.get({
+async function signWithPasskey(
+    credentialId: string,
+    challenge: Uint8Array,
+    rpId: string = 'spritz.chat'
+): Promise<WebAuthnSignature> {
+    const credential = await navigator.credentials.get({
         publicKey: {
+            // The data to sign (e.g., UserOp hash, Safe tx hash)
             challenge,
-            rpId: getRpId(),
+            
+            // Relying party ID (must match registration)
+            rpId,
+            
+            // Timeout (2 minutes)
             timeout: 120000,
+            
+            // Require user verification
             userVerification: 'preferred',
+            
+            // Specify which credential to use
             allowCredentials: [{
-                id: base64urlToArrayBuffer(credential.id),
+                id: base64urlDecode(credentialId),
                 type: 'public-key',
                 transports: ['internal', 'hybrid'],
             }],
         },
-    }) as PublicKeyCredential;
+    });
+
+    const response = credential.response as AuthenticatorAssertionResponse;
     
-    const response = assertion.response as AuthenticatorAssertionResponse;
-    
-    // 4. Parse the DER-encoded signature
-    const derSignature = new Uint8Array(response.signature);
-    const { r, s } = parseDERSignature(derSignature);
-    
-    // 5. Get authenticatorData and clientDataJSON
-    const authenticatorData = new Uint8Array(response.authenticatorData);
-    const clientDataJSON = new TextDecoder().decode(response.clientDataJSON);
-    
-    // 6. Encode for Safe contract
-    const encodedSignature = encodeWebAuthnSignature(
-        authenticatorData,
-        clientDataJSON,
-        { r, s }
+    return {
+        authenticatorData: new Uint8Array(response.authenticatorData),
+        clientDataJSON: new TextDecoder().decode(response.clientDataJSON),
+        signature: new Uint8Array(response.signature),
+    };
+}
+```
+
+### What Gets Signed
+
+WebAuthn signs a **hash of hashes**:
+
+```
+Message = SHA256(authenticatorData || SHA256(clientDataJSON))
+```
+
+```typescript
+import { sha256 } from '@noble/hashes/sha256';
+
+function computeSignedMessage(
+    authenticatorData: Uint8Array,
+    clientDataJSON: string
+): Uint8Array {
+    // Hash the clientDataJSON
+    const clientDataHash = sha256(
+        new TextEncoder().encode(clientDataJSON)
     );
     
-    return encodedSignature;
+    // Concatenate and hash again
+    const message = new Uint8Array([
+        ...authenticatorData,
+        ...clientDataHash,
+    ]);
+    
+    return sha256(message);
+}
+```
+
+### Client Data JSON Structure
+
+```json
+{
+    "type": "webauthn.get",
+    "challenge": "SGVsbG8gV29ybGQh...",
+    "origin": "https://app.spritz.chat",
+    "crossOrigin": false
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `type` | Always "webauthn.get" for assertions |
+| `challenge` | Base64url-encoded challenge (your data to sign) |
+| `origin` | The website origin (verified by authenticator) |
+| `crossOrigin` | Whether request is cross-origin |
+
+---
+
+## DER Signature Format
+
+WebAuthn returns signatures in **DER (Distinguished Encoding Rules)** format, not raw (r, s) bytes:
+
+### DER Structure
+
+```
+SEQUENCE {
+    INTEGER r,  // May have leading 0x00 if high bit is set
+    INTEGER s   // May have leading 0x00 if high bit is set
+}
+
+Bytes: 30 [len] 02 [r-len] [r-bytes] 02 [s-len] [s-bytes]
+```
+
+### Example DER Signature
+
+```
+30 45                              // SEQUENCE, 69 bytes
+   02 21                           // INTEGER, 33 bytes
+      00                           // Leading zero (high bit was set)
+      8b 4c 2e 3f ... (32 bytes)  // r value
+   02 20                           // INTEGER, 32 bytes
+      1a 2b 3c 4d ... (32 bytes)  // s value
+```
+
+### Parsing DER to Raw (r, s)
+
+```typescript
+/**
+ * Parse DER-encoded ECDSA signature to raw (r, s) components
+ */
+function parseDERSignature(der: Uint8Array): {
+    r: Uint8Array;  // 32 bytes, big-endian
+    s: Uint8Array;  // 32 bytes, big-endian
+} {
+    let offset = 0;
+
+    // Verify SEQUENCE tag
+    if (der[offset++] !== 0x30) {
+        throw new Error('Invalid DER: expected SEQUENCE');
+    }
+
+    // Parse total length (may be short or long form)
+    let totalLen = der[offset++];
+    if (totalLen & 0x80) {
+        const lenBytes = totalLen & 0x7f;
+        totalLen = 0;
+        for (let i = 0; i < lenBytes; i++) {
+            totalLen = (totalLen << 8) | der[offset++];
+        }
+    }
+
+    // Parse r
+    if (der[offset++] !== 0x02) {
+        throw new Error('Invalid DER: expected INTEGER for r');
+    }
+    let rLen = der[offset++];
+    let r = der.slice(offset, offset + rLen);
+    offset += rLen;
+
+    // Parse s
+    if (der[offset++] !== 0x02) {
+        throw new Error('Invalid DER: expected INTEGER for s');
+    }
+    let sLen = der[offset++];
+    let s = der.slice(offset, offset + sLen);
+
+    // Normalize: remove leading zeros, pad to 32 bytes
+    r = normalizeScalar(r);
+    s = normalizeScalar(s);
+
+    return { r, s };
+}
+
+function normalizeScalar(bytes: Uint8Array): Uint8Array {
+    // Remove leading zeros
+    let start = 0;
+    while (start < bytes.length - 1 && bytes[start] === 0) {
+        start++;
+    }
+    bytes = bytes.slice(start);
+
+    // Pad to 32 bytes
+    if (bytes.length < 32) {
+        const padded = new Uint8Array(32);
+        padded.set(bytes, 32 - bytes.length);
+        return padded;
+    }
+    
+    return bytes.slice(0, 32);
 }
 ```
 
 ---
 
-## User Operation Signing
+## Signature Verification
 
-### ERC-4337 UserOp Structure
+### Local Verification (JavaScript)
 
-For account abstraction, transactions are packaged as User Operations:
+Verify signatures before submitting to avoid wasted gas:
 
 ```typescript
-interface PackedUserOperation {
-    sender: Address;           // Safe address
-    nonce: bigint;             // EntryPoint nonce
-    initCode: Hex;             // Factory data for deployment (empty if deployed)
-    callData: Hex;             // Encoded Safe transaction
-    accountGasLimits: Hex;     // Packed verification + call gas limits
-    preVerificationGas: bigint;
-    gasFees: Hex;              // Packed maxFeePerGas + maxPriorityFeePerGas
-    paymasterAndData: Hex;     // Paymaster address + data
-    signature: Hex;            // WebAuthn signature
+import { p256 } from '@noble/curves/p256';
+import { sha256 } from '@noble/hashes/sha256';
+
+function verifyWebAuthnSignature(
+    publicKey: P256PublicKey,
+    authenticatorData: Uint8Array,
+    clientDataJSON: string,
+    signature: Uint8Array
+): boolean {
+    // 1. Compute the message that was signed
+    const messageHash = computeSignedMessage(authenticatorData, clientDataJSON);
+
+    // 2. Parse DER signature
+    const { r, s } = parseDERSignature(signature);
+
+    // 3. Format public key (uncompressed)
+    const pubKeyBytes = new Uint8Array(65);
+    pubKeyBytes[0] = 0x04;
+    pubKeyBytes.set(hexToBytes(publicKey.x), 1);
+    pubKeyBytes.set(hexToBytes(publicKey.y), 33);
+
+    // 4. Verify using noble-curves
+    try {
+        return p256.verify(
+            new Uint8Array([...r, ...s]),  // 64-byte signature
+            messageHash,                     // 32-byte message hash
+            pubKeyBytes                      // 65-byte public key
+        );
+    } catch {
+        return false;
+    }
 }
 ```
 
-### UserOp Hash Calculation
+### On-Chain Verification
 
-The signature covers a hash of the UserOp:
+#### RIP-7212 Precompile
+
+Chains supporting [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md) have a native P-256 verifier at `0x0000000000000000000000000000000000000100`:
+
+```solidity
+// RIP-7212 P256Verify precompile
+address constant P256_VERIFIER = address(0x100);
+
+function verifyP256(
+    bytes32 messageHash,
+    bytes32 r,
+    bytes32 s,
+    bytes32 x,
+    bytes32 y
+) internal view returns (bool) {
+    // Call precompile
+    (bool success, bytes memory result) = P256_VERIFIER.staticcall(
+        abi.encode(messageHash, r, s, x, y)
+    );
+    
+    // Returns 1 for valid, 0 for invalid
+    return success && result.length == 32 && 
+           abi.decode(result, (uint256)) == 1;
+}
+```
+
+| Chain | RIP-7212 | Gas Cost |
+|-------|----------|----------|
+| Base | ✅ | ~3,450 |
+| Arbitrum | ✅ | ~3,450 |
+| Optimism | ✅ | ~3,450 |
+| Polygon | ✅ | ~3,450 |
+| Ethereum | ❌ | N/A |
+
+#### Safe P256 Verifier Contract
+
+For chains without RIP-7212, Safe deploys a Solidity-based verifier:
+
+```solidity
+// SafeP256Verifier at 0xA86e0054C51E4894D88762a017ECc5E5235f5DBA
+interface ISafeP256Verifier {
+    function verifySignature(
+        bytes32 messageHash,
+        bytes calldata signature,  // 64 bytes: r || s
+        bytes calldata publicKey   // 64 bytes: x || y
+    ) external view returns (bool);
+}
+```
+
+---
+
+## Safe Integration
+
+### Encoding WebAuthn Signature for Safe
+
+Safe's `execTransaction` expects a specific signature format for WebAuthn:
 
 ```typescript
-import { keccak256, encodeAbiParameters, encodePacked } from 'viem';
+import { encodeAbiParameters, parseAbiParameters } from 'viem';
 
 /**
- * Calculate the hash that must be signed for a UserOperation
+ * Encode WebAuthn signature for Safe's checkNSignatures
  */
-export function getUserOpHash(
-    userOp: PackedUserOperation,
-    entryPointAddress: Address,
-    chainId: bigint
-): `0x${string}` {
-    // Pack the UserOp fields (excluding signature)
-    const packedUserOp = encodeAbiParameters(
+function encodeWebAuthnSignatureForSafe(
+    authenticatorData: Uint8Array,
+    clientDataJSON: string,
+    r: Uint8Array,
+    s: Uint8Array
+): Hex {
+    // Extract clientDataFields (everything after challenge in JSON)
+    // Safe reconstructs the full clientDataJSON for verification
+    const clientDataFields = extractClientDataFields(clientDataJSON);
+
+    return encodeAbiParameters(
+        parseAbiParameters([
+            'bytes authenticatorData',
+            'string clientDataFields', 
+            'uint256[2] signature'
+        ]),
         [
-            { type: 'address' },   // sender
-            { type: 'uint256' },   // nonce
-            { type: 'bytes32' },   // keccak256(initCode)
-            { type: 'bytes32' },   // keccak256(callData)
-            { type: 'bytes32' },   // accountGasLimits
-            { type: 'uint256' },   // preVerificationGas
-            { type: 'bytes32' },   // gasFees
-            { type: 'bytes32' },   // keccak256(paymasterAndData)
-        ],
-        [
-            userOp.sender,
-            userOp.nonce,
-            keccak256(userOp.initCode),
-            keccak256(userOp.callData),
-            userOp.accountGasLimits,
-            userOp.preVerificationGas,
-            userOp.gasFees,
-            keccak256(userOp.paymasterAndData),
+            authenticatorData,
+            clientDataFields,
+            [
+                BigInt('0x' + Buffer.from(r).toString('hex')),
+                BigInt('0x' + Buffer.from(s).toString('hex')),
+            ],
         ]
     );
-    
-    const userOpHash = keccak256(packedUserOp);
-    
-    // Final hash includes EntryPoint address and chainId
-    return keccak256(
-        encodeAbiParameters(
-            [{ type: 'bytes32' }, { type: 'address' }, { type: 'uint256' }],
-            [userOpHash, entryPointAddress, chainId]
-        )
+}
+
+function extractClientDataFields(clientDataJSON: string): string {
+    // Find where challenge ends
+    const challengeEndIndex = clientDataJSON.indexOf(
+        '"', 
+        clientDataJSON.indexOf('"challenge":"') + 13
     );
+    // Return everything after challenge (e.g., ',"origin":"https://...")
+    return clientDataJSON.slice(challengeEndIndex + 1, -1);
 }
 ```
 
-### Signing UserOps with WebAuthn
+### SafeWebAuthnSharedSigner
 
-```typescript
-import { createSmartAccountClient } from 'permissionless';
-import { toSafeSmartAccount } from 'permissionless/accounts';
-import { toWebAuthnAccount } from 'viem/account-abstraction';
+Safe's WebAuthn signer module handles P-256 signature verification:
 
-/**
- * Create a Smart Account Client that signs with WebAuthn
- */
-export async function createWebAuthnSmartAccountClient(
-    credential: PasskeyCredential,
-    chainId: number
-): Promise<SmartAccountClient> {
-    const publicClient = getPublicClient(chainId);
-    const pimlicoClient = getPimlicoClient(chainId);
-    const chain = getChain(chainId);
-    
-    // Format P-256 public key (64 bytes: x || y)
-    const xHex = credential.publicKey.x.replace(/^0x/i, '').padStart(64, '0');
-    const yHex = credential.publicKey.y.replace(/^0x/i, '').padStart(64, '0');
-    const formattedPublicKey = `0x${xHex}${yHex}` as Hex;
-    
-    // Create WebAuthn account for viem
-    const webAuthnAccount = toWebAuthnAccount({
-        credential: {
-            id: credential.credentialId,
-            publicKey: formattedPublicKey,
-        },
-        rpId: getRpId(),
-    });
-    
-    // Create Safe account with WebAuthn owner
-    const safeAccount = await toSafeSmartAccount({
-        client: publicClient,
-        owners: [webAuthnAccount],
-        version: '1.4.1',
-        entryPoint: {
-            address: entryPoint07Address,
-            version: '0.7',
-        },
-        saltNonce: BigInt(0),
-        // WebAuthn verification contracts
-        safeWebAuthnSharedSignerAddress: SAFE_WEBAUTHN_CONTRACTS.safeWebAuthnSharedSignerAddress,
-        safeP256VerifierAddress: SAFE_WEBAUTHN_CONTRACTS.safeP256VerifierAddress,
-    });
-    
-    // Create client with bundler and paymaster
-    return createSmartAccountClient({
-        account: safeAccount,
-        chain,
-        bundlerTransport: http(getPimlicoBundlerUrl(chainId)),
-        userOperation: {
-            estimateFeesPerGas: async () => {
-                const prices = await pimlicoClient.getUserOperationGasPrice();
-                return prices.fast;
-            },
-        },
-        paymaster: pimlicoClient,
-        paymasterContext: getPaymasterContext(chainId),
-    });
+```solidity
+// Deployed at 0x94a4F6affBd8975951142c3999aEAB7ecee555c2
+
+interface ISafeWebAuthnSharedSigner {
+    // Configuration per Safe
+    struct SignerConfiguration {
+        uint256 x;     // Public key X coordinate
+        uint256 y;     // Public key Y coordinate
+        address verifier;  // P256 verifier to use
+    }
+
+    // Verify a WebAuthn signature
+    function isValidSignature(
+        bytes32 _hash,
+        bytes calldata _signature
+    ) external view returns (bytes4);
 }
 ```
 
----
+### ERC-4337 UserOperation Signing
 
-## Gas Limits for WebAuthn
-
-### Why Explicit Gas Limits?
-
-WebAuthn signatures require P-256 verification on-chain, which is computationally expensive. Gas estimation often fails or underestimates, so explicit limits are required:
+For account abstraction transactions, the passkey signs the UserOperation hash:
 
 ```typescript
-/**
- * Gas limits optimized for WebAuthn transactions
- * 
- * These values account for:
- * - Safe deployment (if counterfactual)
- * - P-256 signature verification (~100k gas)
- * - Safe execution logic
- * - Paymaster verification
- */
-export const WEBAUTHN_GAS_LIMITS = {
-    // Verification includes Safe deployment + P-256 verification
-    verificationGasLimit: BigInt(800_000),
-    
-    // Actual transaction execution
-    callGasLimit: BigInt(200_000),
-    
-    // Bundler overhead
-    preVerificationGas: BigInt(100_000),
-    
-    // Paymaster signature verification
-    paymasterVerificationGasLimit: BigInt(150_000),
-    
-    // Paymaster post-operation (refund logic)
-    paymasterPostOpGasLimit: BigInt(50_000),
-} as const;
-```
-
-### Applying Gas Limits
-
-```typescript
-/**
- * Send a transaction with WebAuthn, applying explicit gas limits
- */
-export async function sendWebAuthnTransaction(
-    client: SmartAccountClient,
-    calls: Array<{ to: Address; value: bigint; data: Hex }>
+async function signUserOpWithPasskey(
+    userOp: UserOperation,
+    entryPoint: Address,
+    chainId: number,
+    credential: PasskeyCredential
 ): Promise<Hex> {
-    return client.sendTransaction({
-        calls,
-        // Apply WebAuthn-specific gas limits
-        verificationGasLimit: WEBAUTHN_GAS_LIMITS.verificationGasLimit,
-        callGasLimit: WEBAUTHN_GAS_LIMITS.callGasLimit,
-        preVerificationGas: WEBAUTHN_GAS_LIMITS.preVerificationGas,
-        paymasterVerificationGasLimit: WEBAUTHN_GAS_LIMITS.paymasterVerificationGasLimit,
-        paymasterPostOpGasLimit: WEBAUTHN_GAS_LIMITS.paymasterPostOpGasLimit,
-    });
-}
-```
+    // 1. Compute UserOp hash
+    const userOpHash = computeUserOpHash(userOp, entryPoint, chainId);
 
----
+    // 2. Sign with passkey
+    const webAuthnSig = await signWithPasskey(
+        credential.credentialId,
+        hexToBytes(userOpHash)
+    );
 
-## Relying Party (rpId) Configuration
-
-### rpId Rules
-
-The rpId determines which origins can use a passkey:
-
-```typescript
-/**
- * rpId configuration for Spritz
- * 
- * Rules:
- * - rpId must be a valid domain (no scheme, no port)
- * - Credential can be used on rpId and any subdomain
- * - Cannot be changed after credential creation
- */
-export function getRpId(): string {
-    if (typeof window === 'undefined') {
-        return 'spritz.chat';
-    }
+    // 3. Encode for Safe
+    const { r, s } = parseDERSignature(webAuthnSig.signature);
     
-    const hostname = window.location.hostname;
-    
-    // Production: use root domain for cross-subdomain support
-    if (hostname.includes('spritz.chat')) {
-        return 'spritz.chat';  // Works on app.spritz.chat, spritz.chat, etc.
-    }
-    
-    // Local development
-    if (hostname === 'localhost') {
-        return 'localhost';
-    }
-    
-    // Preview deployments (Vercel)
-    return hostname;
-}
-```
-
-### Cross-Subdomain Authentication
-
-Passkeys registered with rpId `spritz.chat` work on:
-- `https://spritz.chat`
-- `https://app.spritz.chat`
-- `https://staging.spritz.chat`
-- Any other `*.spritz.chat` subdomain
-
----
-
-## Credential Storage
-
-### Database Schema
-
-Passkey credentials are stored securely:
-
-```sql
-CREATE TABLE shout_passkey_credentials (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    
-    -- User association
-    user_address TEXT NOT NULL REFERENCES shout_user_settings(wallet_address),
-    
-    -- WebAuthn credential identifiers
-    credential_id TEXT NOT NULL UNIQUE,      -- Base64URL encoded
-    credential_id_hash TEXT NOT NULL,        -- SHA-256 for indexing
-    
-    -- P-256 public key (required for Safe address calculation)
-    public_key_x TEXT NOT NULL,              -- Hex encoded (0x...)
-    public_key_y TEXT NOT NULL,              -- Hex encoded (0x...)
-    
-    -- Metadata
-    device_name TEXT,                         -- User-provided name
-    authenticator_type TEXT,                  -- 'platform' | 'cross-platform'
-    transports TEXT[],                        -- ['internal', 'hybrid', 'usb', etc.]
-    
-    -- Counter for replay protection
-    sign_count INTEGER DEFAULT 0,
-    
-    -- Timestamps
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    last_used_at TIMESTAMPTZ,
-    
-    -- Backup status (for recovery)
-    backed_up BOOLEAN DEFAULT FALSE,
-    backup_eligible BOOLEAN DEFAULT TRUE
-);
-
--- Index for fast lookup
-CREATE INDEX idx_passkey_user ON shout_passkey_credentials(user_address);
-CREATE INDEX idx_passkey_credential_hash ON shout_passkey_credentials(credential_id_hash);
-```
-
-### Client-Side Storage
-
-For instant access during transactions:
-
-```typescript
-interface StoredCredential {
-    credentialId: string;
-    publicKey: {
-        x: `0x${string}`;
-        y: `0x${string}`;
-    };
-    deviceName?: string;
-    createdAt: string;
-}
-
-// Store in localStorage (encrypted in production)
-const STORAGE_KEY = 'spritz_passkey_credential';
-
-export function storeCredential(credential: StoredCredential): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(credential));
-}
-
-export function getStoredCredential(): StoredCredential | null {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : null;
-}
-```
-
----
-
-## Error Handling
-
-### WebAuthn Error Types
-
-```typescript
-/**
- * Common WebAuthn errors and their causes
- */
-export enum WebAuthnErrorType {
-    // User cancelled the operation
-    NotAllowedError = 'NotAllowedError',
-    
-    // Credential not found or rpId mismatch
-    InvalidStateError = 'InvalidStateError',
-    
-    // Security policy blocked the operation
-    SecurityError = 'SecurityError',
-    
-    // Authenticator doesn't support required features
-    NotSupportedError = 'NotSupportedError',
-    
-    // Operation timed out
-    TimeoutError = 'AbortError',
-}
-
-export function handleWebAuthnError(error: unknown): string {
-    if (error instanceof DOMException) {
-        switch (error.name) {
-            case 'NotAllowedError':
-                return 'Authentication was cancelled. Please try again.';
-            case 'InvalidStateError':
-                return 'Passkey not found. You may need to register a new one.';
-            case 'SecurityError':
-                return 'Security policy prevented authentication. Check your browser settings.';
-            case 'NotSupportedError':
-                return 'This device does not support the required authentication method.';
-            case 'AbortError':
-                return 'Authentication timed out. Please try again.';
-            default:
-                return `Authentication error: ${error.message}`;
-        }
-    }
-    
-    return 'An unexpected error occurred during authentication.';
-}
-```
-
-### Recovery from Errors
-
-```typescript
-/**
- * Retry logic for transient WebAuthn failures
- */
-export async function signWithRetry(
-    safeTxHash: `0x${string}`,
-    credential: StoredCredential,
-    maxAttempts = 3
-): Promise<`0x${string}`> {
-    let lastError: unknown;
-    
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        try {
-            return await signSafeTransactionWithPasskey(safeTxHash, credential);
-        } catch (error) {
-            lastError = error;
-            
-            // Don't retry user cancellation
-            if (error instanceof DOMException && error.name === 'NotAllowedError') {
-                throw error;
-            }
-            
-            // Wait before retry (exponential backoff)
-            if (attempt < maxAttempts) {
-                await new Promise(r => setTimeout(r, 1000 * attempt));
-            }
-        }
-    }
-    
-    throw lastError;
+    return encodeWebAuthnSignatureForSafe(
+        webAuthnSig.authenticatorData,
+        webAuthnSig.clientDataJSON,
+        r,
+        s
+    );
 }
 ```
 
@@ -836,44 +537,69 @@ export async function signWithRetry(
 
 ## Security Considerations
 
-### Phishing Resistance
+### Phishing Protection
 
-WebAuthn's rpId binding provides strong phishing protection:
-
-| Attack Vector | Protection |
-|--------------|------------|
-| **Fake domain** | rpId mismatch - credential won't work |
-| **Subdomain takeover** | Credential still bound to root rpId |
-| **MitM proxy** | TLS required; challenge bound to origin |
-
-### Credential Backup
-
-For account recovery, Spritz supports:
-
-1. **Recovery signer** - Add an EOA as backup owner on the Safe
-2. **Multi-device registration** - Register passkeys on multiple devices
-3. **Cloud sync** - Platform passkeys (iCloud Keychain, Google Password Manager)
-
-### Sign Count Verification
-
-Detect cloned credentials by tracking the signature counter:
+WebAuthn binds credentials to the **origin** (website) where they were created:
 
 ```typescript
-export async function verifySignCount(
-    credentialId: string,
-    newSignCount: number
-): Promise<boolean> {
-    const stored = await getStoredSignCount(credentialId);
-    
-    // Sign count should always increase
-    if (newSignCount <= stored) {
-        // Possible credential cloning detected
-        console.warn('Sign count did not increase - possible credential clone');
-        return false;
-    }
-    
-    await updateStoredSignCount(credentialId, newSignCount);
-    return true;
+// Credential created at spritz.chat can only be used on:
+// ✅ app.spritz.chat
+// ✅ beta.spritz.chat
+// ✅ spritz.chat
+
+// Cannot be used on:
+// ❌ spritz.io
+// ❌ evil-spritz.com
+// ❌ spritz.chat.phishing.com
+```
+
+### Replay Protection
+
+| Protection | Mechanism |
+|------------|-----------|
+| **Challenge** | Server-generated random nonce, single-use |
+| **Counter** | Authenticator increments on each use |
+| **Origin** | Bound to specific domain |
+
+### Key Storage Security
+
+| Platform | Storage | Extraction |
+|----------|---------|------------|
+| **iOS** | Secure Enclave | Impossible |
+| **Android** | TEE/StrongBox | Impossible |
+| **macOS** | Secure Enclave | Impossible |
+| **Windows** | TPM 2.0 | Impossible |
+| **Security Keys** | Secure Element | Impossible |
+
+The private key **never leaves the secure hardware** - not even the operating system can access it.
+
+---
+
+## Troubleshooting
+
+### Common Errors
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `NotAllowedError` | User cancelled or timeout | Re-prompt user |
+| `InvalidStateError` | Credential already exists | Use existing credential |
+| `NotSupportedError` | P-256 not available | Check authenticator capabilities |
+| `SecurityError` | Wrong rpId or origin | Verify domain configuration |
+
+### Debugging Tips
+
+```typescript
+// Log authenticator data for debugging
+function debugAuthenticatorData(authData: Uint8Array) {
+    console.log('rpIdHash:', authData.slice(0, 32));
+    console.log('flags:', authData[32].toString(2).padStart(8, '0'));
+    console.log('  UP (user present):', !!(authData[32] & 0x01));
+    console.log('  UV (user verified):', !!(authData[32] & 0x04));
+    console.log('signCount:', new DataView(
+        authData.buffer, 
+        authData.byteOffset + 33, 
+        4
+    ).getUint32(0));
 }
 ```
 
@@ -881,6 +607,8 @@ export async function verifySignCount(
 
 ## Related Documentation
 
-- [Spritz Wallets](/docs/developers/smart-wallets) - Safe Smart Account implementation
-- [Social Vaults](/docs/developers/vaults) - Multi-sig vaults with passkey support
-- [Authentication](/docs/developers/authentication) - Complete auth flow documentation
+- [Smart Wallets](/docs/developers/smart-wallets) - Safe account integration
+- [Authentication](/docs/developers/authentication) - Passkey registration flow
+- [Vaults](/docs/developers/vaults) - Multi-sig with passkey signatures
+- [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271) - Contract signature verification
+- [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md) - P-256 precompile
