@@ -62,6 +62,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'developers/authentication',
             'developers/smart-wallets',
+            'developers/webauthn-signatures',
             'developers/vaults',
             'developers/messaging',
             'developers/video-calls',

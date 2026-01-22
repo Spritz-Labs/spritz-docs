@@ -1101,19 +1101,380 @@ This function:
 2. Encodes the `execTransaction` call for the vault Safe
 3. Sends it through the passkey Smart Wallet via ERC-4337 with sponsored gas
 
-### Signature Format
+### Multi-Sig Signature Mechanics
 
-Safe requires signatures sorted by signer address:
+Safe multi-sig requires careful handling of signatures from multiple signers. Each signer's Smart Wallet signs the Safe transaction hash, and all signatures are combined for execution.
+
+#### Safe Transaction Hash Computation
 
 ```typescript
-// Signatures are sorted and concatenated
-const sortedSigs = signatures.sort((a, b) => 
-    a.signerAddress.toLowerCase().localeCompare(b.signerAddress.toLowerCase())
+import { keccak256, encodeAbiParameters, parseAbiParameters, Address, Hex } from 'viem';
+
+// Safe domain separator (unique per Safe deployment)
+const DOMAIN_SEPARATOR_TYPEHASH = keccak256(
+    toBytes("EIP712Domain(uint256 chainId,address verifyingContract)")
 );
 
-// Each signature is 65 bytes (r: 32, s: 32, v: 1)
-const concatenated = "0x" + sortedSigs.map(s => s.signature.slice(2)).join("");
+// Safe transaction type hash
+const SAFE_TX_TYPEHASH = keccak256(
+    toBytes(
+        "SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas," +
+        "uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)"
+    )
+);
+
+/**
+ * Compute the Safe transaction hash that signers must sign
+ */
+export function computeSafeTxHash(
+    safeAddress: Address,
+    chainId: number,
+    tx: {
+        to: Address;
+        value: bigint;
+        data: Hex;
+        operation: 0 | 1;  // 0 = Call, 1 = DelegateCall
+        safeTxGas: bigint;
+        baseGas: bigint;
+        gasPrice: bigint;
+        gasToken: Address;
+        refundReceiver: Address;
+        nonce: bigint;
+    }
+): Hex {
+    // 1. Compute domain separator
+    const domainSeparator = keccak256(
+        encodeAbiParameters(
+            parseAbiParameters('bytes32, uint256, address'),
+            [DOMAIN_SEPARATOR_TYPEHASH, BigInt(chainId), safeAddress]
+        )
+    );
+
+    // 2. Hash transaction data
+    const safeTxHash = keccak256(
+        encodeAbiParameters(
+            parseAbiParameters(
+                'bytes32, address, uint256, bytes32, uint8, uint256, uint256, uint256, address, address, uint256'
+            ),
+            [
+                SAFE_TX_TYPEHASH,
+                tx.to,
+                tx.value,
+                keccak256(tx.data),  // Hash of calldata
+                tx.operation,
+                tx.safeTxGas,
+                tx.baseGas,
+                tx.gasPrice,
+                tx.gasToken,
+                tx.refundReceiver,
+                tx.nonce,
+            ]
+        )
+    );
+
+    // 3. Compute EIP-712 hash
+    return keccak256(
+        concat([
+            toBytes('\x19\x01'),
+            hexToBytes(domainSeparator),
+            hexToBytes(safeTxHash),
+        ])
+    );
+}
 ```
+
+#### Signature Collection Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     Multi-Sig Signature Collection                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Vault: "Trip Fund" (2-of-3 threshold)                                   │
+│  Members: Alice, Bob, Charlie                                            │
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  1. ALICE PROPOSES TRANSACTION                                      │ │
+│  │                                                                      │ │
+│  │  POST /api/vault/{id}/transactions                                  │ │
+│  │  { to: "0x...", amount: "1.5", tokenSymbol: "ETH" }                │ │
+│  │                                                                      │ │
+│  │  Server:                                                            │ │
+│  │  - Computes safeTxHash                                              │ │
+│  │  - Alice signs with her Smart Wallet                                │ │
+│  │  - Stores proposal + Alice's signature (1/2)                        │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                          │                                               │
+│                          ▼                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  2. BOB SIGNS (Notification sent)                                   │ │
+│  │                                                                      │ │
+│  │  PATCH /api/vault/{id}/transactions                                 │ │
+│  │  { transactionId: "...", action: "sign" }                          │ │
+│  │                                                                      │ │
+│  │  Server:                                                            │ │
+│  │  - Retrieves safeTxHash                                             │ │
+│  │  - Bob signs with his Smart Wallet                                  │ │
+│  │  - Stores Bob's signature (2/2 ✓ threshold met!)                   │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                          │                                               │
+│                          ▼                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  3. EXECUTE (Any signer can execute)                                │ │
+│  │                                                                      │ │
+│  │  PATCH /api/vault/{id}/transactions                                 │ │
+│  │  { transactionId: "...", action: "execute" }                       │ │
+│  │                                                                      │ │
+│  │  Server:                                                            │ │
+│  │  - Retrieves all signatures                                         │ │
+│  │  - Sorts by signer address (CRITICAL!)                              │ │
+│  │  - Concatenates signatures                                          │ │
+│  │  - Calls Safe.execTransaction()                                     │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Signature Format (EOA vs Smart Wallet vs Passkey)
+
+Safe supports multiple signature types. Spritz vaults use Smart Wallet signatures:
+
+| Signature Type | Format | Length | Signer Type |
+|----------------|--------|--------|-------------|
+| **EOA (ECDSA)** | `r (32) + s (32) + v (1)` | 65 bytes | External wallet |
+| **Contract Signature** | `r (32) + s (32) + v=0 + dynamic` | 65+ bytes | Smart contract |
+| **eth_sign (legacy)** | `r (32) + s (32) + v+4` | 65 bytes | Legacy wallets |
+| **EIP-1271** | Verified via `isValidSignature()` | Variable | Smart Wallet |
+
+```typescript
+// Signature type indicators (v value)
+const SIGNATURE_TYPES = {
+    CONTRACT_SIGNATURE: 0,      // EIP-1271 contract signature
+    APPROVED_HASH: 1,           // Pre-approved hash
+    ETH_SIGN_PREFIX: 27,        // Standard ECDSA (v = 27 or 28)
+    ETH_SIGN_LEGACY: 31,        // eth_sign with v+4 adjustment
+};
+```
+
+#### Signature Sorting (Critical!)
+
+**Safe requires signatures sorted by signer address in ascending order.** Incorrect ordering causes transaction failure:
+
+```typescript
+/**
+ * Sort and concatenate signatures for Safe execution
+ */
+export function prepareSafeSignatures(
+    signatures: Array<{
+        signerAddress: Address;
+        signature: Hex;
+    }>
+): Hex {
+    // CRITICAL: Sort by signer address (case-insensitive, ascending)
+    const sorted = [...signatures].sort((a, b) =>
+        a.signerAddress.toLowerCase().localeCompare(
+            b.signerAddress.toLowerCase()
+        )
+    );
+
+    // Concatenate signatures (remove 0x prefix except first)
+    const concatenated = sorted.reduce((acc, sig, index) => {
+        const sigWithoutPrefix = sig.signature.slice(2);
+        return acc + sigWithoutPrefix;
+    }, '0x');
+
+    return concatenated as Hex;
+}
+
+// Example:
+// Alice: 0xABC... signature: 0x111...
+// Bob:   0xDEF... signature: 0x222...
+// Charlie: 0x123... signature: 0x333...
+//
+// Sorted order: Charlie (0x123) < Alice (0xABC) < Bob (0xDEF)
+// Result: 0x333...111...222...
+```
+
+#### Smart Wallet Signature Generation
+
+When a vault member signs a proposal, their Smart Wallet signs the Safe transaction hash:
+
+```typescript
+import { createSafeAccountClient } from '@/lib/safeWallet';
+
+/**
+ * Sign a vault transaction proposal using the member's Smart Wallet
+ */
+export async function signVaultTransaction(
+    userAddress: Address,           // Member's EOA address
+    vaultAddress: Address,          // Vault (Safe) address
+    safeTxHash: Hex,               // Hash to sign
+    chainId: number,
+    signMessage: (msg: string) => Promise<Hex>
+): Promise<{
+    signature: Hex;
+    signerAddress: Address;        // Member's Smart Wallet address
+}> {
+    // Get the member's Smart Wallet address (this is what's registered as vault owner)
+    const smartWalletAddress = await getSafeAddress(userAddress, chainId);
+
+    // Sign the Safe transaction hash with the user's EOA
+    // The EOA is the owner of the Smart Wallet
+    const signature = await signMessage(safeTxHash);
+
+    // Adjust signature for Safe's eth_sign verification
+    // Safe expects v to be 27/28 + 4 for eth_sign signatures
+    let v = parseInt(signature.slice(-2), 16);
+    if (v < 27) v += 27;
+    v += 4;  // Safe's eth_sign adjustment
+
+    const adjustedSignature = (signature.slice(0, -2) + v.toString(16).padStart(2, '0')) as Hex;
+
+    return {
+        signature: adjustedSignature,
+        signerAddress: smartWalletAddress,
+    };
+}
+```
+
+#### Passkey Signature for Vault Transactions
+
+Passkey users can also sign vault transactions:
+
+```typescript
+import { createPasskeySafeAccountClient, type PasskeyCredential } from '@/lib/safeWallet';
+
+/**
+ * Sign a vault transaction using a passkey-based Smart Wallet
+ */
+export async function signVaultTransactionWithPasskey(
+    safeTxHash: Hex,
+    chainId: number,
+    passkeyCredential: PasskeyCredential
+): Promise<{
+    signature: Hex;
+    signerAddress: Address;
+}> {
+    // Get the passkey user's Smart Wallet address
+    const smartWalletAddress = await getPasskeySafeAddress(
+        passkeyCredential.publicKey.x,
+        passkeyCredential.publicKey.y,
+        chainId
+    );
+
+    // Convert safeTxHash to challenge bytes
+    const challenge = new Uint8Array(Buffer.from(safeTxHash.slice(2), 'hex'));
+
+    // Sign with passkey (triggers biometric)
+    const webAuthnSignature = await signWithPasskey(
+        passkeyCredential.credentialId,
+        challenge
+    );
+
+    // Encode for Safe verification
+    const encodedSignature = encodeWebAuthnSignature(webAuthnSignature);
+
+    // For contract signatures (EIP-1271), we need to format differently
+    // v = 0 indicates contract signature, followed by the actual signature data
+    const contractSignature = encodeContractSignature(
+        smartWalletAddress,
+        encodedSignature
+    );
+
+    return {
+        signature: contractSignature,
+        signerAddress: smartWalletAddress,
+    };
+}
+
+/**
+ * Encode a contract signature for Safe
+ * Format: r (32 bytes) + s (32 bytes) + v (1 byte, = 0) + data offset + data
+ */
+function encodeContractSignature(
+    contractAddress: Address,
+    signatureData: Hex
+): Hex {
+    // Contract signatures use a special encoding:
+    // - r: padded contract address (32 bytes)
+    // - s: data position (32 bytes) - points to after all static signatures
+    // - v: 0 (indicates contract signature)
+    // - Then the actual signature data follows at the specified position
+
+    const r = contractAddress.slice(2).padStart(64, '0');
+    const v = '00';  // Contract signature indicator
+
+    // For simplicity in single-sig scenarios, we can use a simplified encoding
+    // In multi-sig with mixed signature types, positions must be calculated
+    return `0x${r}${''.padStart(64, '0')}${v}${signatureData.slice(2)}` as Hex;
+}
+```
+
+---
+
+### EIP-1271 Contract Signature Verification
+
+Vault members' signatures are Smart Wallet signatures, which use [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271) for verification:
+
+```solidity
+// EIP-1271 interface (implemented by Safe)
+interface IERC1271 {
+    function isValidSignature(
+        bytes32 _hash,
+        bytes memory _signature
+    ) external view returns (bytes4 magicValue);
+}
+
+// Magic return value for valid signatures
+bytes4 constant EIP1271_MAGIC_VALUE = 0x1626ba7e;
+```
+
+#### Verification Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    EIP-1271 Signature Verification                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Vault (Safe) receives execTransaction with signatures                   │
+│                          │                                               │
+│                          ▼                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  For each signature:                                                │ │
+│  │                                                                      │ │
+│  │  if (v == 0) {                                                      │ │
+│  │      // Contract signature (EIP-1271)                               │ │
+│  │      address signer = address(bytes20(r));                          │ │
+│  │                                                                      │ │
+│  │      // Call signer's isValidSignature()                            │ │
+│  │      ┌────────────────────────────────────────────────┐            │ │
+│  │      │  Member's Smart Wallet                          │            │ │
+│  │      │                                                  │            │ │
+│  │      │  isValidSignature(safeTxHash, signatureData)    │            │ │
+│  │      │         │                                        │            │ │
+│  │      │         ▼                                        │            │ │
+│  │      │  Verifies the EOA/Passkey signature             │            │ │
+│  │      │  that controls this Smart Wallet                │            │ │
+│  │      │         │                                        │            │ │
+│  │      │         ▼                                        │            │ │
+│  │      │  Returns 0x1626ba7e (valid) or reverts         │            │ │
+│  │      └────────────────────────────────────────────────┘            │ │
+│  │                                                                      │ │
+│  │  } else if (v > 30) {                                               │ │
+│  │      // eth_sign signature (v = 27/28 + 4)                          │ │
+│  │      signer = ecrecover(hash, v-4, r, s)                            │ │
+│  │  } else {                                                           │ │
+│  │      // Standard ECDSA (v = 27 or 28)                               │ │
+│  │      signer = ecrecover(hash, v, r, s)                              │ │
+│  │  }                                                                  │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+│  All signatures valid + threshold met = Execute transaction             │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ### Execution States
 
@@ -1125,6 +1486,504 @@ const concatenated = "0x" + sortedSigs.map(s => s.signature.slice(2)).join("");
 | `executing` | Transaction being sent |
 | `success` | Transaction confirmed |
 | `error` | Something went wrong |
+
+---
+
+## Multi-Sig Signature Mechanics (Deep Dive)
+
+### Safe Transaction Hash Calculation
+
+Every vault transaction has a unique hash that all signers must sign:
+
+```typescript
+import { keccak256, encodeAbiParameters, encodePacked } from 'viem';
+
+/**
+ * Safe Transaction TypeHash (EIP-712)
+ * keccak256("SafeTx(address to,uint256 value,bytes data,uint8 operation,
+ *            uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,
+ *            address gasToken,address refundReceiver,uint256 nonce)")
+ */
+const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
+
+interface VaultTransactionData {
+    to: Address;
+    value: bigint;
+    data: `0x${string}`;
+    operation: 0 | 1;        // 0 = Call, 1 = DelegateCall
+    safeTxGas: bigint;       // Gas for Safe internal tx
+    baseGas: bigint;         // Gas for overhead
+    gasPrice: bigint;        // Gas price for refund
+    gasToken: Address;       // Token for gas payment (0x0 = ETH)
+    refundReceiver: Address; // Refund recipient (0x0 = msg.sender)
+    nonce: bigint;           // Safe nonce
+}
+
+/**
+ * Calculate the Safe transaction hash
+ * This is what signers actually sign
+ */
+export function calculateVaultTxHash(
+    vaultAddress: Address,
+    chainId: number,
+    tx: VaultTransactionData
+): `0x${string}` {
+    // 1. Hash the transaction data structure
+    const txDataHash = keccak256(
+        encodeAbiParameters(
+            [
+                { type: 'bytes32' },  // SAFE_TX_TYPEHASH
+                { type: 'address' },  // to
+                { type: 'uint256' },  // value
+                { type: 'bytes32' },  // keccak256(data)
+                { type: 'uint8' },    // operation
+                { type: 'uint256' },  // safeTxGas
+                { type: 'uint256' },  // baseGas
+                { type: 'uint256' },  // gasPrice
+                { type: 'address' },  // gasToken
+                { type: 'address' },  // refundReceiver
+                { type: 'uint256' },  // nonce
+            ],
+            [
+                SAFE_TX_TYPEHASH,
+                tx.to,
+                tx.value,
+                keccak256(tx.data),
+                tx.operation,
+                tx.safeTxGas,
+                tx.baseGas,
+                tx.gasPrice,
+                tx.gasToken,
+                tx.refundReceiver,
+                tx.nonce,
+            ]
+        )
+    );
+    
+    // 2. Calculate domain separator
+    const DOMAIN_SEPARATOR_TYPEHASH = keccak256(
+        encodePacked(['string'], ['EIP712Domain(uint256 chainId,address verifyingContract)'])
+    );
+    
+    const domainSeparator = keccak256(
+        encodeAbiParameters(
+            [{ type: 'bytes32' }, { type: 'uint256' }, { type: 'address' }],
+            [DOMAIN_SEPARATOR_TYPEHASH, BigInt(chainId), vaultAddress]
+        )
+    );
+    
+    // 3. Final hash: "\x19\x01" || domainSeparator || txDataHash
+    return keccak256(
+        encodePacked(
+            ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
+            ['0x19', '0x01', domainSeparator, txDataHash]
+        )
+    );
+}
+```
+
+### Signature Types in Multi-Sig
+
+Safe supports different signature types from different owner types:
+
+```typescript
+/**
+ * Safe Signature Types
+ * 
+ * Type 0: Contract signature (EIP-1271)
+ *   - Used when owner is a smart contract
+ *   - Calls isValidSignature(hash, signature) on the contract
+ * 
+ * Type 1: Approved hash
+ *   - Pre-approved via approveHash() on-chain
+ *   - Signature is just padded signer address
+ * 
+ * Type 2: eth_sign
+ *   - Uses personal_sign with "\x19Ethereum Signed Message:" prefix
+ *   - v value adjusted: v + 4 (31 or 32 instead of 27 or 28)
+ * 
+ * Type 3: EIP-712
+ *   - Typed data signature (no message prefix)
+ *   - v value: 27 or 28
+ */
+
+type SignatureType = 0 | 1 | 2 | 3;
+
+interface VaultSignature {
+    signerAddress: Address;    // Signer's address
+    signature: `0x${string}`;  // Raw signature (65 bytes for EOA)
+    signatureType: SignatureType;
+}
+```
+
+### Encoding Mixed Signature Types
+
+When vault members use different wallet types (EOA vs Smart Wallet), signatures must be encoded differently:
+
+```typescript
+/**
+ * Encode signatures for Safe execution
+ * Handles both EOA and Smart Wallet (EIP-1271) signatures
+ */
+export function encodeVaultSignatures(
+    signatures: VaultSignature[]
+): `0x${string}` {
+    // Sort by signer address (Safe requirement)
+    const sorted = [...signatures].sort((a, b) =>
+        a.signerAddress.toLowerCase().localeCompare(b.signerAddress.toLowerCase())
+    );
+    
+    // For contract signatures (type 0), we need dynamic data
+    // Structure: [static data for all sigs] [dynamic data for contract sigs]
+    
+    let staticPart = '';
+    let dynamicPart = '';
+    let dynamicOffset = sorted.length * 65; // Start of dynamic data
+    
+    for (const sig of sorted) {
+        if (sig.signatureType === 0) {
+            // Contract signature (EIP-1271)
+            // Static: address (32 bytes) || offset (32 bytes) || type (1 byte)
+            const addressPadded = sig.signerAddress.slice(2).padStart(64, '0');
+            const offsetHex = dynamicOffset.toString(16).padStart(64, '0');
+            staticPart += addressPadded + offsetHex + '00';
+            
+            // Dynamic: length (32 bytes) || signature data
+            const sigData = sig.signature.slice(2);
+            const sigLength = (sigData.length / 2).toString(16).padStart(64, '0');
+            dynamicPart += sigLength + sigData;
+            
+            dynamicOffset += 32 + sigData.length / 2;
+        } else if (sig.signatureType === 2) {
+            // eth_sign (type 2)
+            // Adjust v: add 4 to indicate eth_sign
+            const r = sig.signature.slice(0, 66);
+            const s = sig.signature.slice(66, 130);
+            let v = parseInt(sig.signature.slice(130, 132), 16);
+            if (v < 27) v += 27;
+            v += 4; // eth_sign adjustment
+            staticPart += sig.signature.slice(2, 130) + v.toString(16).padStart(2, '0');
+        } else {
+            // EIP-712 or other (65 bytes as-is)
+            staticPart += sig.signature.slice(2);
+        }
+    }
+    
+    return `0x${staticPart}${dynamicPart}`;
+}
+```
+
+### Smart Wallet Owner Signatures (EIP-1271)
+
+When a vault member is a **Spritz Wallet** (not just an EOA), they sign using their Safe which requires EIP-1271 verification:
+
+```typescript
+/**
+ * Sign vault transaction from a Spritz Wallet (Safe)
+ * The outer vault will verify this signature via EIP-1271
+ */
+export async function signVaultTxFromSmartWallet(
+    safeTxHash: `0x${string}`,
+    ownerSmartWallet: {
+        address: Address;
+        client: SmartAccountClient;
+    }
+): Promise<VaultSignature> {
+    // The Smart Wallet signs the vault's safeTxHash
+    // When the vault calls isValidSignature on the owner's Safe,
+    // it will verify this signature against the owner's Safe owners
+    
+    const signature = await ownerSmartWallet.client.signMessage({
+        message: { raw: safeTxHash },
+    });
+    
+    return {
+        signerAddress: ownerSmartWallet.address,
+        signature,
+        signatureType: 0, // Contract signature (EIP-1271)
+    };
+}
+```
+
+### Complete Signing Flow Example
+
+```typescript
+import { createPublicClient, http } from 'viem';
+import { base } from 'viem/chains';
+
+/**
+ * Complete flow: Create, sign, and execute a vault transaction
+ */
+export async function executeVaultTransaction({
+    vaultAddress,
+    chainId,
+    to,
+    value,
+    members, // Array of member addresses with their signing methods
+}: {
+    vaultAddress: Address;
+    chainId: number;
+    to: Address;
+    value: bigint;
+    members: Array<{
+        address: Address;
+        isSmartWallet: boolean;
+        signFn: (hash: `0x${string}`) => Promise<`0x${string}`>;
+    }>;
+}): Promise<`0x${string}`> {
+    const publicClient = createPublicClient({
+        chain: base,
+        transport: http(),
+    });
+    
+    // 1. Get vault nonce
+    const nonce = await publicClient.readContract({
+        address: vaultAddress,
+        abi: [{ name: 'nonce', type: 'function', inputs: [], outputs: [{ type: 'uint256' }] }],
+        functionName: 'nonce',
+    });
+    
+    // 2. Build transaction data
+    const txData: VaultTransactionData = {
+        to,
+        value,
+        data: '0x',
+        operation: 0,
+        safeTxGas: BigInt(0),
+        baseGas: BigInt(0),
+        gasPrice: BigInt(0),
+        gasToken: '0x0000000000000000000000000000000000000000',
+        refundReceiver: '0x0000000000000000000000000000000000000000',
+        nonce,
+    };
+    
+    // 3. Calculate safeTxHash
+    const safeTxHash = calculateVaultTxHash(vaultAddress, chainId, txData);
+    console.log('Safe TX Hash:', safeTxHash);
+    
+    // 4. Collect signatures from members
+    const signatures: VaultSignature[] = [];
+    
+    for (const member of members) {
+        const rawSig = await member.signFn(safeTxHash);
+        
+        signatures.push({
+            signerAddress: member.address,
+            signature: rawSig,
+            signatureType: member.isSmartWallet ? 0 : 2,
+        });
+    }
+    
+    // 5. Encode signatures
+    const encodedSignatures = encodeVaultSignatures(signatures);
+    
+    // 6. Execute transaction
+    const txHash = await publicClient.writeContract({
+        address: vaultAddress,
+        abi: SAFE_EXEC_TRANSACTION_ABI,
+        functionName: 'execTransaction',
+        args: [
+            txData.to,
+            txData.value,
+            txData.data,
+            txData.operation,
+            txData.safeTxGas,
+            txData.baseGas,
+            txData.gasPrice,
+            txData.gasToken,
+            txData.refundReceiver,
+            encodedSignatures,
+        ],
+    });
+    
+    return txHash;
+}
+
+const SAFE_EXEC_TRANSACTION_ABI = [{
+    name: 'execTransaction',
+    type: 'function',
+    inputs: [
+        { name: 'to', type: 'address' },
+        { name: 'value', type: 'uint256' },
+        { name: 'data', type: 'bytes' },
+        { name: 'operation', type: 'uint8' },
+        { name: 'safeTxGas', type: 'uint256' },
+        { name: 'baseGas', type: 'uint256' },
+        { name: 'gasPrice', type: 'uint256' },
+        { name: 'gasToken', type: 'address' },
+        { name: 'refundReceiver', type: 'address' },
+        { name: 'signatures', type: 'bytes' },
+    ],
+    outputs: [{ type: 'bool' }],
+}] as const;
+```
+
+### Passkey Member Signatures
+
+When a vault member uses a **passkey-based Spritz Wallet**, the signature flow involves WebAuthn:
+
+```typescript
+/**
+ * Sign vault transaction using a passkey
+ * 
+ * Flow:
+ * 1. User's passkey signs the safeTxHash via WebAuthn
+ * 2. The signature is wrapped for Safe's P256Verifier
+ * 3. The vault calls isValidSignature on the member's Spritz Wallet
+ * 4. The Spritz Wallet verifies the P-256 signature
+ */
+export async function signVaultTxWithPasskey(
+    safeTxHash: `0x${string}`,
+    credential: PasskeyCredential
+): Promise<VaultSignature> {
+    // Convert safeTxHash to WebAuthn challenge
+    const challenge = hexToArrayBuffer(safeTxHash);
+    
+    // Request WebAuthn assertion
+    const assertion = await navigator.credentials.get({
+        publicKey: {
+            challenge,
+            rpId: getRpId(),
+            timeout: 120000,
+            userVerification: 'preferred',
+            allowCredentials: [{
+                id: base64urlToArrayBuffer(credential.credentialId),
+                type: 'public-key',
+            }],
+        },
+    }) as PublicKeyCredential;
+    
+    const response = assertion.response as AuthenticatorAssertionResponse;
+    
+    // Parse DER signature and normalize to low-S
+    const derSignature = new Uint8Array(response.signature);
+    const { r, s } = parseDERSignature(derSignature);
+    const normalized = normalizeSignature({ r, s });
+    
+    // Encode for Safe's WebAuthn module
+    const encodedSig = encodeWebAuthnSignature(
+        new Uint8Array(response.authenticatorData),
+        new TextDecoder().decode(response.clientDataJSON),
+        normalized
+    );
+    
+    // Get the Smart Wallet address for this passkey
+    const smartWalletAddress = await getPasskeySafeAddress(
+        credential.publicKey.x,
+        credential.publicKey.y,
+        8453 // chainId
+    );
+    
+    return {
+        signerAddress: smartWalletAddress,
+        signature: encodedSig,
+        signatureType: 0, // EIP-1271 (verified by Smart Wallet)
+    };
+}
+```
+
+### Signature Verification Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    Vault Multi-Sig Verification Flow                     │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Transaction Submitted to Vault (Safe)                                   │
+│         │                                                                │
+│         ▼                                                                │
+│  ┌─────────────────────────────────────────┐                            │
+│  │     1. Parse Packed Signatures          │                            │
+│  │     (sorted by signer address)          │                            │
+│  └─────────────────────────────────────────┘                            │
+│         │                                                                │
+│         ▼                                                                │
+│  ┌─────────────────────────────────────────┐                            │
+│  │     2. For Each Signature:              │                            │
+│  │                                          │                            │
+│  │     ┌─ Type 0 (Contract) ──────────────┐│                            │
+│  │     │  Call isValidSignature() on      ││                            │
+│  │     │  signer's Smart Wallet           ││                            │
+│  │     │       │                          ││                            │
+│  │     │       ▼                          ││                            │
+│  │     │  ┌──────────────────────────┐   ││                            │
+│  │     │  │ Smart Wallet verifies    │   ││                            │
+│  │     │  │ via WebAuthn or EOA      │   ││                            │
+│  │     │  └──────────────────────────┘   ││                            │
+│  │     └──────────────────────────────────┘│                            │
+│  │                                          │                            │
+│  │     ┌─ Type 2 (eth_sign) ──────────────┐│                            │
+│  │     │  ecrecover with adjusted v       ││                            │
+│  │     │  Verify signer == claimed owner  ││                            │
+│  │     └──────────────────────────────────┘│                            │
+│  │                                          │                            │
+│  └─────────────────────────────────────────┘                            │
+│         │                                                                │
+│         ▼                                                                │
+│  ┌─────────────────────────────────────────┐                            │
+│  │     3. Check Threshold Met              │                            │
+│  │     (valid signatures >= threshold)     │                            │
+│  └─────────────────────────────────────────┘                            │
+│         │                                                                │
+│         ▼                                                                │
+│  ┌─────────────────────────────────────────┐                            │
+│  │     4. Execute Transaction              │                            │
+│  │     call(to, value, data)               │                            │
+│  └─────────────────────────────────────────┘                            │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Nonce Management
+
+Each vault transaction must use a unique nonce:
+
+```typescript
+/**
+ * Get the next available nonce for a vault transaction
+ */
+export async function getVaultNonce(
+    vaultAddress: Address,
+    chainId: number
+): Promise<bigint> {
+    const publicClient = getPublicClient(chainId);
+    
+    // Check if vault is deployed
+    const code = await publicClient.getCode({ address: vaultAddress });
+    if (!code || code === '0x') {
+        return BigInt(0); // Counterfactual vault starts at 0
+    }
+    
+    return publicClient.readContract({
+        address: vaultAddress,
+        abi: [{ 
+            name: 'nonce', 
+            type: 'function', 
+            inputs: [], 
+            outputs: [{ type: 'uint256' }] 
+        }],
+        functionName: 'nonce',
+    });
+}
+
+/**
+ * Atomically increment nonce to prevent race conditions
+ * Use database-level locking for pending transactions
+ */
+export async function reserveNonce(
+    vaultId: string,
+    chainId: number
+): Promise<bigint> {
+    const { data, error } = await supabase
+        .rpc('reserve_vault_nonce', { 
+            p_vault_id: vaultId,
+            p_chain_id: chainId 
+        });
+    
+    if (error) throw error;
+    return BigInt(data);
+}
+```
 
 ---
 

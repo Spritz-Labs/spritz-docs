@@ -316,6 +316,257 @@ const response = await fetch("/api/auth/webauthn/verify", {
 
 ---
 
+## WebAuthn P-256 Signature Deep Dive
+
+### Cryptographic Primitives
+
+WebAuthn uses **ECDSA with the P-256 curve** (also known as secp256r1 or prime256v1):
+
+| Parameter | Value |
+|-----------|-------|
+| **Curve** | P-256 (NIST) |
+| **Field Size** | 256 bits |
+| **Key Size** | 256 bits (private), 512 bits (public uncompressed) |
+| **Signature Size** | 512 bits (r: 256, s: 256) |
+| **Hash** | SHA-256 |
+| **Algorithm ID (COSE)** | -7 (ES256) |
+
+### WebAuthn Signature Data Structure
+
+When a passkey signs, it produces three pieces of data:
+
+```typescript
+interface WebAuthnAssertionResponse {
+    // 1. Authenticator Data (≥37 bytes)
+    // Contains RP ID hash, flags, and signature counter
+    authenticatorData: ArrayBuffer;
+
+    // 2. Client Data JSON
+    // Contains challenge, origin, and type
+    clientDataJSON: ArrayBuffer;
+
+    // 3. Signature (DER-encoded)
+    // ECDSA signature over SHA256(authenticatorData || SHA256(clientDataJSON))
+    signature: ArrayBuffer;
+}
+```
+
+#### Authenticator Data Format
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        Authenticator Data                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Bytes 0-31: rpIdHash (SHA-256 of rpId, e.g., "spritz.chat")            │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ a379a6f6ee...94a4c6d8e1 (32 bytes)                                 │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+│  Byte 32: Flags                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ Bit 0 (UP): User Present       = 1 (required)                      │ │
+│  │ Bit 2 (UV): User Verified      = 1 (biometric/PIN used)            │ │
+│  │ Bit 6 (AT): Attested Data      = 0 (not for assertions)            │ │
+│  │ Bit 7 (ED): Extension Data     = 0/1                               │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+│  Bytes 33-36: Signature Counter (32-bit big-endian)                      │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 00 00 00 05 = 5 (increments on each use, anti-replay)              │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+│  Bytes 37+: Extensions (optional)                                        │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Client Data JSON Format
+
+```json
+{
+    "type": "webauthn.get",
+    "challenge": "dGhpcyBpcyBhIGNoYWxsZW5nZQ",
+    "origin": "https://app.spritz.chat",
+    "crossOrigin": false
+}
+```
+
+The challenge is the **base64url-encoded** data that needs to be signed (e.g., UserOperation hash).
+
+### Signature Verification Process
+
+```typescript
+import { p256 } from '@noble/curves/p256';
+import { sha256 } from '@noble/hashes/sha256';
+
+/**
+ * Complete WebAuthn P-256 signature verification
+ */
+export function verifyWebAuthnSignature(
+    publicKey: { x: Hex; y: Hex },
+    authenticatorData: Uint8Array,
+    clientDataJSON: string,
+    signature: Uint8Array,
+    expectedChallenge: Uint8Array
+): boolean {
+    // 1. Parse and validate clientDataJSON
+    const clientData = JSON.parse(clientDataJSON);
+    
+    // Verify type
+    if (clientData.type !== 'webauthn.get') {
+        throw new Error('Invalid clientData type');
+    }
+    
+    // Verify origin
+    const allowedOrigins = [
+        'https://app.spritz.chat',
+        'https://spritz.chat',
+        'http://localhost:3000',
+    ];
+    if (!allowedOrigins.includes(clientData.origin)) {
+        throw new Error('Invalid origin');
+    }
+    
+    // Verify challenge matches
+    const receivedChallenge = base64urlDecode(clientData.challenge);
+    if (!arraysEqual(receivedChallenge, expectedChallenge)) {
+        throw new Error('Challenge mismatch');
+    }
+
+    // 2. Compute the signed message
+    // WebAuthn signs: SHA256(authenticatorData || SHA256(clientDataJSON))
+    const clientDataHash = sha256(new TextEncoder().encode(clientDataJSON));
+    const signedData = new Uint8Array([...authenticatorData, ...clientDataHash]);
+    const messageHash = sha256(signedData);
+
+    // 3. Parse DER-encoded signature
+    const { r, s } = parseDERSignature(signature);
+    
+    // 4. Verify with P-256
+    const publicKeyBytes = new Uint8Array(65);
+    publicKeyBytes[0] = 0x04; // Uncompressed point
+    publicKeyBytes.set(hexToBytes(publicKey.x), 1);
+    publicKeyBytes.set(hexToBytes(publicKey.y), 33);
+
+    return p256.verify(
+        new Uint8Array([...r, ...s]),
+        messageHash,
+        publicKeyBytes
+    );
+}
+```
+
+### DER Signature Parsing
+
+WebAuthn returns signatures in DER (Distinguished Encoding Rules) format:
+
+```
+DER Signature Structure:
+0x30 [total-length] 0x02 [r-length] [r-bytes] 0x02 [s-length] [s-bytes]
+
+Example:
+30 45                           // SEQUENCE, 69 bytes total
+   02 21                        // INTEGER, 33 bytes (r with leading 00)
+      00 8b4c2e3f...            // r value (33 bytes, leading 00 for positive)
+   02 20                        // INTEGER, 32 bytes
+      1a2b3c4d...               // s value (32 bytes)
+```
+
+```typescript
+/**
+ * Parse DER-encoded ECDSA signature to r and s components
+ */
+export function parseDERSignature(der: Uint8Array): {
+    r: Uint8Array;  // 32 bytes
+    s: Uint8Array;  // 32 bytes
+} {
+    let offset = 0;
+
+    // SEQUENCE tag (0x30)
+    if (der[offset++] !== 0x30) {
+        throw new Error('Expected SEQUENCE tag');
+    }
+
+    // Total length (may be 1 or 2 bytes)
+    let totalLength = der[offset++];
+    if (totalLength & 0x80) {
+        // Long form length
+        const numLengthBytes = totalLength & 0x7f;
+        totalLength = 0;
+        for (let i = 0; i < numLengthBytes; i++) {
+            totalLength = (totalLength << 8) | der[offset++];
+        }
+    }
+
+    // Parse r INTEGER
+    if (der[offset++] !== 0x02) {
+        throw new Error('Expected INTEGER tag for r');
+    }
+    let rLength = der[offset++];
+    let r = der.slice(offset, offset + rLength);
+    offset += rLength;
+
+    // Parse s INTEGER
+    if (der[offset++] !== 0x02) {
+        throw new Error('Expected INTEGER tag for s');
+    }
+    let sLength = der[offset++];
+    let s = der.slice(offset, offset + sLength);
+
+    // Normalize to 32 bytes each
+    // Remove leading zero (added for positive integers in DER)
+    if (r.length === 33 && r[0] === 0) r = r.slice(1);
+    if (s.length === 33 && s[0] === 0) s = s.slice(1);
+
+    // Pad to 32 bytes if needed
+    if (r.length < 32) {
+        const padded = new Uint8Array(32);
+        padded.set(r, 32 - r.length);
+        r = padded;
+    }
+    if (s.length < 32) {
+        const padded = new Uint8Array(32);
+        padded.set(s, 32 - s.length);
+        s = padded;
+    }
+
+    return { r, s };
+}
+```
+
+### On-Chain Verification with RIP-7212
+
+For on-chain verification, the P-256 signature is verified using either:
+
+1. **RIP-7212 Precompile** (gas-efficient, ~3,450 gas)
+2. **Solidity Implementation** (fallback, ~200,000 gas)
+
+```solidity
+// RIP-7212 P256 Precompile Interface
+interface IP256Verifier {
+    /// @notice Verifies a P-256 signature
+    /// @param messageHash The 32-byte message hash
+    /// @param r The r component of the signature (32 bytes)
+    /// @param s The s component of the signature (32 bytes)  
+    /// @param x The x coordinate of the public key (32 bytes)
+    /// @param y The y coordinate of the public key (32 bytes)
+    /// @return success 1 if valid, 0 if invalid
+    function verify(
+        bytes32 messageHash,
+        bytes32 r,
+        bytes32 s,
+        bytes32 x,
+        bytes32 y
+    ) external view returns (uint256 success);
+}
+
+// Precompile address (standardized across RIP-7212 chains)
+address constant P256_VERIFIER = 0x0000000000000000000000000000000000000100;
+```
+
+---
+
 ## Session Management
 
 ### JWT Structure
