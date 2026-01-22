@@ -72,8 +72,10 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
                         "https://github.com/Spritz-Labs/spritz-docs/tree/main/",
-                    showLastUpdateAuthor: true,
-                    showLastUpdateTime: true,
+                    // Note: showLastUpdateAuthor/Time disabled for Vercel compatibility
+                    // Vercel builds don't have full git history
+                    showLastUpdateAuthor: false,
+                    showLastUpdateTime: false,
         },
         blog: {
           showReadingTime: true,
