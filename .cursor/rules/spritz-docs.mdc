@@ -442,11 +442,362 @@ tags: [tag1, tag2]
 - First paragraph before `<!-- truncate -->` becomes the excerpt
 - Include `<!-- truncate -->` after 2-3 sentences
 
+---
+
+# Documentation Audit Standards
+
+When creating or reviewing documentation, systematically evaluate against these six audit areas.
+
+## 1. Content Accuracy & Completeness
+
+### Code Examples
+- ✅ All code examples MUST be syntactically correct
+- ✅ Follow current best practices (async/await, proper error handling)
+- ✅ Include all necessary imports and type annotations
+- ✅ Use realistic placeholder values (`0x1234...`, not `xxx`)
+- ❌ Never include untested or speculative code
+
+### Version & Dependency Information
+- Keep version numbers current (see "Version Numbers & Technical Specs" above)
+- Document compatibility requirements explicitly
+- Update dependencies when they change upstream
+
+### Feature Coverage Checklist
+Ask: "Is every feature documented?" For each feature, ensure:
+- [ ] What it does (overview)
+- [ ] How to use it (tutorial/guide)
+- [ ] Technical details (reference)
+- [ ] Configuration options with types and defaults
+- [ ] Error messages and their meanings
+- [ ] Troubleshooting for common issues
+
+### Configuration Documentation
+For every configuration option, document:
+| Field | Required |
+|-------|----------|
+| Name | ✅ |
+| Type | ✅ |
+| Default value | ✅ |
+| Description | ✅ |
+| Valid values/constraints | ✅ |
+| Example | When helpful |
+
+## 2. Technical Depth & Quality
+
+### Depth Requirements by Audience
+
+**For Users (guides/):**
+- Task-focused explanations
+- Step-by-step instructions
+- Visual aids (ASCII diagrams)
+- Expected outcomes clearly stated
+
+**For Developers (developers/, api/):**
+- Implementation details
+- Code examples with full context
+- Edge cases documented
+- Performance considerations
+- Security implications
+
+### Architecture Documentation
+When documenting systems, include:
+1. **System overview** - High-level architecture diagram
+2. **Data flow** - How data moves through the system
+3. **Component interactions** - How parts communicate
+4. **State management** - Where state lives and how it changes
+
+### API Reference Completeness
+Every API endpoint MUST document:
+| Element | Required |
+|---------|----------|
+| HTTP method & path | ✅ |
+| Description | ✅ |
+| Authentication required | ✅ |
+| Path parameters | If applicable |
+| Query parameters | If applicable |
+| Request body schema | If applicable |
+| Response schema | ✅ |
+| Error codes | ✅ |
+| Rate limits | ✅ |
+| Example request | ✅ |
+| Example response | ✅ |
+
+### Explain "Why", Not Just "How"
+Every documentation section should answer:
+- **What** does this do?
+- **Why** would you use it?
+- **When** is it appropriate?
+- **How** do you implement it?
+
+Example of good "why" documentation:
+```markdown
+## Why Counterfactual Deployment?
+
+Spritz Wallets use counterfactual deployment to avoid gas costs 
+until the first transaction. This means:
+- Users get a wallet address immediately (no waiting for confirmation)
+- No gas required just to create an account
+- The wallet is deployed on-chain only when needed
+```
+
+### Edge Cases & Advanced Patterns
+Document these scenarios when relevant:
+- Error recovery patterns
+- Retry strategies
+- Rate limit handling
+- Pagination patterns
+- Batch operations
+- Caching strategies
+- Offline/degraded mode behavior
+
+## 3. Developer Experience
+
+### Getting Started Evaluation
+The quickstart MUST achieve:
+- [ ] First success in under 5 minutes
+- [ ] Clear prerequisites with exact versions
+- [ ] Single copy-paste command when possible
+- [ ] Visible progress/feedback at each step
+- [ ] Clear "what's next" after completion
+
+### Prerequisites Documentation
+Always specify:
+```markdown
+## Prerequisites
+
+| Requirement | Version | Check Command |
+|-------------|---------|---------------|
+| Node.js | ≥18.0.0 | `node --version` |
+| npm | ≥9.0.0 | `npm --version` |
+| Git | Any recent | `git --version` |
+```
+
+### Cross-Environment Testing
+Installation instructions must work on:
+- macOS (Intel & Apple Silicon)
+- Windows (with WSL if needed)
+- Linux (Ubuntu/Debian)
+
+Note platform-specific differences:
+```markdown
+:::note macOS Users
+On Apple Silicon Macs, you may need to run:
+\`\`\`bash
+arch -arm64 npm install
+\`\`\`
+:::
+```
+
+### Copy-Paste Ready Code
+Every code example should:
+1. Include all imports at the top
+2. Use realistic values (not `foo`, `bar`)
+3. Handle errors appropriately
+4. Work if pasted into a real project
+5. Include comments for non-obvious parts
+
+**Bad example:**
+```typescript
+const result = await api.call(x);
+```
+
+**Good example:**
+```typescript
+import { SpritzAPI } from '@spritz/sdk';
+
+const api = new SpritzAPI({ 
+    baseUrl: 'https://api.spritz.chat' 
+});
+
+try {
+    const agents = await api.agents.list({ 
+        userAddress: '0x1234...5678',
+        visibility: 'public' 
+    });
+    console.log(`Found ${agents.length} agents`);
+} catch (error) {
+    console.error('Failed to fetch agents:', error.message);
+}
+```
+
+## 4. Information Architecture
+
+### Logical Progression
+Documentation should flow:
+```
+Conceptual (What & Why)
+    ↓
+Tutorial (Guided Learning)
+    ↓
+How-To (Task-Based)
+    ↓
+Reference (Technical Details)
+```
+
+### Navigation Principles
+- Group related content in categories
+- Use consistent naming conventions
+- Keep navigation depth ≤ 3 levels
+- Most important items first in each section
+
+### Cross-Reference Requirements
+- Every page should link to at least 2 related pages
+- Use "Next Steps" sections to guide user journeys
+- Reference prerequisite knowledge with links
+- Link from high-level overviews to detailed pages
+
+### Prevent Orphan Pages
+Before adding a new page:
+1. Add it to `sidebars.ts`
+2. Link to it from at least one existing page
+3. Include in "Related" or "Next Steps" sections where appropriate
+
+### Prevent Redundant Content
+- Single source of truth for each concept
+- Use cross-references instead of duplicating
+- If similar content exists, consolidate or differentiate clearly
+
+## 5. User Value & Usability
+
+### Common Use Cases
+Document the workflows users actually need:
+
+**For Spritz, always cover:**
+- [ ] Creating an account (all auth methods)
+- [ ] Sending a message
+- [ ] Creating an AI agent
+- [ ] Making a video call
+- [ ] Starting a livestream
+- [ ] Managing friends/contacts
+- [ ] Setting up a smart wallet
+
+### Real-World Examples
+Go beyond "hello world":
+
+**Bad:** "Here's how to create an agent"
+**Good:** "Building a customer support agent that answers questions about your product using RAG"
+
+### Troubleshooting Guide Standards
+For each issue, document:
+```markdown
+### [Issue Title]
+
+**Symptoms:**
+- What the user sees/experiences
+
+**Cause:**
+- Why this happens
+
+**Solution:**
+1. Step-by-step fix
+
+**Prevention:**
+- How to avoid this in the future
+```
+
+### Migration Guides
+For breaking changes, include:
+1. What changed
+2. Why it changed
+3. Step-by-step migration
+4. Before/after code examples
+5. Timeline/deprecation dates
+
+### Practical Examples for Everything
+| Element | Example Required |
+|---------|-----------------|
+| CLI commands | Yes, with output |
+| API endpoints | Yes, full request/response |
+| Configuration | Yes, complete config file |
+| Code patterns | Yes, working snippet |
+
+## 6. Documentation Maintenance
+
+### Outdated Content Indicators
+Watch for and fix:
+- [ ] Old screenshots (prefer ASCII diagrams)
+- [ ] Deprecated API endpoints
+- [ ] Legacy code patterns
+- [ ] Old version numbers
+- [ ] Broken external links
+- [ ] References to removed features
+
+### Changelog Maintenance
+Keep `changelog.md` updated with:
+- Version number and date
+- Breaking changes (highlighted)
+- New features
+- Bug fixes
+- Deprecations
+
+### Documentation Versioning Strategy
+- Main docs = current stable version
+- Note when features are beta/experimental
+- Link to previous versions when relevant
+
+### Contribution Guidelines
+The repo should include guidance on:
+- How to contribute documentation
+- Style guide (this file!)
+- Review process
+- Testing documentation locally
+
+---
+
+# Self-Audit Checklist
+
+Run this checklist before completing any documentation:
+
+## Critical (Must Fix)
+- [ ] Code examples are syntactically correct and tested
+- [ ] Version numbers match current reality
+- [ ] All links work
+- [ ] No placeholder text (`[TODO]`, `[TBD]`, `xxx`)
+- [ ] No sensitive data (API keys, secrets)
+- [ ] Frontmatter is complete
+
+## High Priority
+- [ ] Prerequisites clearly stated with versions
+- [ ] Code is copy-paste ready with imports
+- [ ] Error scenarios documented
+- [ ] "Why" explained, not just "how"
+- [ ] Cross-references to related content
+- [ ] Added to sidebar and linked from other pages
+
+## Medium Priority
+- [ ] ASCII diagrams for complex flows
+- [ ] Tables for structured data
+- [ ] Admonitions for warnings/tips
+- [ ] Real-world examples (not just "hello world")
+- [ ] Edge cases documented
+
+## Nice to Have
+- [ ] Performance considerations
+- [ ] Security implications
+- [ ] Alternative approaches mentioned
+- [ ] Related external resources linked
+
+---
+
+# Priority Levels for Findings
+
+When auditing documentation, categorize issues:
+
+| Priority | Definition | Action |
+|----------|------------|--------|
+| **Critical** | Actively harms user understanding or prevents successful implementation | Fix immediately |
+| **High** | Missing documentation that users/developers frequently need | Fix before release |
+| **Medium** | Would improve understanding but not blocking | Fix soon |
+| **Low** | Polish and enhancement | Fix when convenient |
+
+---
+
 ## Summary
 
 Generate documentation that is:
-1. **Accurate** - Verified technical information
-2. **Complete** - All necessary context included
-3. **Consistent** - Follows established patterns
-4. **Discoverable** - Proper SEO and cross-linking
-5. **Maintainable** - Easy to update as product evolves
+1. **Accurate** - Verified technical information, tested code examples
+2. **Complete** - All necessary context, prerequisites, and error handling included
+3. **Consistent** - Follows established patterns and terminology
+4. **Discoverable** - Proper SEO, cross-linking, and information architecture
+5. **Maintainable** - Easy to update, no redundancy, clear ownership
+6. **User-Focused** - Real-world examples, troubleshooting, practical value
