@@ -51,11 +51,13 @@ GET /api/agents?userAddress=0x...&visibility=public&limit=20
             "system_instructions": "You are a helpful assistant.",
             "model": "gemini-2.0-flash",
             "avatar_emoji": "🤖",
+            "avatar_url": "https://example.com/avatar.png",
             "visibility": "public",
             "web_search_enabled": true,
             "use_knowledge_base": true,
             "message_count": 123,
             "tags": ["helpful", "technical"],
+            "suggested_questions": ["What can you help with?", "Tell me about yourself"],
             "x402_enabled": false,
             "created_at": "2026-01-15T10:30:00Z",
             "updated_at": "2026-01-15T10:30:00Z"
@@ -80,6 +82,7 @@ POST /api/agents
     "system_instructions": "You are a helpful assistant that provides concise answers.",
     "model": "gemini-2.0-flash",
     "avatar_emoji": "🤖",
+    "avatar_url": "https://example.com/avatar.png",
     "visibility": "private",
     "web_search_enabled": true,
     "use_knowledge_base": true,
@@ -87,6 +90,11 @@ POST /api/agents
     "mcp_servers": [],
     "api_tools": []
 }
+```
+
+:::info Avatar Options
+Agents can have either an `avatar_emoji` (single emoji character) or an `avatar_url` (image URL). If both are provided, `avatar_url` takes precedence in the UI.
+:::
 ```
 
 ### Response
@@ -254,19 +262,48 @@ POST /api/agents/:id/knowledge
 
 ```json
 {
+    "userAddress": "0x...",
     "url": "https://example.com/docs",
-    "title": "Example Documentation",
-    "content_type": "webpage"
+    "title": "Example Documentation"
 }
 ```
+
+### Request Body (Official Agents - Advanced Options)
+
+Official agents can use Firecrawl for enhanced scraping:
+
+```json
+{
+    "userAddress": "0x...",
+    "url": "https://docs.example.com",
+    "title": "Example Documentation",
+    "scrapeMethod": "firecrawl",
+    "crawlDepth": 3,
+    "excludePatterns": ["/blog/*", "/changelog/*"],
+    "autoSync": true,
+    "syncIntervalHours": 24
+}
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `url` | string | Required. Valid HTTPS URL |
+| `title` | string | Optional. Auto-detected from URL if not provided |
+| `scrapeMethod` | enum | `basic` (default) or `firecrawl` (official agents only) |
+| `crawlDepth` | number | Max crawl depth 1-5 (official agents only) |
+| `excludePatterns` | array | URL patterns to skip, max 20 (official agents only) |
+| `autoSync` | boolean | Enable automatic re-indexing (official agents only) |
+| `syncIntervalHours` | number | Hours between syncs, 1-168 (official agents only) |
 
 ### Response
 
 ```json
 {
-    "knowledge": {
+    "item": {
         "id": "uuid",
-        "status": "pending"
+        "status": "pending",
+        "scrape_method": "firecrawl",
+        "auto_sync": true
     }
 }
 ```
@@ -285,23 +322,35 @@ POST /api/agents/:id/knowledge/index
 }
 ```
 
+### Request Body
+
+```json
+{
+    "userAddress": "0x...",
+    "knowledgeId": "uuid"
+}
+```
+
 ### Process
 
-1. Fetches URL content
-2. Chunks content into ~500-1000 token pieces
-3. Generates embeddings for each chunk
-4. Stores chunks in database
-5. Updates status to "indexed"
+1. Fetches URL content (using basic scraping or Firecrawl)
+2. For Firecrawl with `crawlDepth > 1`: crawls linked pages up to max depth
+3. Chunks content into ~500-1000 token pieces with 100-token overlap
+4. Generates embeddings using `text-embedding-004` for each chunk
+5. Stores chunks in database with vector embeddings
+6. Updates status to "indexed"
 
 ### Response
 
 ```json
 {
     "success": true,
-    "chunk_count": 15,
-    "status": "indexed"
+    "chunksIndexed": 45,
+    "pagesScraped": 12
 }
 ```
+
+The `pagesScraped` field indicates how many pages were crawled (always 1 for basic scraping, may be higher for Firecrawl with crawl depth > 1).
 
 ### Delete Knowledge
 
@@ -409,37 +458,34 @@ GET /api/agents/:id/embed
 GET /api/public/agents/:id
 ```
 
+Returns information about a public or official agent.
+
 ### Response
 
 ```json
 {
-    "agent": {
-        "id": "uuid",
-        "name": "Agent Name",
-        "personality": "...",
-        "emoji": "🤖",
-        "tags": ["helpful"],
-        "features": {
-            "webSearch": true,
-            "knowledgeBase": true
-        },
-        "stats": {
-            "totalMessages": 123
-        },
-        "createdAt": "2024-01-01T00:00:00Z"
-    },
-    "pricing": {
-        "enabled": true,
-        "pricePerMessage": "$0.01",
-        "priceCents": 1,
-        "network": "base-sepolia",
-        "currency": "USDC"
-    },
-    "endpoints": {
-        "chat": "/api/public/agents/{id}/chat",
-        "info": "/api/public/agents/{id}"
-    }
+    "id": "uuid",
+    "name": "Agent Name",
+    "personality": "Helpful and knowledgeable",
+    "avatar_emoji": "🤖",
+    "avatar_url": "https://example.com/avatar.png",
+    "visibility": "public",
+    "tags": ["helpful", "technical"],
+    "suggested_questions": [
+        "What can you help me with?",
+        "Tell me about yourself!",
+        "What makes you unique?",
+        "How can you help me today?"
+    ],
+    "x402_enabled": true,
+    "x402_price_cents": 1,
+    "x402_network": "base"
 }
+```
+
+:::info Suggested Questions
+For **official agents**, suggested questions are manually configured by admins. For **public agents**, suggested questions are auto-generated based on the agent's name, personality, and tags.
+:::
 ```
 
 ### Chat with Public Agent (x402)
@@ -651,20 +697,40 @@ When creating or updating agents, the following validation rules apply:
 | `system_instructions` | string | Optional. Max 4000 characters |
 | `model` | string | Default: `gemini-2.0-flash` (currently the only supported model) |
 | `avatar_emoji` | string | Optional. Single emoji character |
-| `visibility` | enum | Must be: `private`, `friends`, or `public` |
+| `avatar_url` | string | Optional. Valid HTTPS URL for custom avatar image |
+| `visibility` | enum | Must be: `private`, `friends`, `public`, or `official` |
 | `web_search_enabled` | boolean | Optional. Default: `false` |
 | `use_knowledge_base` | boolean | Optional. Default: `false` |
-| `tags` | array | Optional. Max 10 tags, each 1-30 characters |
+| `tags` | array | Optional. Max 5 tags, each 1-20 characters |
+| `suggested_questions` | array | Official agents only. Max 4 questions, each 1-100 characters |
 | `x402_price_cents` | number | Optional. Min: 1, Max: 10000 (for x402-enabled agents) |
 | `x402_network` | string | Must be: `base` or `base-sepolia` (when x402_enabled) |
+
+:::warning Official Visibility
+The `official` visibility type is **admin-only**. Only platform administrators can create or modify official agents. Official agents:
+- Are publicly accessible (like `public` agents)
+- Can use Firecrawl for advanced web scraping
+- Support auto-sync for knowledge bases
+- Can have custom suggested questions
+:::
 
 ### Knowledge Base Validation
 
 | Parameter | Type | Constraints |
 |-----------|------|-------------|
 | `url` | string | Required. Valid HTTPS URL |
-| `title` | string | Required. 1-200 characters |
-| `content_type` | enum | Must be: `webpage`, `github`, or `docs` |
+| `title` | string | Optional. Auto-detected from URL. Max 200 characters |
+| `content_type` | enum | Auto-detected. One of: `webpage`, `github`, or `docs` |
+| `scrapeMethod` | enum | `basic` (default) or `firecrawl` (official agents only) |
+| `crawlDepth` | number | 1-5 (official agents only) |
+| `excludePatterns` | array | Max 20 patterns (official agents only) |
+| `autoSync` | boolean | Default: `false` (official agents only) |
+| `syncIntervalHours` | number | 1-168 hours (official agents only) |
+
+:::info Knowledge Limits
+- Regular agents: Maximum 10 knowledge URLs
+- Official agents: Maximum 50 knowledge URLs
+:::
 
 ### Chat Validation
 

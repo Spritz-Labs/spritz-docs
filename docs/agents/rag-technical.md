@@ -168,10 +168,42 @@ POST /api/agents/:id/knowledge
 
 ### Step 2: Content Fetching
 
-The system fetches the URL and extracts text content:
-- HTML pages: Extracts text, removes scripts/styles
+The system supports two scraping methods:
+
+#### Basic Scraping (Default)
+
+Available to all users. Fetches URL content using simple HTML parsing:
+- HTML pages: Extracts text, removes scripts/styles/navigation
 - GitHub repos: Fetches markdown files
 - Documentation sites: Parses structured content
+
+#### Firecrawl Integration (Official Agents Only)
+
+For official agents, Spritz integrates with [Firecrawl](https://firecrawl.dev) for high-quality web scraping:
+
+```typescript
+POST /api/agents/:id/knowledge
+{
+    "url": "https://docs.example.com",
+    "title": "Example Documentation",
+    "scrapeMethod": "firecrawl",   // Use Firecrawl instead of basic
+    "crawlDepth": 3,               // Follow links up to 3 levels deep
+    "excludePatterns": ["/blog/*", "/changelog/*"],  // Skip these paths
+    "autoSync": true,              // Enable automatic re-indexing
+    "syncIntervalHours": 24        // Re-index every 24 hours
+}
+```
+
+**Firecrawl Features:**
+- JavaScript rendering for SPAs
+- Multi-page crawling for documentation sites
+- Clean markdown output optimized for RAG
+- Anti-bot bypass capabilities
+- Up to 50 pages per knowledge source
+
+:::info Official Agents Only
+Firecrawl integration is available only for official agents due to API costs. Regular agents use the basic scraping method which works well for most static content.
+:::
 
 ### Step 3: Chunking
 
@@ -251,13 +283,54 @@ const fullMessage = message +
 - **Selective Indexing**: Only index when `use_knowledge_base` is enabled
 - **Cleanup**: Remove old chunks when knowledge is deleted
 
+## Auto-Sync for Knowledge Sources
+
+Official agents can enable automatic re-indexing to keep knowledge bases up-to-date with source content changes.
+
+### How Auto-Sync Works
+
+1. **Cron Job**: Runs every 6 hours (configurable via Vercel Cron)
+2. **Eligibility Check**: Only processes sources with `auto_sync: true` on official agents
+3. **Interval Check**: Respects each source's `sync_interval_hours` setting
+4. **Re-indexing**: Fetches fresh content, generates new embeddings, replaces old chunks
+
+### Database Schema Updates
+
+```sql
+ALTER TABLE shout_agent_knowledge ADD COLUMN
+    scrape_method TEXT DEFAULT 'basic',        -- 'basic' or 'firecrawl'
+    crawl_depth INTEGER DEFAULT 1,             -- Max depth for Firecrawl crawls
+    exclude_patterns TEXT[],                   -- URL patterns to skip
+    auto_sync BOOLEAN DEFAULT false,           -- Enable automatic re-indexing
+    sync_interval_hours INTEGER DEFAULT 24,    -- Hours between syncs
+    last_synced_at TIMESTAMPTZ;                -- Last successful sync time
+```
+
+### Cron Endpoint
+
+```http
+GET /api/cron/sync-knowledge
+Authorization: Bearer ${CRON_SECRET}
+```
+
+The cron job:
+- Queries all knowledge sources with `auto_sync: true` on official agents
+- Filters by those needing sync (based on `sync_interval_hours` and `last_synced_at`)
+- Re-indexes each source sequentially with rate limiting
+- Updates `last_synced_at` on success
+
+:::tip Cost Management
+Auto-sync is limited to official agents to manage Firecrawl and embedding API costs. Each sync operation generates new embeddings for all chunks in the knowledge source.
+:::
+
 ## Best Practices
 
 1. **Chunk Size**: Keep chunks between 500-1000 tokens for optimal retrieval
 2. **Overlap**: Use 10-20% overlap to maintain context across chunks
 3. **Metadata**: Store source URLs and titles for citation
 4. **Threshold**: Adjust similarity threshold (0.3 default) based on use case
-5. **Refresh**: Re-index when source content changes
+5. **Refresh**: Re-index when source content changes (or use auto-sync for official agents)
+6. **Exclude Patterns**: For documentation sites, exclude changelog, blog, and versioned paths to reduce noise
 
 ## Troubleshooting
 
