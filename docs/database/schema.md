@@ -84,9 +84,12 @@ CREATE TABLE shout_agents (
     avatar_emoji TEXT DEFAULT '🤖',
     avatar_url TEXT, -- Custom uploaded avatar image (optional)
 
-    -- Visibility: 'private', 'friends', 'public'
+    -- Visibility: 'private', 'friends', 'public', 'official'
     visibility TEXT DEFAULT 'private'
-        CHECK (visibility IN ('private', 'friends', 'public')),
+        CHECK (visibility IN ('private', 'friends', 'public', 'official')),
+    
+    -- Suggested questions (official agents, max 4)
+    suggested_questions TEXT[],
     
     -- Capabilities
     web_search_enabled BOOLEAN DEFAULT true,
@@ -147,7 +150,7 @@ CREATE INDEX idx_agent_chats_created ON shout_agent_chats(created_at DESC);
 
 ### `shout_agent_knowledge`
 
-Knowledge base URLs.
+Knowledge base URLs with optional Firecrawl integration for advanced scraping.
 
 ```sql
 CREATE TABLE shout_agent_knowledge (
@@ -164,9 +167,19 @@ CREATE TABLE shout_agent_knowledge (
         CHECK (status IN ('pending', 'processing', 'indexed', 'failed')),
     error_message TEXT,
     
-    -- Vertex AI reference (for V2)
+    -- Embedding reference
     embedding_id TEXT,
     chunk_count INTEGER DEFAULT 0,
+    
+    -- Firecrawl options (Official agents only)
+    scrape_method TEXT DEFAULT 'basic', -- 'basic' or 'firecrawl'
+    crawl_depth INTEGER DEFAULT 1,      -- Max depth for Firecrawl crawls
+    exclude_patterns TEXT[],            -- URL patterns to skip
+    
+    -- Auto-sync configuration (Official agents only)
+    auto_sync BOOLEAN DEFAULT false,
+    sync_interval_hours INTEGER DEFAULT 24, -- Hours between syncs
+    last_synced_at TIMESTAMPTZ,
     
     -- Timestamps
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -178,6 +191,34 @@ CREATE TABLE shout_agent_knowledge (
 
 CREATE INDEX idx_agent_knowledge_agent ON shout_agent_knowledge(agent_id);
 CREATE INDEX idx_agent_knowledge_status ON shout_agent_knowledge(status);
+```
+
+### `shout_agent_channel_memberships`
+
+Tracks which Official agents are present in which channels for @mention interactions.
+
+```sql
+CREATE TABLE shout_agent_channel_memberships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id UUID NOT NULL REFERENCES shout_agents(id) ON DELETE CASCADE,
+    channel_type TEXT NOT NULL CHECK (channel_type IN ('global', 'channel')),
+    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL for global
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    created_by TEXT, -- Admin who added the agent
+    
+    UNIQUE(agent_id, channel_type, channel_id)
+);
+
+CREATE INDEX idx_agent_channel_memberships_channel 
+    ON shout_agent_channel_memberships(channel_type, channel_id);
+CREATE INDEX idx_agent_channel_memberships_agent 
+    ON shout_agent_channel_memberships(agent_id);
+
+-- RLS: Anyone can read, admins manage via API
+ALTER TABLE shout_agent_channel_memberships ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Agent channel memberships are viewable by everyone"
+    ON shout_agent_channel_memberships FOR SELECT USING (true);
 ```
 
 ### `shout_knowledge_chunks`

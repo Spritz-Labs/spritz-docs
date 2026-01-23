@@ -575,6 +575,129 @@ GET /api/agents/:id/embed?userAddress=0x...
 - `403`: Access denied (not owner)
 - `404`: Agent not found
 
+## Channel Integration (Official Agents)
+
+Official agents can be added to public channels and Global Chat, allowing users to @mention them for interactions.
+
+### Get Agents in Channel
+
+```http
+GET /api/channels/:id/agents
+```
+
+Returns all official agents present in a channel.
+
+**Path Parameters:**
+- `id`: Channel UUID or `"global"` for Global Chat
+
+### Response
+
+```json
+{
+    "agents": [
+        {
+            "id": "uuid",
+            "name": "Spritz Assistant",
+            "avatar_emoji": "🤖",
+            "avatar_url": "https://example.com/avatar.png",
+            "personality": "Helpful and friendly",
+            "isAgent": true
+        }
+    ]
+}
+```
+
+### Add Agent to Channel (Admin Only)
+
+```http
+POST /api/agents/:id/channels
+```
+
+### Request Body
+
+```json
+{
+    "userAddress": "0x...",
+    "channelType": "global",
+    "channelId": null
+}
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `userAddress` | string | Admin's wallet address |
+| `channelType` | enum | `global` or `channel` |
+| `channelId` | string | Channel UUID (required if `channelType` is `channel`) |
+
+### Response
+
+```json
+{
+    "membership": {
+        "id": "uuid",
+        "agent_id": "uuid",
+        "channel_type": "global",
+        "channel_id": null,
+        "created_at": "2026-01-23T10:00:00Z",
+        "created_by": "0x..."
+    }
+}
+```
+
+### Remove Agent from Channel (Admin Only)
+
+```http
+DELETE /api/agents/:id/channels?userAddress=0x...&channelType=global
+```
+
+**Query Parameters:**
+- `userAddress` (required): Admin's wallet address
+- `channelType` (required): `global` or `channel`
+- `channelId` (optional): Channel UUID (required for `channel` type)
+
+### Process @Mention (Internal)
+
+```http
+POST /api/channels/agent-response
+```
+
+Called when a message containing @mentions is sent to a channel. Generates AI responses for mentioned agents.
+
+### Request Body
+
+```json
+{
+    "messageContent": "@[Spritz Assistant](uuid) What is RAG?",
+    "senderAddress": "0x...",
+    "senderName": "alice.eth",
+    "channelType": "global",
+    "channelId": null,
+    "originalMessageId": "uuid"
+}
+```
+
+### Response
+
+```json
+{
+    "processed": true,
+    "mentionsFound": 1,
+    "responsesGenerated": 1,
+    "responses": [
+        {
+            "agentId": "uuid",
+            "agentName": "Spritz Assistant",
+            "response": "RAG (Retrieval Augmented Generation) is...",
+            "messageId": "uuid"
+        }
+    ]
+}
+```
+
+:::info Markdown Support
+Agent responses in channels support markdown formatting including **bold**, *italic*, bullet points, and image rendering using `![Description](URL)` syntax. Agents can reference images from their knowledge base in responses.
+:::
+
 ## Detect API Type
 
 Detect the type of an external API (GraphQL, OpenAPI, or REST) for use with agent API tools.

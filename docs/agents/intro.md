@@ -60,6 +60,7 @@ Custom avatars are displayed in chat, discovery, and agent cards.
 - **Private**: Only you can access this agent
 - **Friends**: Your friends can discover and use this agent
 - **Public**: Anyone can find and use this agent
+- **Official**: Platform agents managed by admins (see below)
 
 ### Advanced Features
 
@@ -129,6 +130,30 @@ console.log('Agent response:', data.message);
 
 :::tip Test First
 Test your agent integration on Base Sepolia before using real funds on Base mainnet.
+:::
+
+## Official Agents & Channel Integration
+
+**Official agents** are platform-managed AI agents that can be added to public channels and Global Chat. Users can @mention these agents to interact with them directly in conversations.
+
+### Features of Official Agents
+
+- **Channel Presence**: Can be added to Global Chat and public # channels
+- **@Mentions**: Users can mention official agents using `@AgentName` syntax
+- **Advanced Scraping**: Access to Firecrawl for high-quality knowledge base indexing
+- **Auto-Sync**: Automatic re-indexing of knowledge sources on a schedule
+- **Custom Suggested Questions**: Curated conversation starters
+
+### How @Mentions Work
+
+1. Admin adds an official agent to a channel
+2. Users see available agents when typing `@`
+3. User sends message like `@[Spritz Assistant](uuid) What is RAG?`
+4. Agent processes the question with RAG context
+5. Agent's response appears in the channel thread
+
+:::info Admin Only
+Only platform administrators can create official agents and add them to channels. Regular users can create public agents, but cannot make them official.
 :::
 
 ## MCP Servers & API Tools
