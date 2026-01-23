@@ -1,0 +1,452 @@
+---
+description: Rules for generating professional, accurate Spritz documentation
+globs: ["docs/**/*.md", "blog/**/*.md"]
+alwaysApply: true
+---
+
+# Spritz Documentation Standards
+
+You are generating documentation for Spritz, a decentralized social platform with Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Follow these standards precisely.
+
+## Project Context
+
+- **Framework**: Docusaurus 3.x
+- **Tech Stack**: Next.js 15, Tailwind CSS 3.4, TypeScript
+- **Web3**: viem, wagmi, Safe Smart Accounts, ERC-4337
+- **Messaging**: Logos Messaging (built on Waku protocol)
+- **AI**: Google Gemini API (gemini-2.0-flash, gemini-2.0-flash-lite, gemini-1.5-pro)
+- **Video**: Huddle01 (calls), Livepeer (livestreaming)
+- **Chains**: Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche + Solana
+
+## Frontmatter Requirements
+
+Every documentation file MUST have complete frontmatter:
+
+```yaml
+---
+title: [Descriptive Title - Max 60 chars for SEO]
+description: [150-160 char description with keywords]
+keywords:
+    [
+        keyword1,
+        keyword2,
+        keyword3,
+        # Include: Spritz, feature name, related tech
+    ]
+sidebar_label: [Short label for sidebar]
+sidebar_position: [Number for ordering]
+---
+```
+
+### Frontmatter Rules
+- `title`: Clear, specific, includes main topic
+- `description`: Complete sentence, includes primary keywords, 150-160 chars
+- `keywords`: 5-10 relevant terms, always include "Spritz"
+- `sidebar_label`: Short version of title (2-4 words)
+- `sidebar_position`: Lower = higher in sidebar
+
+## Document Structure
+
+### Standard Document Pattern
+
+```markdown
+# [Main Title]
+
+[1-2 sentence overview of what this doc covers]
+
+## Overview / Introduction
+[Context and high-level explanation]
+
+## [Main Sections]
+[Detailed content with examples]
+
+## [API Reference / Technical Details] (if applicable)
+[Endpoints, parameters, responses]
+
+## [Troubleshooting / Common Issues] (if applicable)
+
+## Next Steps
+- [Link to related doc 1]
+- [Link to related doc 2]
+```
+
+### Heading Hierarchy
+- `#` - Page title (ONE per page, matches frontmatter title)
+- `##` - Major sections
+- `###` - Subsections
+- `####` - Rarely used, only for deep nesting
+
+## Code Blocks
+
+### TypeScript/JavaScript
+```typescript
+// Always include relevant imports
+import { SiweMessage } from 'siwe';
+
+// Use descriptive variable names
+const userAddress = '0x1234...';
+
+// Include type annotations
+async function fetchAgents(params: FetchParams): Promise<Agent[]> {
+    // Implementation with comments explaining non-obvious logic
+}
+```
+
+### HTTP/API Endpoints
+```http
+GET /api/agents?userAddress=0x...&visibility=public&limit=20
+```
+
+### SQL
+```sql
+-- Include comments explaining purpose
+CREATE TABLE shout_agents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    owner_address TEXT NOT NULL,
+    -- Additional columns with types
+);
+```
+
+### JSON (for request/response examples)
+```json
+{
+    "agents": [
+        {
+            "id": "uuid",
+            "owner_address": "0x...",
+            "name": "Agent Name"
+        }
+    ]
+}
+```
+
+### Code Block Rules
+1. Always specify language after triple backticks
+2. Include necessary imports in TypeScript examples
+3. Use 4-space indentation
+4. Include comments for complex logic
+5. Use realistic placeholder values (`0x1234...`, `uuid`, etc.)
+6. Keep examples copy-paste ready when possible
+
+## API Documentation Format
+
+### Endpoint Documentation Pattern
+
+```markdown
+## [Endpoint Name]
+
+[Brief description of what the endpoint does]
+
+\```http
+METHOD /api/path/:param?query=value
+\```
+
+### Path Parameters
+- `param` (required): Description
+
+### Query Parameters
+- `queryParam` (optional): Description (default: value)
+
+### Request Body
+\```json
+{
+    "field": "value"
+}
+\```
+
+### Response
+\```json
+{
+    "success": true,
+    "data": { ... }
+}
+\```
+
+### Errors
+- `400`: Bad request - [when this happens]
+- `401`: Unauthorized - [when this happens]
+- `404`: Not found - [when this happens]
+```
+
+### Parameter Tables
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Agent name (1-100 chars) |
+| `visibility` | enum | No | `private`, `friends`, or `public` |
+
+## Terminology Standards
+
+### Correct Terms (ALWAYS use these)
+| Correct | Incorrect |
+|---------|-----------|
+| Spritz | spritz, SPRITZ |
+| Spritz ID | user ID, address |
+| Spritz Wallet | Smart Wallet (legacy) |
+| Logos Messaging | Waku (use "Logos Messaging (Waku)" on first mention) |
+| Safe Smart Account | Safe, Gnosis Safe |
+| passkey | Passkey, PassKey |
+| x402 | X402, x-402 |
+
+### Product Names (capitalize correctly)
+- Huddle01
+- Livepeer
+- Pimlico
+- Reown AppKit (not WalletConnect)
+- World ID
+- Alien ID
+- Google Gemini
+
+### Technical Terms
+- ERC-4337 (with hyphen)
+- SIWE (Sign-In with Ethereum)
+- SIWS (Sign-In with Solana)
+- WebAuthn (capital A)
+- P-256 (with hyphen)
+- secp256k1 (lowercase)
+
+## Admonitions (Callouts)
+
+Use Docusaurus admonitions for important information:
+
+```markdown
+:::tip [Optional Title]
+Helpful hints and best practices
+:::
+
+:::info [Optional Title]
+Additional context or background information
+:::
+
+:::warning [Optional Title]
+Important caveats or potential issues
+:::
+
+:::danger [Optional Title]
+Critical warnings that could cause data loss or security issues
+:::
+
+:::note [Optional Title]
+Side notes and additional details
+:::
+```
+
+### When to Use Each
+- `tip`: Best practices, shortcuts, recommendations
+- `info`: Background context, explanations, "why" information
+- `warning`: Potential pitfalls, deprecations, important caveats
+- `danger`: Security risks, data loss potential, breaking changes
+- `note`: Supplementary information, edge cases
+
+## ASCII Diagrams
+
+For architecture and flow diagrams, use box-drawing characters:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        TITLE                                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────────┐         ┌──────────────┐                 │
+│  │   Box 1      │────────►│   Box 2      │                 │
+│  └──────────────┘         └──────────────┘                 │
+│         │                         │                         │
+│         ▼                         ▼                         │
+│  ┌──────────────┐         ┌──────────────┐                 │
+│  │   Box 3      │         │   Box 4      │                 │
+│  └──────────────┘         └──────────────┘                 │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Box Drawing Characters
+- Corners: `┌ ┐ └ ┘`
+- Lines: `─ │`
+- Intersections: `├ ┤ ┬ ┴ ┼`
+- Arrows: `► ▼ ◄ ▲ →`
+
+## Tables
+
+### Standard Table Format
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Value 1 | Value 2 | Value 3 |
+
+### Table Best Practices
+1. Always include header row with separator
+2. Keep columns aligned with pipes
+3. Use consistent formatting within columns
+4. Bold important values: `**value**`
+5. Use checkmarks and X for boolean: `✅ Yes` / `❌ No`
+
+## Cross-References
+
+### Internal Links
+```markdown
+See [Authentication](/docs/developers/authentication) for details.
+See the [API Reference](/docs/api/intro#rate-limiting) for rate limits.
+```
+
+### Link Rules
+1. Use relative paths starting with `/docs/`
+2. Include anchor links for specific sections: `#section-name`
+3. Make link text descriptive (not "click here")
+4. Verify links exist before committing
+
+## Version Numbers & Technical Specs
+
+### Current Versions (keep updated)
+- Next.js: 15
+- Tailwind CSS: 3.4
+- Safe: v1.4.1
+- EntryPoint: v0.7
+- Embedding Model: text-embedding-004
+- Gemini Models: gemini-2.0-flash, gemini-2.0-flash-lite, gemini-1.5-pro
+
+### Contract Addresses (verify before using)
+- SafeWebAuthnSharedSigner: `0x94a4F6affBd8975951142c3999aEAB7ecee555c2`
+- SafeP256Verifier: `0xA86e0054C51E4894D88762a017ECc5E5235f5DBA`
+
+## Common Patterns
+
+### Authentication Code Example
+```typescript
+// 1. Get nonce
+const { nonce } = await fetch('/api/auth/nonce').then(r => r.json());
+
+// 2. Sign message
+const signature = await signMessage({ message: siweMessage });
+
+// 3. Verify
+await fetch('/api/auth/verify', {
+    method: 'POST',
+    credentials: 'include', // ALWAYS include for cookie auth
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, signature }),
+});
+```
+
+### API Response Pattern
+```json
+{
+    "success": true,
+    "data": { ... }
+}
+```
+
+### Error Response Pattern
+```json
+{
+    "error": "Error message",
+    "code": "ERROR_CODE"
+}
+```
+
+## Things to AVOID
+
+### Never Do These
+1. ❌ Don't use "click here" for links
+2. ❌ Don't leave placeholder text like `[TODO]` or `[TBD]`
+3. ❌ Don't include actual API keys, secrets, or private keys
+4. ❌ Don't use screenshots (they become outdated)
+5. ❌ Don't reference "Waku" without mentioning "Logos Messaging"
+6. ❌ Don't use outdated version numbers
+7. ❌ Don't create orphan pages (always link from somewhere)
+8. ❌ Don't use passive voice when active is clearer
+9. ❌ Don't explain "what" without explaining "why"
+10. ❌ Don't copy-paste code without verifying it works
+
+### Avoid These Phrases
+- "Simply" or "just" (minimizes complexity)
+- "Obviously" or "clearly" (condescending)
+- "Easy" or "trivial" (subjective)
+- "Click here" (non-descriptive link)
+- "As mentioned above" (be specific)
+
+## Quality Checklist
+
+Before completing any documentation:
+
+- [ ] Frontmatter is complete with all required fields
+- [ ] Title matches the `#` heading
+- [ ] Description is 150-160 characters
+- [ ] All code blocks have language specified
+- [ ] Code examples are copy-paste ready
+- [ ] All internal links are valid
+- [ ] Version numbers are current
+- [ ] Terminology matches standards
+- [ ] No placeholder text remains
+- [ ] No sensitive data included
+- [ ] Tables are properly formatted
+- [ ] Admonitions used appropriately
+- [ ] "Next Steps" section included where relevant
+
+## File Naming
+
+### Documentation Files
+- Use kebab-case: `login-flow.md`, `smart-wallets.md`
+- Be descriptive: `agents-detailed.md` not `agents-2.md`
+- Match sidebar label when possible
+
+### Directory Structure
+```
+docs/
+├── index.md           # Landing page
+├── intro.md           # Introduction
+├── getting-started.md # Quick start
+├── faq.md            # FAQ
+├── changelog.md      # Release notes
+├── agents/           # Feature category
+│   ├── intro.md
+│   ├── rag-technical.md
+│   └── ...
+├── api/              # API reference
+│   ├── intro.md
+│   ├── agents-detailed.md
+│   └── ...
+├── developers/       # Developer guides
+│   ├── installation.md
+│   ├── authentication.md
+│   └── ...
+└── guides/           # User guides
+    ├── messaging.md
+    └── ...
+```
+
+## Sidebar Configuration
+
+When adding new docs, update `sidebars.ts`:
+
+```typescript
+{
+    type: 'category',
+    label: 'Category Name',
+    items: [
+        'folder/doc-name',  // Matches docs/folder/doc-name.md
+    ],
+}
+```
+
+## Blog Posts
+
+Blog posts have additional frontmatter:
+
+```yaml
+---
+slug: url-friendly-slug
+title: Blog Post Title
+authors: [author_id]
+tags: [tag1, tag2]
+---
+```
+
+- First paragraph before `<!-- truncate -->` becomes the excerpt
+- Include `<!-- truncate -->` after 2-3 sentences
+
+## Summary
+
+Generate documentation that is:
+1. **Accurate** - Verified technical information
+2. **Complete** - All necessary context included
+3. **Consistent** - Follows established patterns
+4. **Discoverable** - Proper SEO and cross-linking
+5. **Maintainable** - Easy to update as product evolves
