@@ -29,34 +29,33 @@ Spritz supports multiple authentication methods, all providing:
 │                      SIWE Flow                               │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  1. Request Nonce                                            │
-│  ┌──────────┐    GET /api/auth/nonce                        │
+│  1. Request SIWE Message (includes nonce)                    │
+│  ┌──────────┐    GET /api/auth/verify?address=0x...         │
 │  │  Client  │ ────────────────────────────────►             │
 │  └──────────┘ ◄────────────────────────────────             │
-│                   { nonce: "abc123..." }                     │
+│                   { message: "...", nonce: "abc123..." }    │
 │                                                              │
-│  2. Create SIWE Message                                      │
+│  2. Server generates SIWE Message                            │
 │  ┌──────────────────────────────────────────────┐           │
 │  │ app.spritz.chat wants you to sign in...      │           │
 │  │                                               │           │
 │  │ URI: https://app.spritz.chat                 │           │
 │  │ Version: 1                                    │           │
-│  │ Chain ID: 8453                               │           │
+│  │ Chain ID: 1                                  │           │
 │  │ Nonce: abc123...                              │           │
-│  │ Issued At: 2025-01-17T12:00:00Z              │           │
-│  │ Expiration Time: 2025-01-17T12:10:00Z        │           │
+│  │ Issued At: 2026-01-22T12:00:00Z              │           │
 │  └──────────────────────────────────────────────┘           │
 │                                                              │
 │  3. Sign Message (Wallet)                                    │
 │  ┌──────────┐                                               │
-│  │  Wallet  │  signMessage(siweMessage)                     │
+│  │  Wallet  │  signMessage(message)                         │
 │  │ (MM/RK)  │  → signature: 0x...                           │
 │  └──────────┘                                               │
 │                                                              │
 │  4. Verify Signature                                         │
 │  ┌──────────┐    POST /api/auth/verify                      │
 │  │  Client  │ ────────────────────────────────►             │
-│  └──────────┘    { message, signature }                     │
+│  └──────────┘    { address, message, signature }            │
 │                                                              │
 │  5. Create Session                                           │
 │  ◄────────────────────────────────────────────              │
@@ -68,34 +67,20 @@ Spritz supports multiple authentication methods, all providing:
 ### Implementation
 
 ```typescript
-// 1. Get nonce
-const { nonce } = await fetch("/api/auth/nonce").then((r) => r.json());
+// 1. Get pre-formatted SIWE message with nonce from server
+const { message, nonce } = await fetch(
+    `/api/auth/verify?address=${userAddress}`
+).then((r) => r.json());
 
-// 2. Create SIWE message
-import { SiweMessage } from "siwe";
+// 2. Sign the message
+const signature = await signMessage({ message });
 
-const message = new SiweMessage({
-    domain: window.location.host,
-    address: userAddress,
-    statement: "Sign in to Spritz",
-    uri: window.location.origin,
-    version: "1",
-    chainId: chainId,
-    nonce: nonce,
-    issuedAt: new Date().toISOString(),
-    expirationTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-});
-
-const messageToSign = message.prepareMessage();
-
-// 3. Sign with wallet
-const signature = await signMessage({ message: messageToSign });
-
-// 4. Verify and create session
+// 3. Verify and create session
 const response = await fetch("/api/auth/verify", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: messageToSign, signature }),
+    credentials: "include", // Required for session cookie
+    body: JSON.stringify({ address: userAddress, message, signature }),
 });
 
 // Session cookie is automatically set
@@ -751,8 +736,8 @@ export async function rateLimitMiddleware(
 
 | Endpoint               | Limit | Window   | Constant |
 | ---------------------- | ----- | -------- | -------- |
-| `/api/auth/nonce`      | 10    | 1 minute | `RATE_LIMIT_AUTH` |
-| `/api/auth/verify`     | 5     | 1 minute | `RATE_LIMIT_STRICT` |
+| `/api/auth/verify` (GET) | 10    | 1 minute | `RATE_LIMIT_AUTH` |
+| `/api/auth/verify` (POST) | 5     | 1 minute | `RATE_LIMIT_STRICT` |
 | `/api/auth/webauthn/*` | 10    | 1 minute | `RATE_LIMIT_AUTH` |
 | `/api/agents/*/chat`   | 30    | 1 minute | `RATE_LIMIT_AI` |
 | `/api/streams`         | 5     | 1 minute | `RATE_LIMIT_STRICT` |

@@ -102,9 +102,9 @@ All notable changes to Spritz are documented here.
 - **Friend System**: Add friends, organize with tags
 
 ### Technical
-- Next.js 15 with App Router
+- Next.js 16 with App Router
 - Supabase for database and auth
-- Tailwind CSS 3.4 for styling
+- Tailwind CSS 4 for styling
 - TypeScript throughout
 
 ---

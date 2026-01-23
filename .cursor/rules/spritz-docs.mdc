@@ -11,10 +11,10 @@ You are generating documentation for Spritz, a decentralized social platform wit
 ## Project Context
 
 - **Framework**: Docusaurus 3.x
-- **Tech Stack**: Next.js 15, Tailwind CSS 3.4, TypeScript
+- **Tech Stack**: Next.js 16, Tailwind CSS 4, TypeScript
 - **Web3**: viem, wagmi, Safe Smart Accounts, ERC-4337
 - **Messaging**: Logos Messaging (built on Waku protocol)
-- **AI**: Google Gemini API (gemini-2.0-flash, gemini-2.0-flash-lite, gemini-1.5-pro)
+- **AI**: Google Gemini API (gemini-2.0-flash)
 - **Video**: Huddle01 (calls), Livepeer (livestreaming)
 - **Chains**: Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche + Solana
 
@@ -295,12 +295,12 @@ See the [API Reference](/docs/api/intro#rate-limiting) for rate limits.
 ## Version Numbers & Technical Specs
 
 ### Current Versions (keep updated)
-- Next.js: 15
-- Tailwind CSS: 3.4
+- Next.js: 16
+- Tailwind CSS: 4
 - Safe: v1.4.1
 - EntryPoint: v0.7
 - Embedding Model: text-embedding-004
-- Gemini Models: gemini-2.0-flash, gemini-2.0-flash-lite, gemini-1.5-pro
+- Gemini Model: gemini-2.0-flash
 
 ### Contract Addresses (verify before using)
 - SafeWebAuthnSharedSigner: `0x94a4F6affBd8975951142c3999aEAB7ecee555c2`

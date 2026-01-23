@@ -90,14 +90,14 @@ The most common flow for crypto-native users connecting with MetaMask, Rainbow, 
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                              │                                           │
 │                              ▼                                           │
-│  STEP 2: Get nonce from server                                          │
+│  STEP 2: Get SIWE message and nonce from server                         │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │  GET /api/auth/nonce                                              │   │
-│  │  Response: { nonce: "abc123...", expiresAt: "..." }              │   │
+│  │  GET /api/auth/verify?address=0x1234...                          │   │
+│  │  Response: { message: "...", nonce: "abc123..." }                │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                              │                                           │
 │                              ▼                                           │
-│  STEP 3: Create and sign SIWE message                                   │
+│  STEP 3: Sign the SIWE message                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │  "app.spritz.chat wants you to sign in with your Ethereum        │   │
 │  │   account: 0x1234...                                              │   │
@@ -506,7 +506,7 @@ INSERT INTO shout_sessions (
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
-| `/api/auth/nonce` | GET | Get fresh nonce for signing |
+| `/api/auth/verify?address=...` | GET | Get SIWE message and nonce for signing |
 | `/api/auth/verify` | POST | Verify SIWE signature, create session |
 | `/api/wallet/smart-wallet` | GET | Get computed Smart Wallet address |
 

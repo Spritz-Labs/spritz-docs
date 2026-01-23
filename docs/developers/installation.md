@@ -422,9 +422,9 @@ npm run type-check
 
 | Category | Technology |
 |----------|------------|
-| Framework | Next.js 15 (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Language | TypeScript |
-| Styling | Tailwind CSS 3.4 |
+| Styling | Tailwind CSS 4 |
 | Database | PostgreSQL + pgvector |
 | Realtime | PostgreSQL Realtime |
 | Web3 (EVM) | viem, wagmi |

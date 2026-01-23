@@ -101,8 +101,8 @@ Monetize your AI agents by charging per message using the x402 protocol. Support
 
 | Category                | Technology                      |
 | ----------------------- | ------------------------------- |
-| **Framework**           | Next.js 15 with App Router      |
-| **Styling**             | Tailwind CSS 3.4                |
+| **Framework**           | Next.js 16 with App Router      |
+| **Styling**             | Tailwind CSS 4                  |
 | **Animations**          | Motion (Framer Motion)          |
 | **3D Graphics**         | Three.js with React Three Fiber |
 | **Web3 (EVM)**          | viem, wagmi, permissionless.js  |

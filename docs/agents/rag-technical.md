@@ -66,12 +66,12 @@ Spritz uses **Google's `text-embedding-004`** model:
 - **API**: Google GenAI Embedding API
 
 :::info Gemini Model Configuration
-For chat generation, Spritz uses Google Gemini models. The available models are:
-- **gemini-2.0-flash** - Default. Best balance of speed and quality
-- **gemini-2.0-flash-lite** - Faster, lower cost, suitable for simple queries
-- **gemini-1.5-pro** - Higher quality for complex reasoning tasks
+For chat generation, Spritz uses **gemini-2.0-flash** from Google's Gemini API. This model provides:
+- Fast response times (optimized for real-time chat)
+- High-quality responses suitable for most use cases
+- Good balance between cost and capability
 
-Model availability may change as Google updates their API. Check the [Google AI documentation](https://ai.google.dev/models) for the latest information.
+All agents use this model by default. Model availability may change as Google updates their API.
 :::
 
 ### Generating Embeddings

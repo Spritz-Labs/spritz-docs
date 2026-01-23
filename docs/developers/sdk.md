@@ -142,10 +142,8 @@ export interface Agent {
 
 export type AgentVisibility = 'private' | 'friends' | 'public';
 
-export type GeminiModel = 
-    | 'gemini-2.0-flash'
-    | 'gemini-2.0-flash-lite'
-    | 'gemini-1.5-pro';
+// Currently only gemini-2.0-flash is supported
+export type GeminiModel = 'gemini-2.0-flash';
 
 export interface McpServer {
     name: string;

@@ -62,8 +62,8 @@ This page provides a quick overview of all available API endpoints. For detailed
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/auth/nonce` | Get a fresh nonce for SIWE/SIWS signing |
-| POST | `/api/auth/verify` | Verify SIWE signature |
+| GET | `/api/auth/verify?address=0x...` | Get SIWE message and nonce for signing |
+| POST | `/api/auth/verify` | Verify SIWE signature and create session |
 | POST | `/api/auth/verify-solana` | Verify SIWS signature |
 | GET | `/api/auth/session` | Get current session |
 | POST | `/api/auth/logout` | Logout |

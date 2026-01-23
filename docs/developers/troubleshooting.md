@@ -124,13 +124,12 @@ const messageToSign = message.prepareMessage();
 
 2. **Check nonce validity:**
 ```typescript
-// Nonce should be fetched fresh from server
-// and used within 5 minutes
-const { nonce, expiresAt } = await fetch('/api/auth/nonce').then(r => r.json());
+// Nonce is returned with the SIWE message from the server
+// and must be used within 5 minutes
+const { message, nonce } = await fetch(`/api/auth/verify?address=${address}`).then(r => r.json());
 
-if (Date.now() > new Date(expiresAt).getTime()) {
-    throw new Error('Nonce expired, please refresh');
-}
+// The nonce is already embedded in the message
+// Just sign and submit within the validity window
 ```
 
 ---

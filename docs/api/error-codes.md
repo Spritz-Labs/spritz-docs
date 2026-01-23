@@ -83,7 +83,7 @@ Some errors include additional fields:
 
 | Code | Description | Resolution |
 |------|-------------|------------|
-| `INVALID_NONCE` | Nonce expired or already used | Request new nonce via `GET /api/auth/nonce` |
+| `INVALID_NONCE` | Nonce expired or already used | Request new nonce via `GET /api/auth/verify?address=...` |
 | `INVALID_SIGNATURE` | Signature doesn't match address | Re-sign the SIWE message |
 | `NONCE_EXPIRED` | Nonce older than 5 minutes | Request new nonce |
 | `INVALID_DOMAIN` | Domain mismatch | Ensure domain is `app.spritz.chat` |

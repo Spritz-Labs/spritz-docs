@@ -32,35 +32,21 @@ Most endpoints require authentication via Sign-In with Ethereum (SIWE/SIWS). Ses
 ### Quick Start Authentication
 
 ```typescript
-import { SiweMessage } from 'siwe';
-
-// 1. Get a nonce from the server
-const { nonce } = await fetch('https://app.spritz.chat/api/auth/nonce', {
+// 1. Get a pre-formatted SIWE message with nonce from the server
+const { message, nonce } = await fetch(
+    `https://app.spritz.chat/api/auth/verify?address=${walletAddress}`, {
     credentials: 'include',
 }).then(r => r.json());
 
-// 2. Create and sign the SIWE message
-const message = new SiweMessage({
-    domain: 'app.spritz.chat',
-    address: walletAddress,
-    statement: 'Sign in to Spritz',
-    uri: 'https://app.spritz.chat',
-    version: '1',
-    chainId: 8453, // Base
-    nonce: nonce,
-    issuedAt: new Date().toISOString(),
-    expirationTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-});
-
-const messageToSign = message.prepareMessage();
-const signature = await wallet.signMessage(messageToSign);
+// 2. Sign the message with the wallet
+const signature = await wallet.signMessage(message);
 
 // 3. Verify signature and create session
 await fetch('https://app.spritz.chat/api/auth/verify', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include', // Required for cookies
-    body: JSON.stringify({ message: messageToSign, signature }),
+    body: JSON.stringify({ address: walletAddress, message, signature }),
 });
 
 // 4. Make authenticated requests (session cookie sent automatically)
@@ -68,6 +54,10 @@ const agents = await fetch('https://app.spritz.chat/api/agents', {
     credentials: 'include',
 }).then(r => r.json());
 ```
+
+:::note SIWE Message Format
+The server generates a standard SIWE message for you. The GET request to `/api/auth/verify?address=...` returns both the pre-formatted `message` string and the `nonce`. You sign the message as-is and send it back for verification.
+:::
 
 :::tip Cookie-Based Auth
 Spritz uses HTTP-only session cookies for security. Always include `credentials: 'include'` in your fetch requests.
@@ -178,7 +168,7 @@ For a complete list of error codes with troubleshooting guidance, see the [Error
 
 ### Authentication
 
-- `GET /api/auth/nonce` - Get a fresh nonce for SIWE/SIWS signing
+- `GET /api/auth/verify?address=...` - Get SIWE message and nonce for signing
 - `GET /api/auth/verify` - Verify SIWE signature
 - `POST /api/auth/verify` - Verify SIWE signature
 - `GET /api/auth/verify-solana` - Verify SIWS signature

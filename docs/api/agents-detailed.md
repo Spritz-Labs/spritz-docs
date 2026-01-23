@@ -649,7 +649,7 @@ When creating or updating agents, the following validation rules apply:
 | `name` | string | Required. 1-100 characters |
 | `personality` | string | Required. 1-1000 characters |
 | `system_instructions` | string | Optional. Max 4000 characters |
-| `model` | enum | Must be: `gemini-2.0-flash`, `gemini-2.0-flash-lite`, or `gemini-1.5-pro` |
+| `model` | string | Default: `gemini-2.0-flash` (currently the only supported model) |
 | `avatar_emoji` | string | Optional. Single emoji character |
 | `visibility` | enum | Must be: `private`, `friends`, or `public` |
 | `web_search_enabled` | boolean | Optional. Default: `false` |
