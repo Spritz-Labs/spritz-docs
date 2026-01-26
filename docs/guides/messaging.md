@@ -80,6 +80,26 @@ When viewing pixel art or images, use quick share buttons:
 - **More Options**: Share to Facebook, LinkedIn, Reddit, Telegram, WhatsApp
 - **Download**: Save the image to your device
 
+### Location Sharing
+
+Share your location in DMs and Group Chats:
+
+1. Click the attachment menu (+) in chat
+2. Select "Location"
+3. Allow location access when prompted
+4. Drop a pin on the map or use your current location
+5. Send the location message
+
+**Location Message Features:**
+- **Interactive Map Preview**: Shows an OpenStreetMap embed with your pin
+- **Open in Maps**: Recipients can open in Google Maps or Apple Maps
+- **Address Display**: Shows resolved address when available
+- **Coordinates**: Displays latitude and longitude
+
+:::info Availability
+Location sharing is available in DMs and Group Chats only. For privacy reasons, it is not available in public Channels or Global Chat.
+:::
+
 ## Chat Folders
 
 Organize your conversations with Telegram-style emoji folders.
@@ -120,6 +140,82 @@ Organize your conversations with Telegram-style emoji folders.
 - Folders sync across devices via your account
 - Removing a chat from a folder doesn't delete the chat
 - Delete a folder by long-pressing it
+
+## Message Actions
+
+Spritz provides a unified Telegram-style message menu for quick actions. Long-press or right-click any message to access:
+
+| Action | Description |
+|--------|-------------|
+| 📋 **Copy** | Copy message text to clipboard |
+| ↩️ **Reply** | Reply to the specific message |
+| ➡️ **Forward** | Forward message to another chat |
+| 😀 **React** | Add an emoji reaction |
+| ⬇️ **Download** | Download images or pixel art |
+| 🗑️ **Delete** | Delete your own messages |
+| 🚫 **Report** | Report inappropriate content |
+
+### Emoji Reactions
+
+React to messages with emojis:
+
+1. Long-press (mobile) or hover (desktop) on any message
+2. Select from quick reactions: 👍 ❤️ 😂 😮 😢 🙏
+3. Tap an existing reaction to add yours
+4. Your reaction appears below the message
+
+**Reaction Features:**
+- View who reacted by tapping the reaction count
+- Remove your reaction by tapping it again
+- Animated reactions for added expressiveness
+
+## User Moderation
+
+Keep your conversations safe with built-in moderation tools.
+
+### Mute Conversations
+
+Silence notifications without blocking:
+
+1. Open the chat you want to mute
+2. Click the menu (⋮) or long-press the chat
+3. Select "Mute"
+4. Choose duration: 1 hour, 8 hours, 1 day, 1 week, or Forever
+5. Unmute anytime from the same menu
+
+### Block Users
+
+Prevent a user from messaging you:
+
+1. Open the user's profile or chat
+2. Click "Block User"
+3. Confirm the action
+
+**What happens when you block someone:**
+- They cannot send you messages
+- You cannot send them messages
+- Any friend relationship is removed
+- They won't see when you're online
+
+### Report Users
+
+Report inappropriate behavior to admins:
+
+1. Long-press the offending message
+2. Select "Report"
+3. Choose the reason:
+   - Spam
+   - Harassment
+   - Hate speech
+   - Violence
+   - Scam
+   - Impersonation
+   - Inappropriate content
+   - Other
+4. Add optional details
+5. Optionally block the user at the same time
+
+Reports are reviewed by Spritz administrators. See the [User Moderation API](/docs/api/user-moderation) for technical details.
 
 ## Features
 

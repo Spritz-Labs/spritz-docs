@@ -1020,6 +1020,100 @@ ALTER PUBLICATION spritz_realtime ADD TABLE shout_moderators;
 ALTER PUBLICATION spritz_realtime ADD TABLE shout_muted_users;
 ```
 
+## User Moderation Tables
+
+### `shout_muted_conversations`
+
+Stores mute settings for conversations (DMs, groups, channels).
+
+```sql
+CREATE TABLE shout_muted_conversations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_address TEXT NOT NULL,
+    conversation_type TEXT NOT NULL CHECK (conversation_type IN ('dm', 'group', 'channel')),
+    conversation_id TEXT NOT NULL, -- Peer address for DMs, group/channel ID for others
+    muted_until TIMESTAMPTZ, -- NULL = forever
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_address, conversation_type, conversation_id)
+);
+
+CREATE INDEX idx_muted_conversations_user ON shout_muted_conversations(user_address);
+CREATE INDEX idx_muted_conversations_until ON shout_muted_conversations(muted_until);
+```
+
+### `shout_blocked_users`
+
+Stores user blocks (bidirectional - blocked user can't message blocker).
+
+```sql
+CREATE TABLE shout_blocked_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    blocker_address TEXT NOT NULL,
+    blocked_address TEXT NOT NULL,
+    reason TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(blocker_address, blocked_address)
+);
+
+CREATE INDEX idx_blocked_users_blocker ON shout_blocked_users(blocker_address);
+CREATE INDEX idx_blocked_users_blocked ON shout_blocked_users(blocked_address);
+```
+
+### `shout_user_reports`
+
+Stores reports for admin review.
+
+```sql
+CREATE TABLE shout_user_reports (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reporter_address TEXT NOT NULL,
+    reported_address TEXT NOT NULL,
+    report_type TEXT NOT NULL CHECK (report_type IN (
+        'spam', 'harassment', 'hate_speech', 'violence', 
+        'scam', 'impersonation', 'inappropriate_content', 'other'
+    )),
+    description TEXT,
+    conversation_type TEXT, -- Context: dm, group, channel
+    conversation_id TEXT,
+    message_id TEXT, -- Specific message being reported
+    message_content TEXT, -- Snapshot of content (max 1000 chars)
+    status TEXT DEFAULT 'pending' CHECK (status IN (
+        'pending', 'reviewed', 'action_taken', 'dismissed'
+    )),
+    admin_notes TEXT,
+    reviewed_at TIMESTAMPTZ,
+    reviewed_by TEXT, -- Admin who reviewed
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_reports_reporter ON shout_user_reports(reporter_address);
+CREATE INDEX idx_reports_reported ON shout_user_reports(reported_address);
+CREATE INDEX idx_reports_status ON shout_user_reports(status);
+CREATE INDEX idx_reports_type ON shout_user_reports(report_type);
+CREATE INDEX idx_reports_created ON shout_user_reports(created_at DESC);
+```
+
+### Moderation RLS Policies
+
+```sql
+ALTER TABLE shout_muted_conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shout_blocked_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shout_user_reports ENABLE ROW LEVEL SECURITY;
+
+-- Users can manage their own mutes
+CREATE POLICY "Users can view/manage own mutes" ON shout_muted_conversations FOR ALL USING (true);
+
+-- Users can view blocks (need to check if blocked by others)
+CREATE POLICY "Users can view blocks" ON shout_blocked_users FOR SELECT USING (true);
+CREATE POLICY "Users can create/delete own blocks" ON shout_blocked_users FOR ALL USING (true);
+
+-- Users can create reports, admins can view all
+CREATE POLICY "Users can create reports" ON shout_user_reports FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users/admins can view reports" ON shout_user_reports FOR SELECT USING (true);
+CREATE POLICY "Admins can update reports" ON shout_user_reports FOR UPDATE USING (true);
+```
+
 ## Migration Scripts
 
 All migration scripts are located in `/migrations` directory:

@@ -77,6 +77,7 @@ const sidebars: SidebarsConfig = {
           items: [
             'api/intro',
             'api/agents-detailed',
+            'api/user-moderation',
             'api/streaming',
             'api/error-codes',
             'api/complete',

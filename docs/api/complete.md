@@ -112,6 +112,20 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET | `/api/profile/theme` | Get profile theme |
 | POST | `/api/profile/theme` | Update profile theme |
 
+### User Moderation (Mute, Block, Report)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/mute` | Get muted conversations |
+| POST | `/api/users/mute` | Mute a conversation |
+| DELETE | `/api/users/mute` | Unmute a conversation |
+| GET | `/api/users/block` | Get blocked users |
+| POST | `/api/users/block` | Block a user |
+| DELETE | `/api/users/block` | Unblock a user |
+| GET | `/api/users/report` | Get reports (user/admin) |
+| POST | `/api/users/report` | Submit a report |
+| PATCH | `/api/users/report` | Update report status (admin) |
+
 ### Channels
 
 | Method | Endpoint | Description |
@@ -123,6 +137,16 @@ This page provides a quick overview of all available API endpoints. For detailed
 | POST | `/api/channels/:id/leave` | Leave channel |
 | GET | `/api/channels/:id/messages` | Get messages |
 | POST | `/api/channels/:id/messages` | Send message |
+| GET | `/api/channels/:id/agents` | Get official agents in channel |
+| POST | `/api/channels/agent-response` | Process @mentions |
+
+### Agent Channel Management (Admin)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/agents/:id/channels` | Get channels agent is in |
+| POST | `/api/agents/:id/channels` | Add agent to channel |
+| DELETE | `/api/agents/:id/channels` | Remove agent from channel |
 
 ### Rooms & Calls
 
