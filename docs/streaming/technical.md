@@ -1,4 +1,24 @@
+---
+title: Livestreaming Technical Deep Dive
+description: Streaming flow, WebRTC/WHIP ingestion, Livepeer transcoding, HLS and WebRTC WHEP playback, recording, and technical specifications for Spritz livestreams.
+keywords:
+  [
+    Spritz,
+    livestreaming,
+    Livepeer,
+    WebRTC,
+    WHIP,
+    HLS,
+    transcoding,
+    streaming,
+  ]
+sidebar_label: Technical Deep Dive
+sidebar_position: 1
+---
+
 # Livestreaming - Technical Deep Dive
+
+This page describes the streaming flow and technical details used by the Spritz app (see `lib/livepeer.ts`, GoLiveModal, LiveStreamPlayer, and stream API routes in the codebase).
 
 ## Architecture
 
@@ -24,72 +44,68 @@ const livepeerStream = await createLivepeerStream(streamName);
 
 ### 2. WebRTC Ingestion (WHIP)
 
-The broadcaster uses **WebRTC-HTTP Ingestion Protocol (WHIP)** to send video:
+The broadcaster uses **WebRTC-HTTP Ingestion Protocol (WHIP)** to send video. Livepeer uses GeoDNS: a **HEAD** request to `https://livepeer.studio/webrtc/{streamKey}` returns a **Location** header with the regional WHIP endpoint (e.g. `https://lax-prod-catalyst-2.lp-playback.studio/webrtc/{streamKey}`). Use that URL for SDP POST and for ICE servers (STUN/TURN on the same host). Recommended: use `getIngest(streamKey)` from `@livepeer/react/external` or the Broadcast component from `@livepeer/react/broadcast`.
 
 ```typescript
-// WebRTC ingest URL
-const ingestUrl = `https://livepeer.studio/webrtc/${streamKey}`;
+import { getIngest } from "@livepeer/react/external";
 
-// Browser WebRTC setup
+const ingestUrl = getIngest(streamKey); // or resolve regional URL via HEAD redirect
+
+// Regional ICE servers (host from redirect URL)
+const host = new URL(ingestUrl).host;
 const pc = new RTCPeerConnection({
-    iceServers: [{ urls: 'stun:stun.livepeer.studio:3478' }]
+    iceServers: [
+        { urls: `stun:${host}` },
+        { urls: `turn:${host}`, username: "livepeer", credential: "livepeer" },
+    ],
 });
 
-// Get user media
 const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-        width: 1080,
-        height: 1920,
-        frameRate: 30
-    },
-    audio: true
+    video: { width: 1080, height: 1920, frameRate: 30 },
+    audio: true,
 });
 
-// Add tracks to peer connection
-stream.getTracks().forEach(track => {
-    pc.addTrack(track, stream);
-});
+// Add as sendonly transceivers (WHIP spec)
+stream.getVideoTracks()[0] && pc.addTransceiver(stream.getVideoTracks()[0], { direction: "sendonly" });
+stream.getAudioTracks()[0] && pc.addTransceiver(stream.getAudioTracks()[0], { direction: "sendonly" });
 
-// WHIP offer/answer exchange
 const offer = await pc.createOffer();
 await pc.setLocalDescription(offer);
-
+// Wait for ICE gathering (e.g. up to 5s), then POST offer SDP to ingestUrl
 const response = await fetch(ingestUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/sdp' },
-    body: offer.sdp
+    method: "POST",
+    headers: { "Content-Type": "application/sdp" },
+    body: pc.localDescription?.sdp,
 });
-
 const answer = await response.text();
-await pc.setRemoteDescription({ type: 'answer', sdp: answer });
+await pc.setRemoteDescription({ type: "answer", sdp: answer });
 ```
 
 ### 3. Livepeer Processing
 
 Livepeer:
-- Receives WebRTC stream
-- Transcodes to multiple quality levels (720p, 480p, 360p)
-- Generates HLS manifest
-- Records stream for VOD
+- Receives WebRTC stream (WHIP)
+- Transcodes to H.264 with configured or default profiles (240p, 360p, 480p, 720p)
+- Generates HLS manifest and optional WebRTC WHEP playback
+- Records stream for VOD when `record: true` (optional `recordingSpec` with encoder: H.264, HEVC, VP8, VP9)
 
-### 4. HLS Playback
+### 4. Playback (HLS or WebRTC WHEP)
 
-Viewers receive HLS stream:
+Viewers can use **Playback Info** (`GET https://livepeer.studio/api/playback/{playbackId}`) to get HLS and WebRTC WHEP URLs, then use the Livepeer Player (prefers WebRTC, fallback HLS) or hls.js for HLS only:
 
 ```typescript
-// HLS playback URL
+// Direct HLS URL
 const playbackUrl = `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
 
-// Using hls.js
-import Hls from 'hls.js';
+// Or fetch playback info (server-side) and use getSrc(playbackInfo) with Player.Root
+const playbackInfo = await livepeer.playback.get(playbackId);
 
-const video = document.getElementById('video');
+// Using hls.js
+import Hls from "hls.js";
 const hls = new Hls();
 hls.loadSource(playbackUrl);
 hls.attachMedia(video);
-hls.on(Hls.Events.MANIFEST_PARSED, () => {
-    video.play();
-});
+hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
 ```
 
 ## Stream States
@@ -136,14 +152,9 @@ if (livepeerStream?.isActive) {
 Streams are automatically recorded when `record: true`:
 
 ```typescript
-const livepeerStream = await createLivepeerStream(streamName, {
-    record: true,
-    profiles: [
-        { name: "720p", bitrate: 2000000, fps: 30, width: 1280, height: 720 },
-        { name: "480p", bitrate: 1000000, fps: 30, width: 854, height: 480 },
-        { name: "360p", bitrate: 500000, fps: 30, width: 640, height: 360 }
-    ]
-});
+// Spritz app: lib/livepeer.ts uses these profiles (no fpsDen/quality/gop/profile)
+const livepeerStream = await createLivepeerStream(streamName);
+// createLivepeerStream sends: record: true, profiles: [720p 2Mbps, 480p 1Mbps, 360p 500kbps]
 ```
 
 ### Asset Retrieval
@@ -228,34 +239,32 @@ POST /api/streams/:id/chat
 
 ## Technical Specifications
 
-### Video Encoding
+### Video Encoding (Livepeer)
 
-- **Codec**: H.264 (AVC)
-- **Resolution**: 1080x1920 (9:16 portrait)
-- **Frame Rate**: 30 fps
-- **Bitrate**: Adaptive (2Mbps max for 720p)
+- **Codec**: H.264 (AVC); profile: H264Baseline, H264Main, H264High, or H264ConstrainedHigh
+- **Transcode profiles**: width/height ≥ 128, bitrate ≥ 400; optional quality (0–44), gop, fpsDen (default 1)
+- **Default profiles** (if not specified): 240p (250 kbps), 360p (800 kbps), 480p (1.6 Mbps), 720p (3 Mbps)
+- **Recording encoders**: H.264, HEVC, VP8, VP9 (via recordingSpec)
 
 ### Audio Encoding
 
-- **Codec**: AAC
-- **Sample Rate**: 48kHz
-- **Bitrate**: 128kbps
+- **Codec**: AAC (transcoder default)
+- **Sample Rate**: 48 kHz typical
+- **Bitrate**: Set by transcoder
 
 ### Network Requirements
 
-- **Upload**: Minimum 2Mbps for 720p
-- **Download**: Minimum 1Mbps for viewing
-- **Latency**: ~3-5 seconds (HLS)
+- **Upload**: Minimum 2 Mbps for 720p; 5 Mbps recommended for stable broadcast
+- **Download**: Minimum 1 Mbps for viewing
+- **Latency**: ~3–5 s (HLS); sub-second with WebRTC WHEP playback
 
-### Transcoding Profiles
+### Transcoding Profiles (Spritz defaults)
 
-Livepeer automatically creates multiple quality levels:
+1. **720p**: 1280×720 @ 3 Mbps, quality 23, gop "2", H264Baseline
+2. **480p**: 854×480 @ 1.6 Mbps
+3. **360p**: 640×360 @ 800 kbps
 
-1. **720p**: 1280x720 @ 2Mbps
-2. **480p**: 854x480 @ 1Mbps
-3. **360p**: 640x360 @ 500kbps
-
-HLS player automatically selects best quality based on connection.
+HLS player (or Livepeer Player with Playback Info) selects best quality based on connection.
 
 ## Error Handling
 
