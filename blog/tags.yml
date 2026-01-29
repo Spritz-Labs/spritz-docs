@@ -82,3 +82,13 @@ wallets:
     label: Wallets
     permalink: /wallets
     description: Posts about Web3 wallets, account abstraction, and self-custody
+
+world-id:
+    label: World ID
+    permalink: /world-id
+    description: Posts about World ID and proof of personhood
+
+security:
+    label: Security
+    permalink: /security
+    description: Posts about security, scams, and identity verification
