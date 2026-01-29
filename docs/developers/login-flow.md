@@ -61,14 +61,14 @@ The source of these depends on the authentication method used.
 
 ## Authentication Methods Summary
 
-| Method | Spritz ID Source | Wallet Signer | Immediate Wallet? | Best For |
-|--------|------------------|---------------|-------------------|----------|
-| **EVM Wallet** | Wallet address | Wallet EOA | ✅ Yes | Crypto-native users |
-| **Passkey** | Credential ID hash | WebAuthn P-256 | ✅ Yes | New users, mobile |
-| **Email** | Derived hash | Passkey (must create) | ❌ No | Non-crypto users |
-| **World ID** | nullifier_hash | Passkey (must create) | ❌ No | Privacy-focused |
-| **Alien ID** | alienAddress | Passkey (must create) | ❌ No | Alien ecosystem |
-| **Solana** | Solana address | Passkey (must create) | ❌ No | Solana users |
+| Method         | Spritz ID Source   | Wallet Signer         | Immediate Wallet? | Best For            |
+| -------------- | ------------------ | --------------------- | ----------------- | ------------------- |
+| **EVM Wallet** | Wallet address     | Wallet EOA            | ✅ Yes            | Crypto-native users |
+| **Passkey**    | Credential ID hash | WebAuthn P-256        | ✅ Yes            | New users, mobile   |
+| **Email**      | Derived hash       | Passkey (must create) | ❌ No             | Non-crypto users    |
+| **World ID**   | nullifier_hash     | Passkey (must create) | ❌ No             | Privacy-focused     |
+| **Alien ID**   | alienAddress       | Passkey (must create) | ❌ No             | Alien ecosystem     |
+| **Solana**     | Solana address     | Passkey (must create) | ❌ No             | Solana users        |
 
 ---
 
@@ -112,12 +112,12 @@ The most common flow for crypto-native users connecting with MetaMask, Rainbow, 
 │  STEP 4: Verify signature and create session                            │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │  POST /api/auth/verify                                            │   │
-│  │  Body: { message, signature }                                     │   │
+│  │  Body: { address, message, signature }                            │   │
 │  │                                                                    │   │
 │  │  Server:                                                          │   │
 │  │  ✓ Verifies SIWE signature                                        │   │
 │  │  ✓ Creates/updates user record in database                       │   │
-│  │  ✓ Sets wallet_type = "eoa"                                       │   │
+│  │  ✓ Sets wallet_type = "wallet"                                    │   │
 │  │  ✓ Creates JWT session (7-day expiry)                            │   │
 │  │  ✓ Sets HTTP-only session cookie                                  │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
@@ -296,13 +296,13 @@ For users who want passwordless login using Face ID, Touch ID, or Windows Hello.
 
 ### Passkey vs Wallet: Key Differences
 
-| Aspect | Wallet Login | Passkey Login |
-|--------|--------------|---------------|
-| **Spritz ID** | Wallet address (0x...) | Derived from credential hash |
-| **Safe Signer** | EOA (secp256k1) | WebAuthn (P-256) |
+| Aspect                       | Wallet Login                    | Passkey Login                             |
+| ---------------------------- | ------------------------------- | ----------------------------------------- |
+| **Spritz ID**                | Wallet address (0x...)          | Derived from credential hash              |
+| **Safe Signer**              | EOA (secp256k1)                 | WebAuthn (P-256)                          |
 | **Safe Address Calculation** | `getSafeAddress(walletAddress)` | `getPasskeySafeAddress(pubKeyX, pubKeyY)` |
-| **Transaction Signing** | Wallet prompt | Face ID / Touch ID |
-| **Cross-device** | Need wallet on device | Can use phone to sign on laptop |
+| **Transaction Signing**      | Wallet prompt                   | Face ID / Touch ID                        |
+| **Cross-device**             | Need wallet on device           | Can use phone to sign on laptop           |
 
 ---
 
@@ -424,14 +424,14 @@ Privacy-preserving authentication using zero-knowledge proofs.
 
 Here's a summary of when each component is created:
 
-| Stage | What Happens | Spritz ID | Smart Wallet Address | Smart Wallet Deployed |
-|-------|--------------|-----------|---------------------|----------------------|
-| **Before Login** | — | ❌ None | ❌ None | ❌ No |
-| **After Wallet/Passkey Login** | Session created | ✅ Assigned | ✅ Computed (counterfactual) | ❌ No |
-| **After Email/WorldID Login** | Session created | ✅ Assigned | ❌ Not computed | ❌ No |
-| **After Email User Creates Passkey** | Passkey linked | ✅ Same | ✅ Computed | ❌ No |
-| **User Receives Tokens** | Tokens sent to address | ✅ Same | ✅ Same | ❌ No (still works!) |
-| **First Outgoing Transaction** | Safe deployed | ✅ Same | ✅ Same | ✅ **YES** |
+| Stage                                | What Happens           | Spritz ID   | Smart Wallet Address         | Smart Wallet Deployed |
+| ------------------------------------ | ---------------------- | ----------- | ---------------------------- | --------------------- |
+| **Before Login**                     | —                      | ❌ None     | ❌ None                      | ❌ No                 |
+| **After Wallet/Passkey Login**       | Session created        | ✅ Assigned | ✅ Computed (counterfactual) | ❌ No                 |
+| **After Email/WorldID Login**        | Session created        | ✅ Assigned | ❌ Not computed              | ❌ No                 |
+| **After Email User Creates Passkey** | Passkey linked         | ✅ Same     | ✅ Computed                  | ❌ No                 |
+| **User Receives Tokens**             | Tokens sent to address | ✅ Same     | ✅ Same                      | ❌ No (still works!)  |
+| **First Outgoing Transaction**       | Safe deployed          | ✅ Same     | ✅ Same                      | ✅ **YES**            |
 
 ---
 
@@ -504,34 +504,34 @@ INSERT INTO shout_sessions (
 
 ### Wallet Login
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/auth/verify?address=...` | GET | Get SIWE message and nonce for signing |
-| `/api/auth/verify` | POST | Verify SIWE signature, create session |
-| `/api/wallet/smart-wallet` | GET | Get computed Smart Wallet address |
+| Endpoint                       | Method | Purpose                                |
+| ------------------------------ | ------ | -------------------------------------- |
+| `/api/auth/verify?address=...` | GET    | Get SIWE message and nonce for signing |
+| `/api/auth/verify`             | POST   | Verify SIWE signature, create session  |
+| `/api/wallet/smart-wallet`     | GET    | Get computed Smart Wallet address      |
 
 ### Passkey Login
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/passkey/register/options` | POST | Get WebAuthn registration options |
-| `/api/passkey/register/verify` | POST | Verify registration, store credential |
-| `/api/passkey/login/options` | POST | Get WebAuthn authentication options |
-| `/api/passkey/login/verify` | POST | Verify assertion, create session |
+| Endpoint                        | Method | Purpose                               |
+| ------------------------------- | ------ | ------------------------------------- |
+| `/api/passkey/register/options` | POST   | Get WebAuthn registration options     |
+| `/api/passkey/register/verify`  | POST   | Verify registration, store credential |
+| `/api/passkey/login/options`    | POST   | Get WebAuthn authentication options   |
+| `/api/passkey/login/verify`     | POST   | Verify assertion, create session      |
 
 ### Email Login
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/email/send-code` | POST | Send verification code |
-| `/api/email/verify-code` | POST | Verify code, create session |
+| Endpoint                 | Method | Purpose                     |
+| ------------------------ | ------ | --------------------------- |
+| `/api/email/send-code`   | POST   | Send verification code      |
+| `/api/email/verify-code` | POST   | Verify code, create session |
 
 ### Session Management
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/auth/session` | GET | Get current session info |
-| `/api/auth/logout` | POST | Clear session, delete cookie |
+| Endpoint            | Method | Purpose                      |
+| ------------------- | ------ | ---------------------------- |
+| `/api/auth/session` | GET    | Get current session info     |
+| `/api/auth/logout`  | POST   | Clear session, delete cookie |
 
 ---
 
@@ -544,14 +544,14 @@ import { useSmartWallet } from "@/hooks/useSmartWallet";
 
 function WalletFeature() {
     const { smartWallet, isLoading } = useSmartWallet(userAddress);
-    
+
     if (isLoading) return <Loading />;
-    
+
     // User logged in via email/WorldID without passkey
     if (smartWallet?.needsPasskey) {
         return <CreatePasskeyPrompt />;
     }
-    
+
     // User has full wallet access
     return (
         <div>
@@ -575,13 +575,13 @@ async function handleLogin(method: AuthMethod) {
             const signature = await signSIWE(address, nonce);
             await verifySignature(signature);
             break;
-            
+
         case "passkey":
             // Create/authenticate with passkey
             const credential = await navigator.credentials.get({...});
             await verifyPasskey(credential);
             break;
-            
+
         case "email":
             // Send code → Verify → Prompt for passkey later
             await sendEmailCode(email);
@@ -599,20 +599,20 @@ async function handleLogin(method: AuthMethod) {
 
 ### Session Security
 
-| Practice | Implementation |
-|----------|----------------|
+| Practice              | Implementation                             |
+| --------------------- | ------------------------------------------ |
 | **HTTP-only cookies** | JWT stored in cookie, not accessible to JS |
-| **Secure flag** | Cookie only sent over HTTPS |
-| **SameSite=Strict** | Prevents CSRF attacks |
-| **7-day expiry** | Sessions automatically expire |
+| **Secure flag**       | Cookie only sent over HTTPS                |
+| **SameSite=Strict**   | Prevents CSRF attacks                      |
+| **7-day expiry**      | Sessions automatically expire              |
 
 ### Passkey Security
 
-| Risk | Mitigation |
-|------|------------|
-| **Phishing** | Passkeys bound to domain (rpId = "spritz.chat") |
-| **Device loss** | Recovery signer can be added to Safe |
-| **Replay attacks** | Each signature includes unique challenge |
+| Risk               | Mitigation                                      |
+| ------------------ | ----------------------------------------------- |
+| **Phishing**       | Passkeys bound to domain (rpId = "spritz.chat") |
+| **Device loss**    | Recovery signer can be added to Safe            |
+| **Replay attacks** | Each signature includes unique challenge        |
 
 ---
 
