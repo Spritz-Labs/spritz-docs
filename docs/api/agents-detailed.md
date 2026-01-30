@@ -1,6 +1,14 @@
+---
+title: Agents API - Detailed Reference
+description: "Complete reference for AI agent endpoints: list, create, chat, knowledge base, discovery, favorites, embed, x402, and channel integration."
+keywords: [Spritz, agents API, chat, knowledge base, MCP, x402, API reference]
+sidebar_label: Agents API
+sidebar_position: 1
+---
+
 # Agents API - Detailed Reference
 
-Complete reference for AI agent endpoints including creation, chat, knowledge bases, and x402 monetization.
+Complete reference for AI agent endpoints including creation, chat, knowledge bases, and x402 monetization. For implementation details (RAG, MCP, API tools, scheduling), see [AI Architecture](/docs/agents/architecture).
 
 ## Authentication
 
@@ -29,16 +37,19 @@ See the [API Introduction](/docs/api/intro#authentication) for complete authenti
 ## List Agents
 
 ```http
-GET /api/agents?userAddress=0x...&visibility=public&limit=20
+GET /api/agents?userAddress=0x...&includeOfficial=true
 ```
 
 ### Query Parameters
 
-- `userAddress` (optional): Filter by owner address
-- `visibility` (optional): Filter by visibility (`private`, `friends`, `public`)
-- `limit` (optional): Maximum results (default: 20)
+| Parameter         | Type   | Required | Description                                                                                                        |
+| ----------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `userAddress`     | string | Yes      | Owner wallet address (normalized to lowercase)                                                                     |
+| `includeOfficial` | string | No       | If `"true"`, and the requesting user is an admin, official agents (not owned by the user) are appended to the list |
 
 ### Response
+
+Returns all agents owned by `userAddress`, ordered by `created_at` descending. When `includeOfficial` is `"true"` and the user is in `shout_admins`, official agents (visibility `official`) not owned by the user are merged into the list.
 
 ```json
 {
@@ -51,14 +62,9 @@ GET /api/agents?userAddress=0x...&visibility=public&limit=20
             "system_instructions": "You are a helpful assistant.",
             "model": "gemini-2.0-flash",
             "avatar_emoji": "🤖",
-            "avatar_url": "https://example.com/avatar.png",
-            "visibility": "public",
-            "web_search_enabled": true,
-            "use_knowledge_base": true,
+            "visibility": "private",
             "message_count": 123,
             "tags": ["helpful", "technical"],
-            "suggested_questions": ["What can you help with?", "Tell me about yourself"],
-            "x402_enabled": false,
             "created_at": "2026-01-15T10:30:00Z",
             "updated_at": "2026-01-15T10:30:00Z"
         }
@@ -74,28 +80,30 @@ POST /api/agents
 
 ### Request Body
 
+| Parameter     | Type   | Required | Description                                                          |
+| ------------- | ------ | -------- | -------------------------------------------------------------------- |
+| `userAddress` | string | Yes      | Owner wallet address                                                 |
+| `name`        | string | Yes      | Agent name (trimmed)                                                 |
+| `personality` | string | No       | Short personality; used to generate `system_instructions`            |
+| `avatarEmoji` | string | No       | Single emoji (default: `"🤖"`)                                       |
+| `visibility`  | string | No       | `private` (default), `friends`, `public`, or `official` (admin only) |
+| `tags`        | array  | No       | Max 5 tags; each trimmed, lowercased, max 20 chars                   |
+
 ```json
 {
     "userAddress": "0x...",
     "name": "My Agent",
     "personality": "Helpful and concise",
-    "system_instructions": "You are a helpful assistant that provides concise answers.",
-    "model": "gemini-2.0-flash",
-    "avatar_emoji": "🤖",
-    "avatar_url": "https://example.com/avatar.png",
+    "avatarEmoji": "🤖",
     "visibility": "private",
-    "web_search_enabled": true,
-    "use_knowledge_base": true,
-    "tags": ["helpful", "technical"],
-    "mcp_servers": [],
-    "api_tools": []
+    "tags": ["helpful", "technical"]
 }
 ```
 
-:::info Avatar Options
-Agents can have either an `avatar_emoji` (single emoji character) or an `avatar_url` (image URL). If both are provided, `avatar_url` takes precedence in the UI.
-:::
-```
+- **Beta:** User must have `beta_access` in `shout_users` (403 if not).
+- **Limit:** Non-admin users are limited to 5 agents; official agents and admins are exempt.
+- **Official:** Only admins can set `visibility: "official"` (403 otherwise).
+- **System instructions:** If `personality` is provided, generated as: `You are an AI assistant named "${name}". Your personality: ${personality}. Be helpful, friendly, and stay in character.` Otherwise a short default. Model is fixed as `gemini-2.0-flash`.
 
 ### Response
 
@@ -105,7 +113,14 @@ Agents can have either an `avatar_emoji` (single emoji character) or an `avatar_
         "id": "uuid",
         "owner_address": "0x...",
         "name": "My Agent",
-        "created_at": "2026-01-15T10:30:00Z"
+        "personality": "Helpful and concise",
+        "system_instructions": "You are an AI assistant named \"My Agent\". Your personality: Helpful and concise. Be helpful, friendly, and stay in character.",
+        "model": "gemini-2.0-flash",
+        "avatar_emoji": "🤖",
+        "visibility": "private",
+        "tags": ["helpful", "technical"],
+        "created_at": "2026-01-15T10:30:00Z",
+        "updated_at": "2026-01-15T10:30:00Z"
     }
 }
 ```
@@ -156,53 +171,98 @@ POST /api/agents/:id/chat
 
 ### Request Body
 
+| Parameter     | Type    | Required | Description                                                   |
+| ------------- | ------- | -------- | ------------------------------------------------------------- |
+| `userAddress` | string  | Yes      | User wallet address (used for access and history)             |
+| `message`     | string  | Yes      | User message text                                             |
+| `stream`      | boolean | No       | If `true`, response is NDJSON stream (`application/x-ndjson`) |
+
 ```json
 {
     "userAddress": "0x...",
     "message": "What can you help me with?",
-    "sessionId": "optional-session-id"
+    "stream": false
 }
 ```
 
-### Response
+### Response (non-streaming)
 
 ```json
 {
-    "success": true,
-    "sessionId": "session-id",
     "message": "I can help you with...",
-    "agent": {
-        "id": "uuid",
-        "name": "Agent Name",
-        "emoji": "🤖"
-    },
-    "usage": {
-        "promptTokens": 150,
-        "completionTokens": 75,
-        "totalTokens": 225
+    "agentName": "Agent Name",
+    "agentEmoji": "🤖",
+    "scheduling": null
+}
+```
+
+When scheduling was used and slots are returned for the booking card:
+
+```json
+{
+    "message": "...",
+    "agentName": "Support Bot",
+    "agentEmoji": "🎧",
+    "scheduling": {
+        "ownerAddress": "0x...",
+        "slots": [
+            { "start": "2026-01-30T18:00:00Z", "end": "2026-01-30T18:30:00Z" }
+        ],
+        "slotsByDate": { "Monday, January 30": ["6:00 PM", "6:45 PM"] },
+        "freeEnabled": true,
+        "paidEnabled": false,
+        "freeDuration": 15,
+        "paidDuration": 30,
+        "priceCents": 0,
+        "timezone": "America/Los_Angeles"
     }
 }
 ```
 
+### Response (streaming)
+
+When `stream: true`, the response is NDJSON (`application/x-ndjson`): one line per chunk or final event.
+
+```json
+{"type":"chunk","text":"Here "}
+{"type":"chunk","text":"is "}
+{"type":"chunk","text":"the answer.\n"}
+{"type":"done","message":"Here is the answer.\n","scheduling":null}
+```
+
+On error:
+
+```json
+{ "type": "error", "error": "Failed to generate response" }
+```
+
 ### Implementation Details
 
-1. **RAG Context**: If `use_knowledge_base` is enabled, retrieves relevant chunks
+1. **RAG Context**: If `use_knowledge_base !== false`, retrieves relevant chunks via `match_knowledge_chunks`; fallback to pending knowledge URL fetch
 2. **Web Search**: If `web_search_enabled`, uses Google Search grounding
-3. **MCP Tools**: If MCP servers configured, discovers and uses tools
-4. **Chat History**: Maintains context from previous messages in session
-5. **Response Generation**: Uses Gemini API with system instructions
+3. **Platform + MCP**: Platform API tools (The Grid GraphQL) and optional MCP servers; per-agent `api_tools` and `mcp_servers`
+4. **Chat History**: Last 10 messages from `shout_agent_chats` for this agent and `userAddress`
+5. **Scheduling**: If enabled and message suggests scheduling, adds slot context and optional `scheduling` payload for the booking card
+6. **Response**: Gemini `gemini-2.0-flash`; rate limit tier `ai` (30/min)
 
 ### Chat History
 
 ```http
-GET /api/agents/:id/chat?sessionId=session-id&limit=20
+GET /api/agents/:id/chat?userAddress=0x...&limit=50
 ```
+
+### Query Parameters
+
+| Parameter     | Type   | Required | Description                |
+| ------------- | ------ | -------- | -------------------------- |
+| `userAddress` | string | Yes      | User wallet address        |
+| `limit`       | number | No       | Max messages (default: 50) |
 
 ### Response
 
 ```json
 {
-    "messages": [
+    "chats": [
         {
             "id": "uuid",
             "role": "user",
@@ -213,7 +273,7 @@ GET /api/agents/:id/chat?sessionId=session-id&limit=20
             "id": "uuid",
             "role": "assistant",
             "content": "Hi! How can I help?",
-            "created_at": "2024-01-01T00:00:01Z"
+            "created_at": "2026-01-15T10:30:01Z"
         }
     ]
 }
@@ -222,8 +282,10 @@ GET /api/agents/:id/chat?sessionId=session-id&limit=20
 ### Clear Chat History
 
 ```http
-DELETE /api/agents/:id/chat?sessionId=session-id
+DELETE /api/agents/:id/chat?userAddress=0x...
 ```
+
+**Query Parameters:** `userAddress` (required). Deletes all chat rows for this agent and user.
 
 ## Knowledge Base
 
@@ -285,15 +347,15 @@ Official agents can use Firecrawl for enhanced scraping:
 }
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `url` | string | Required. Valid HTTPS URL |
-| `title` | string | Optional. Auto-detected from URL if not provided |
-| `scrapeMethod` | enum | `basic` (default) or `firecrawl` (official agents only) |
-| `crawlDepth` | number | Max crawl depth 1-5 (official agents only) |
-| `excludePatterns` | array | URL patterns to skip, max 20 (official agents only) |
-| `autoSync` | boolean | Enable automatic re-indexing (official agents only) |
-| `syncIntervalHours` | number | Hours between syncs, 1-168 (official agents only) |
+| Parameter           | Type    | Description                                             |
+| ------------------- | ------- | ------------------------------------------------------- |
+| `url`               | string  | Required. Valid HTTPS URL                               |
+| `title`             | string  | Optional. Auto-detected from URL if not provided        |
+| `scrapeMethod`      | enum    | `basic` (default) or `firecrawl` (official agents only) |
+| `crawlDepth`        | number  | Max crawl depth 1-5 (official agents only)              |
+| `excludePatterns`   | array   | URL patterns to skip, max 20 (official agents only)     |
+| `autoSync`          | boolean | Enable automatic re-indexing (official agents only)     |
+| `syncIntervalHours` | number  | Hours between syncs, 1-168 (official agents only)       |
 
 ### Response
 
@@ -316,13 +378,10 @@ POST /api/agents/:id/knowledge/index
 
 ### Request Body
 
-```json
-{
-    "knowledge_id": "uuid"
-}
-```
-
-### Request Body
+| Parameter     | Type   | Required | Description                             |
+| ------------- | ------ | -------- | --------------------------------------- |
+| `userAddress` | string | Yes      | Owner or authorized user wallet address |
+| `knowledgeId` | string | Yes      | UUID of the knowledge item to index     |
 
 ```json
 {
@@ -486,13 +545,14 @@ Returns information about a public or official agent.
 :::info Suggested Questions
 For **official agents**, suggested questions are manually configured by admins. For **public agents**, suggested questions are auto-generated based on the agent's name, personality, and tags.
 :::
-```
+
+````
 
 ### Chat with Public Agent (x402)
 
 ```http
 POST /api/public/agents/:id/chat
-```
+````
 
 ### Request Headers
 
@@ -588,6 +648,7 @@ GET /api/channels/:id/agents
 Returns all official agents present in a channel.
 
 **Path Parameters:**
+
 - `id`: Channel UUID or `"global"` for Global Chat
 
 ### Response
@@ -623,11 +684,11 @@ POST /api/agents/:id/channels
 }
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `userAddress` | string | Admin's wallet address |
-| `channelType` | enum | `global` or `channel` |
-| `channelId` | string | Channel UUID (required if `channelType` is `channel`) |
+| Parameter     | Type   | Description                                           |
+| ------------- | ------ | ----------------------------------------------------- |
+| `userAddress` | string | Admin's wallet address                                |
+| `channelType` | enum   | `global` or `channel`                                 |
+| `channelId`   | string | Channel UUID (required if `channelType` is `channel`) |
 
 ### Response
 
@@ -651,6 +712,7 @@ DELETE /api/agents/:id/channels?userAddress=0x...&channelType=global
 ```
 
 **Query Parameters:**
+
 - `userAddress` (required): Admin's wallet address
 - `channelType` (required): `global` or `channel`
 - `channelId` (optional): Channel UUID (required for `channel` type)
@@ -695,7 +757,7 @@ Called when a message containing @mentions is sent to a channel. Generates AI re
 ```
 
 :::info Markdown Support
-Agent responses in channels support markdown formatting including **bold**, *italic*, bullet points, and image rendering using `![Description](URL)` syntax. Agents can reference images from their knowledge base in responses.
+Agent responses in channels support markdown formatting including **bold**, _italic_, bullet points, and image rendering using `![Description](URL)` syntax. Agents can reference images from their knowledge base in responses.
 :::
 
 ## Detect API Type
@@ -801,10 +863,10 @@ POST /api/agents/detect-api
 
 Agent endpoints follow the tiered rate limiting system:
 
-| Endpoint Type | Limit | Tier |
-|---------------|-------|------|
-| `/api/agents/*/chat` | 30/min | AI |
-| Other agent endpoints | 100/min | General |
+| Endpoint Type                      | Limit    | Tier             |
+| ---------------------------------- | -------- | ---------------- |
+| `/api/agents/*/chat`               | 30/min   | AI               |
+| Other agent endpoints              | 100/min  | General          |
 | `/api/public/agents/*/chat` (x402) | No limit | Payment required |
 
 See [API Overview](/docs/api/intro#rate-limiting) for complete rate limiting documentation.
@@ -813,54 +875,56 @@ See [API Overview](/docs/api/intro#rate-limiting) for complete rate limiting doc
 
 When creating or updating agents, the following validation rules apply:
 
-| Parameter | Type | Constraints |
-|-----------|------|-------------|
-| `name` | string | Required. 1-100 characters |
-| `personality` | string | Required. 1-1000 characters |
-| `system_instructions` | string | Optional. Max 4000 characters |
-| `model` | string | Default: `gemini-2.0-flash` (currently the only supported model) |
-| `avatar_emoji` | string | Optional. Single emoji character |
-| `avatar_url` | string | Optional. Valid HTTPS URL for custom avatar image |
-| `visibility` | enum | Must be: `private`, `friends`, `public`, or `official` |
-| `web_search_enabled` | boolean | Optional. Default: `false` |
-| `use_knowledge_base` | boolean | Optional. Default: `false` |
-| `tags` | array | Optional. Max 5 tags, each 1-20 characters |
-| `suggested_questions` | array | Official agents only. Max 4 questions, each 1-100 characters |
-| `x402_price_cents` | number | Optional. Min: 1, Max: 10000 (for x402-enabled agents) |
-| `x402_network` | string | Must be: `base` or `base-sepolia` (when x402_enabled) |
+| Parameter             | Type    | Constraints                                                      |
+| --------------------- | ------- | ---------------------------------------------------------------- |
+| `name`                | string  | Required. 1-100 characters                                       |
+| `personality`         | string  | Required. 1-1000 characters                                      |
+| `system_instructions` | string  | Optional. Max 4000 characters                                    |
+| `model`               | string  | Default: `gemini-2.0-flash` (currently the only supported model) |
+| `avatar_emoji`        | string  | Optional. Single emoji character                                 |
+| `avatar_url`          | string  | Optional. Valid HTTPS URL for custom avatar image                |
+| `visibility`          | enum    | Must be: `private`, `friends`, `public`, or `official`           |
+| `web_search_enabled`  | boolean | Optional. Default: `false`                                       |
+| `use_knowledge_base`  | boolean | Optional. Default: `false`                                       |
+| `tags`                | array   | Optional. Max 5 tags, each 1-20 characters                       |
+| `suggested_questions` | array   | Official agents only. Max 4 questions, each 1-100 characters     |
+| `x402_price_cents`    | number  | Optional. Min: 1, Max: 10000 (for x402-enabled agents)           |
+| `x402_network`        | string  | Must be: `base` or `base-sepolia` (when x402_enabled)            |
 
 :::warning Official Visibility
 The `official` visibility type is **admin-only**. Only platform administrators can create or modify official agents. Official agents:
+
 - Are publicly accessible (like `public` agents)
 - Can use Firecrawl for advanced web scraping
 - Support auto-sync for knowledge bases
 - Can have custom suggested questions
-:::
+  :::
 
 ### Knowledge Base Validation
 
-| Parameter | Type | Constraints |
-|-----------|------|-------------|
-| `url` | string | Required. Valid HTTPS URL |
-| `title` | string | Optional. Auto-detected from URL. Max 200 characters |
-| `content_type` | enum | Auto-detected. One of: `webpage`, `github`, or `docs` |
-| `scrapeMethod` | enum | `basic` (default) or `firecrawl` (official agents only) |
-| `crawlDepth` | number | 1-5 (official agents only) |
-| `excludePatterns` | array | Max 20 patterns (official agents only) |
-| `autoSync` | boolean | Default: `false` (official agents only) |
-| `syncIntervalHours` | number | 1-168 hours (official agents only) |
+| Parameter           | Type    | Constraints                                             |
+| ------------------- | ------- | ------------------------------------------------------- |
+| `url`               | string  | Required. Valid HTTPS URL                               |
+| `title`             | string  | Optional. Auto-detected from URL. Max 200 characters    |
+| `content_type`      | enum    | Auto-detected. One of: `webpage`, `github`, or `docs`   |
+| `scrapeMethod`      | enum    | `basic` (default) or `firecrawl` (official agents only) |
+| `crawlDepth`        | number  | 1-5 (official agents only)                              |
+| `excludePatterns`   | array   | Max 20 patterns (official agents only)                  |
+| `autoSync`          | boolean | Default: `false` (official agents only)                 |
+| `syncIntervalHours` | number  | 1-168 hours (official agents only)                      |
 
 :::info Knowledge Limits
+
 - Regular agents: Maximum 10 knowledge URLs
 - Official agents: Maximum 50 knowledge URLs
-:::
+  :::
 
 ### Chat Validation
 
-| Parameter | Type | Constraints |
-|-----------|------|-------------|
-| `message` | string | Required. 1-10000 characters |
-| `sessionId` | string | Optional. UUID format |
+| Parameter   | Type   | Constraints                  |
+| ----------- | ------ | ---------------------------- |
+| `message`   | string | Required. 1-10000 characters |
+| `sessionId` | string | Optional. UUID format        |
 
 ## Best Practices
 
@@ -869,6 +933,3 @@ The `official` visibility type is **admin-only**. Only platform administrators c
 3. **Caching**: Cache agent info, not chat responses
 4. **Retries**: Implement exponential backoff for rate limits
 5. **Monitoring**: Track token usage and costs
-
-
-

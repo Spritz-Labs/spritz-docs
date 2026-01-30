@@ -54,19 +54,21 @@ CREATE TABLE shout_knowledge_chunks (
 );
 
 -- Index for vector similarity search
-CREATE INDEX ON shout_knowledge_chunks 
+CREATE INDEX ON shout_knowledge_chunks
 USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
 ```
 
 ## Embedding Model
 
 Spritz uses **Google's `text-embedding-004`** model:
+
 - **Dimensions**: 768
 - **Distance Metric**: Cosine similarity
 - **API**: Google GenAI Embedding API
 
 :::info Gemini Model Configuration
 For chat generation, Spritz uses **gemini-2.0-flash** from Google's Gemini API. This model provides:
+
 - Fast response times (optimized for real-time chat)
 - High-quality responses suitable for most use cases
 - Good balance between cost and capability
@@ -82,7 +84,7 @@ async function generateQueryEmbedding(query: string): Promise<number[] | null> {
         model: "text-embedding-004",
         contents: query,
     });
-    
+
     return result.embeddings?.[0]?.values || null;
 }
 ```
@@ -110,13 +112,13 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         kc.id,
         kc.content,
         1 - (kc.embedding <=> p_query_embedding) AS similarity,
         kc.metadata
     FROM shout_knowledge_chunks kc
-    WHERE 
+    WHERE
         kc.agent_id = p_agent_id
         AND 1 - (kc.embedding <=> p_query_embedding) > p_match_threshold
     ORDER BY kc.embedding <=> p_query_embedding
@@ -128,7 +130,10 @@ $$;
 ### Query Implementation
 
 ```typescript
-async function getRAGContext(agentId: string, message: string): Promise<string | null> {
+async function getRAGContext(
+    agentId: string,
+    message: string,
+): Promise<string | null> {
     // Generate embedding for the query
     const queryEmbedding = await generateQueryEmbedding(message);
     if (!queryEmbedding) return null;
@@ -138,15 +143,17 @@ async function getRAGContext(agentId: string, message: string): Promise<string |
         p_agent_id: agentId,
         p_query_embedding: `[${queryEmbedding.join(",")}]`,
         p_match_count: 5,
-        p_match_threshold: 0.3 // 30% similarity threshold
+        p_match_threshold: 0.3, // 30% similarity threshold
     });
 
     if (error || !chunks?.length) return null;
 
     // Format context with relevance scores
     const context = chunks
-        .map((chunk: { content: string; similarity: number }) => 
-            `[Relevance: ${(chunk.similarity * 100).toFixed(0)}%]\n${chunk.content}`)
+        .map(
+            (chunk: { content: string; similarity: number }) =>
+                `[Relevance: ${(chunk.similarity * 100).toFixed(0)}%]\n${chunk.content}`,
+        )
         .join("\n\n---\n\n");
 
     return context;
@@ -173,6 +180,7 @@ The system supports two scraping methods:
 #### Basic Scraping (Default)
 
 Available to all users. Fetches URL content using simple HTML parsing:
+
 - HTML pages: Extracts text, removes scripts/styles/navigation
 - GitHub repos: Fetches markdown files
 - Documentation sites: Parses structured content
@@ -195,6 +203,7 @@ POST /api/agents/:id/knowledge
 ```
 
 **Firecrawl Features:**
+
 - JavaScript rendering for SPAs
 - Multi-page crawling for documentation sites
 - Clean markdown output optimized for RAG
@@ -208,6 +217,7 @@ Firecrawl integration is available only for official agents due to API costs. Re
 ### Step 3: Chunking
 
 Content is split into chunks:
+
 - **Chunk Size**: ~500-1000 tokens
 - **Overlap**: ~100 tokens between chunks
 - **Strategy**: Semantic chunking when possible
@@ -219,7 +229,7 @@ Each chunk is embedded:
 ```typescript
 for (const chunk of chunks) {
     const embedding = await generateEmbedding(chunk.content);
-    
+
     await db.from("shout_knowledge_chunks").insert({
         agent_id: agentId,
         knowledge_id: knowledgeId,
@@ -228,8 +238,8 @@ for (const chunk of chunks) {
         metadata: {
             source_url: url,
             chunk_index: index,
-            title: title
-        }
+            title: title,
+        },
     });
 }
 ```
@@ -242,7 +252,7 @@ await db
     .update({
         status: "indexed",
         chunk_count: chunks.length,
-        indexed_at: new Date().toISOString()
+        indexed_at: new Date().toISOString(),
     })
     .eq("id", knowledgeId);
 ```
@@ -258,7 +268,8 @@ When a user sends a message, the system:
 
 ```typescript
 const ragContext = await getRAGContext(agentId, message);
-const fullMessage = message + 
+const fullMessage =
+    message +
     `\n\nRelevant context from knowledge base:\n${ragContext}\n\n` +
     `Use this context to inform your response when relevant.`;
 ```
@@ -314,6 +325,7 @@ Authorization: Bearer ${CRON_SECRET}
 ```
 
 The cron job:
+
 - Queries all knowledge sources with `auto_sync: true` on official agents
 - Filters by those needing sync (based on `sync_interval_hours` and `last_synced_at`)
 - Re-indexes each source sequentially with rate limiting
@@ -374,5 +386,8 @@ DELETE /api/agents/:id/knowledge/:knowledge_id
 // Cascades to delete all associated chunks
 ```
 
+## Next Steps
 
-
+- [AI Architecture](/docs/agents/architecture) — Chat flow, RAG retrieval (`match_knowledge_chunks`), indexing pipeline, and code examples
+- [MCP Servers & API Tools](/docs/agents/mcp-servers) — External tools for agents
+- [Agents API Reference](/docs/api/agents-detailed) — Knowledge endpoints

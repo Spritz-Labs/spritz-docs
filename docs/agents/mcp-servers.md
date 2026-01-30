@@ -34,8 +34,8 @@ The system automatically discovers tools from MCP servers:
 
 ```typescript
 async function discoverMcpTools(
-    serverUrl: string, 
-    headers: Record<string, string>
+    serverUrl: string,
+    headers: Record<string, string>,
 ): Promise<MCPTool[]> {
     const response = await fetch(serverUrl, {
         method: "POST",
@@ -44,10 +44,10 @@ async function discoverMcpTools(
             jsonrpc: "2.0",
             id: 0,
             method: "tools/list",
-            params: {}
-        })
+            params: {},
+        }),
     });
-    
+
     const data = await response.json();
     return data?.result?.tools || [];
 }
@@ -61,10 +61,13 @@ interface MCPTool {
     description?: string;
     inputSchema?: {
         type: string;
-        properties?: Record<string, {
-            type: string;
-            description?: string;
-        }>;
+        properties?: Record<
+            string,
+            {
+                type: string;
+                description?: string;
+            }
+        >;
         required?: string[];
     };
 }
@@ -76,23 +79,27 @@ For better tool usage, the system uses Google Search to understand MCP servers:
 
 ```typescript
 async function getMcpServerContext(
-    serverName: string, 
-    serverUrl: string
+    serverName: string,
+    serverUrl: string,
 ): Promise<string | null> {
     const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: [{
-            role: "user",
-            parts: [{ 
-                text: `What is ${serverName} MCP server? How do I use its tools?` 
-            }]
-        }],
+        contents: [
+            {
+                role: "user",
+                parts: [
+                    {
+                        text: `What is ${serverName} MCP server? How do I use its tools?`,
+                    },
+                ],
+            },
+        ],
         config: {
             tools: [{ googleSearch: {} }],
             maxOutputTokens: 1024,
-        }
+        },
     });
-    
+
     return response.text;
 }
 ```
@@ -108,14 +115,14 @@ const toolCall = {
     method: "tools/call",
     params: {
         name: toolName,
-        arguments: toolArguments
-    }
+        arguments: toolArguments,
+    },
 };
 
 const response = await fetch(mcpServerUrl, {
     method: "POST",
     headers: mcpHeaders,
-    body: JSON.stringify(toolCall)
+    body: JSON.stringify(toolCall),
 });
 ```
 
@@ -198,6 +205,7 @@ Custom API tools allow agents to call external REST APIs directly.
 ```
 
 Available tools:
+
 - `create_issue`: Create a GitHub issue
 - `search_repos`: Search repositories
 - `get_file_contents`: Read file from repository
@@ -260,5 +268,8 @@ PUT /api/agents/:id
 }
 ```
 
+## Next Steps
 
-
+- [AI Architecture](/docs/agents/architecture) — Platform API tools (The Grid GraphQL), platform MCP, per-agent MCP/API tools, and tool-call flow
+- [RAG Technical](/docs/agents/rag-technical) — Knowledge base and vector search
+- [Agents API Reference](/docs/api/agents-detailed) — Endpoints and request/response shapes

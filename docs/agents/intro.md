@@ -22,6 +22,7 @@ Spritz allows you to create and interact with customizable AI agents powered by 
 ## Overview
 
 AI agents in Spritz are intelligent assistants that can:
+
 - Have custom personalities and behaviors
 - Access knowledge bases (RAG - Retrieval Augmented Generation)
 - Be shared with friends or made public
@@ -35,11 +36,11 @@ AI agents in Spritz are intelligent assistants that can:
 1. Navigate to the Agents section in your dashboard
 2. Click "Create Agent"
 3. Fill in the required fields:
-   - **Name**: A descriptive name for your agent
-   - **Personality**: How your agent should behave and respond
-   - **System Instructions**: Custom instructions for the AI model
-   - **Model**: Choose from available Gemini models (default: `gemini-2.0-flash`)
-   - **Avatar**: Choose an emoji or upload a custom image
+    - **Name**: A descriptive name for your agent
+    - **Personality**: How your agent should behave and respond
+    - **System Instructions**: Custom instructions for the AI model
+    - **Model**: Choose from available Gemini models (default: `gemini-2.0-flash`)
+    - **Avatar**: Choose an emoji or upload a custom image
 
 ### Agent Avatar
 
@@ -47,11 +48,11 @@ Customize your agent's appearance:
 
 - **Emoji**: Quick selection from emoji picker (default)
 - **Custom Image**: Upload a JPG, PNG, or WebP image
-  1. Click the avatar area when editing your agent
-  2. Select "Upload Image"
-  3. Choose your image file
-  4. Crop and adjust as needed
-  5. Save your agent
+    1. Click the avatar area when editing your agent
+    2. Select "Upload Image"
+    3. Choose your image file
+    4. Crop and adjust as needed
+    5. Save your agent
 
 Custom avatars are displayed in chat, discovery, and agent cards.
 
@@ -80,6 +81,7 @@ Agents can have custom knowledge bases that enhance their responses:
 5. The agent will use this knowledge in conversations
 
 Supported sources:
+
 - GitHub repositories
 - Documentation websites
 - Web pages
@@ -98,10 +100,10 @@ Monetize your agents by enabling x402 payments:
 External developers can integrate your agent:
 
 ```typescript
-import { wrapFetchWithPayment } from 'x402-fetch';
-import { createWalletClient, http } from 'viem';
-import { base } from 'viem/chains';
-import { privateKeyToAccount } from 'viem/accounts';
+import { wrapFetchWithPayment } from "x402-fetch";
+import { createWalletClient, http } from "viem";
+import { base } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
 
 // Setup wallet client for payments
 const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
@@ -116,16 +118,16 @@ const paidFetch = wrapFetchWithPayment(fetch, walletClient);
 
 // Make paid request - payment handled automatically on 402 response
 const response = await paidFetch(
-    'https://app.spritz.chat/api/public/agents/{agentId}/chat',
+    "https://app.spritz.chat/api/public/agents/{agentId}/chat",
     {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Hello!' }),
-    }
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "Hello!" }),
+    },
 );
 
 const data = await response.json();
-console.log('Agent response:', data.message);
+console.log("Agent response:", data.message);
 ```
 
 :::tip Test First
@@ -173,13 +175,15 @@ Agents can use Model Context Protocol (MCP) servers and custom API tools:
 
 ## Technical Deep Dives
 
+- [AI Architecture](/docs/agents/architecture) — File structure, chat flow, RAG, MCP, API tools, scheduling, events (implementation overview)
 - [Knowledge Base (RAG) - Technical Details](/docs/agents/rag-technical)
 - [MCP Servers & API Tools](/docs/agents/mcp-servers)
 - [x402 Monetization](/docs/agents/x402)
 
 ## Next Steps
 
-- Learn about [x402 Monetization](/docs/agents/x402)
-- Explore the [API Reference](/docs/api/agents-detailed)
-- Check out [RAG Technical Details](/docs/agents/rag-technical)
-
+- [AI Architecture](/docs/agents/architecture) — Implementation overview (chat flow, RAG, MCP, API tools)
+- [RAG Technical Details](/docs/agents/rag-technical) — Schema and indexing
+- [MCP Servers & API Tools](/docs/agents/mcp-servers) — External tools
+- [x402 Monetization](/docs/agents/x402) — Paid agent access
+- [Agents API Reference](/docs/api/agents-detailed) — Endpoints and request/response shapes
