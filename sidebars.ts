@@ -67,6 +67,7 @@ const sidebars: SidebarsConfig = {
                         "developers/messaging",
                         "developers/video-calls",
                         "developers/livestreaming",
+                        "developers/poap-channels",
                         "developers/security",
                     ],
                 },

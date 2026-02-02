@@ -5,10 +5,11 @@ Public channels in Spritz allow you to discover and join community discussions o
 ## Overview
 
 Public channels are:
-- **Discoverable**: Browse and search available channels
-- **Open**: Anyone can join public channels
-- **Topic-Based**: Organized around specific topics
-- **Community-Driven**: Built by and for the community
+
+-   **Discoverable**: Browse and search available channels
+-   **Open**: Anyone can join public channels
+-   **Topic-Based**: Organized around specific topics
+-   **Community-Driven**: Built by and for the community
 
 ## Official Channels
 
@@ -16,16 +17,16 @@ Spritz includes **96 official channels** across multiple categories, verified by
 
 ### Channel Categories
 
-| Category | Examples | Count |
-|----------|----------|-------|
-| **Cities** | New York, London, Tokyo, Paris | 20+ |
-| **Crypto** | Bitcoin, Ethereum, DeFi, NFTs | 15+ |
-| **Tech** | AI, Web3, Programming, Startups | 12+ |
-| **Gaming** | PC Gaming, Console, Esports | 10+ |
-| **Sports** | Football, Basketball, Soccer | 10+ |
-| **Music** | Hip Hop, Electronic, Indie | 8+ |
-| **Art** | Digital Art, Photography, Design | 6+ |
-| **Languages** | English, Spanish, Mandarin | 8+ |
+| Category      | Examples                         | Count |
+| ------------- | -------------------------------- | ----- |
+| **Cities**    | New York, London, Tokyo, Paris   | 20+   |
+| **Crypto**    | Bitcoin, Ethereum, DeFi, NFTs    | 15+   |
+| **Tech**      | AI, Web3, Programming, Startups  | 12+   |
+| **Gaming**    | PC Gaming, Console, Esports      | 10+   |
+| **Sports**    | Football, Basketball, Soccer     | 10+   |
+| **Music**     | Hip Hop, Electronic, Indie       | 8+    |
+| **Art**       | Digital Art, Photography, Design | 6+    |
+| **Languages** | English, Spanish, Mandarin       | 8+    |
 
 Official channels are created and moderated by the Spritz team to ensure quality conversations.
 
@@ -38,12 +39,22 @@ Official channels are created and moderated by the Spritz team to ensure quality
 3. See channel descriptions and member counts
 4. Join channels that interest you
 
+### From my POAPs
+
+If you hold **POAPs** (Proof of Attendance Protocol NFTs) from events (e.g. conferences, meetups), you can:
+
+-   Switch to **"From my POAPs"** in Browse Channels to see events you've attended
+-   For each event: **Create** a channel (if none exists yet) or **Join** the existing channel
+-   POAP channels use **Logos Messaging** (Waku) and are limited to **one channel per POAP event**
+
+This requires the app to have POAP integration enabled (`POAP_API_KEY`). For technical details, API endpoints, and code examples, see [POAP Channels - Technical Integration](/docs/developers/poap-channels).
+
 ### Search Channels
 
-- Search by name or topic
-- Filter by category
-- Sort by popularity or activity
-- Find trending channels
+-   Search by name or topic
+-   Filter by category
+-   Sort by popularity or activity
+-   Find trending channels
 
 ## Joining Channels
 
@@ -56,31 +67,32 @@ Official channels are created and moderated by the Spritz team to ensure quality
 
 ### Messaging
 
-- Send messages to all channel members
-- Share links and media
-- React to messages with emojis
-- Reply with message quotes
+-   Send messages to all channel members
+-   Share links and media
+-   React to messages with emojis
+-   Reply with message quotes
 
 ### Pinned Messages
 
 Admins can pin important messages to the top of the channel:
 
-- **Pin Messages**: Admins can pin any message for visibility
-- **View Pinned**: Pinned messages appear at the top of the chat
-- **Unpin**: Admins can unpin messages when no longer relevant
+-   **Pin Messages**: Admins can pin any message for visibility
+-   **View Pinned**: Pinned messages appear at the top of the chat
+-   **Unpin**: Admins can unpin messages when no longer relevant
 
 Pinned messages are great for:
-- Important announcements
-- Channel rules and guidelines
-- Frequently asked questions
-- Event information
+
+-   Important announcements
+-   Channel rules and guidelines
+-   Frequently asked questions
+-   Event information
 
 ### Channel Info
 
-- View channel description
-- See member count
-- Check activity level
-- View channel rules (if set)
+-   View channel description
+-   See member count
+-   Check activity level
+-   View channel rules (if set)
 
 ## Creating Channels
 
@@ -108,26 +120,28 @@ GET /api/channels?category=tech&userAddress=0x...
 ```
 
 **Query Parameters:**
-- `category` - Filter by category (optional)
-- `userAddress` - Include membership status in response (optional)
-- `joined` - If `true`, only return channels user has joined (optional)
+
+-   `category` - Filter by category (optional)
+-   `userAddress` - Include membership status in response (optional)
+-   `joined` - If `true`, only return channels user has joined (optional)
 
 **Response:**
+
 ```json
 {
-  "channels": [
-    {
-      "id": "uuid",
-      "name": "Ethereum",
-      "description": "Discuss Ethereum development",
-      "emoji": "⟠",
-      "category": "crypto",
-      "is_official": true,
-      "member_count": 1250,
-      "message_count": 8420,
-      "is_member": false
-    }
-  ]
+    "channels": [
+        {
+            "id": "uuid",
+            "name": "Ethereum",
+            "description": "Discuss Ethereum development",
+            "emoji": "⟠",
+            "category": "crypto",
+            "is_official": true,
+            "member_count": 1250,
+            "message_count": 8420,
+            "is_member": false
+        }
+    ]
 }
 ```
 
@@ -194,9 +208,7 @@ POST /api/channels/:id/messages/pin
 
 ## Next Steps
 
-- Learn about [Groups](/docs/guides/groups)
-- Explore [Messaging](/docs/guides/messaging)
-- Check out [Friends](/docs/guides/friends)
-
-
-
+-   [POAP Channels](/docs/developers/poap-channels) — Technical integration (API, schema, code)
+-   [Groups](/docs/guides/groups) — Private group chats
+-   [Messaging](/docs/guides/messaging) — Direct and channel messaging
+-   [Friends](/docs/guides/friends) — Friends list and requests
