@@ -37,6 +37,33 @@ const config: Config = {
   },
 
     headTags: [
+        // Browser tab icons (Chrome and others use these for favicon)
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'icon',
+                type: 'image/png',
+                sizes: '32x32',
+                href: '/icons/favicon-32x32.png',
+            },
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'icon',
+                type: 'image/png',
+                sizes: '16x16',
+                href: '/icons/favicon-16x16.png',
+            },
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'apple-touch-icon',
+                sizes: '180x180',
+                href: '/icons/apple-touch-icon.png',
+            },
+        },
         // Preconnect to external domains for performance
         {
             tagName: 'link',
