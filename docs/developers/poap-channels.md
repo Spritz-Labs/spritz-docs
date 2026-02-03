@@ -25,6 +25,8 @@ This document explains how Spritz integrates **POAP** (Proof of Attendance Proto
 -   **POAP**: Proof of Attendance Protocol; users receive NFTs (POAPs) for attending events. Each POAP is tied to an **event** (e.g. Devcon 2026).
 -   **Spritz POAP channels**: One **public channel** can be linked to one POAP **event**. Only one channel per POAP event is allowed. Channels created from POAPs use **Waku/Logos** messaging (not the default standard channel backend).
 -   **User flow**: User connects wallet → app fetches their POAPs via POAP API → user sees "From my POAPs" in Browse Channels → for each POAP event they hold, they see either an existing channel (Join/Open) or the option to create the channel. Creating a channel from a POAP auto-sets `messaging_type: "waku"` and stores `poap_event_id`, `poap_event_name`, `poap_image_url`.
+-   **Join gating**: To **join** a POAP channel, the user must hold the POAP for that event. The server checks both the user's address and their **Smart Wallet** (from `shout_users.smart_wallet_address`) so passkey users can join if the POAP is on their Smart Wallet. If the user does not hold the POAP, `POST /api/channels/:id/join` returns 403.
+-   **Multi-address scan**: The "From my POAPs" endpoint (`/api/poap/events-with-channels`) accepts either a single `address` or multiple `addresses` (comma-separated). POAPs from all addresses are merged and deduplicated by event id (e.g. identity wallet + Smart Wallet for passkey users).
 
 ## Prerequisites
 
@@ -251,7 +253,7 @@ async function fetchMyPoapEvents(
 
 ### 2. User POAP events with channel status ("From my POAPs")
 
-Returns the same deduplicated POAP events for the user, plus for each event whether a channel already exists and the user's membership. Used by the "From my POAPs" tab in Browse Channels.
+Returns the same deduplicated POAP events for the user, plus for each event whether a channel already exists and the user's membership. Used by the "From my POAPs" tab in Browse Channels. Supports **multi-address** scan: pass `addresses=0x1,0x2` to merge POAPs from multiple wallets (e.g. identity + Smart Wallet for passkey users).
 
 **Request**
 
@@ -259,9 +261,19 @@ Returns the same deduplicated POAP events for the user, plus for each event whet
 GET /api/poap/events-with-channels?address=0x1234...5678
 ```
 
-| Parameter | Type   | Required | Description          |
-| --------- | ------ | -------- | -------------------- |
-| `address` | string | Yes      | User wallet address. |
+Or multiple addresses (POAPs merged, deduplicated by event id):
+
+```http
+GET /api/poap/events-with-channels?addresses=0x1234...,0x5678...&memberAddress=0x1234...
+```
+
+| Parameter       | Type   | Required | Description                                                                   |
+| --------------- | ------ | -------- | ----------------------------------------------------------------------------- |
+| `address`       | string | Yes\*    | Single wallet address. Use when only one address is needed.                   |
+| `addresses`     | string | Yes\*    | Comma-separated wallet addresses. POAPs from all are merged and deduplicated. |
+| `memberAddress` | string | No       | Address used for `is_member` lookup (default: first address in list).         |
+
+\*Exactly one of `address` or `addresses` is required.
 
 **Response (200)**
 
@@ -295,11 +307,11 @@ GET /api/poap/events-with-channels?address=0x1234...5678
 
 **Server implementation (concept)**
 
-1. Call POAP API `GET https://api.poap.tech/actions/scan/{address}` with `X-API-Key`.
-2. Deduplicate by event id, collect event ids.
+1. Resolve addresses: single `address` or split `addresses` (comma-separated). Optionally use `memberAddress` for membership lookup (default: first address).
+2. For each address, call POAP API `GET https://api.poap.tech/actions/scan/{address}` with `X-API-Key`; merge results and deduplicate by event id (optionally keep `createdAt` for sorting).
 3. Query `shout_public_channels` where `is_active = true` and `poap_event_id` in event ids.
-4. Query `shout_channel_members` for the user to set `is_member` on each channel.
-5. Return list of `{ eventId, eventName, imageUrl, channel }`.
+4. Query `shout_channel_members` for `memberAddress` to set `is_member` on each channel.
+5. Return list of `{ eventId, eventName, imageUrl, channel }` (e.g. sorted by `createdAt` desc when available).
 
 ```typescript
 // After fetching POAP list and building seen map (eventId -> { eventName, imageUrl })
@@ -376,7 +388,100 @@ If no channel exists for that event: `{ "channel": null }`.
 
 ---
 
-### 4. Create a POAP-linked channel
+### 4. Join channel (POAP gating)
+
+For **POAP channels** (channel has `poap_event_id`), joining is gated: the user must hold the POAP for that event. The server checks both the user's `userAddress` and their **Smart Wallet** (`shout_users.smart_wallet_address`) so passkey users can join if the POAP is on their Smart Wallet.
+
+**Request**
+
+```http
+POST /api/channels/:id/join
+Content-Type: application/json
+```
+
+**Body**
+
+```json
+{
+    "userAddress": "0x..."
+}
+```
+
+**Verification (POAP channels only)**
+
+1. Load channel; if `poap_event_id` is set, require `POAP_API_KEY`.
+2. Call POAP API `GET https://api.poap.tech/actions/scan/{address}/{eventId}` for each address to check (user address + Smart Wallet if different).
+3. If any address holds the POAP, allow join; otherwise return 403.
+
+**Response (200)**
+
+```json
+{
+    "success": true,
+    "channelName": "POAP: Devcon 2026"
+}
+```
+
+**Errors**
+
+| Status | Condition                                                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 403    | POAP channel and `POAP_API_KEY` not set: "POAP verification is not configured. You need this POAP to join this channel."       |
+| 403    | POAP channel and user does not hold the POAP: "You need this POAP to join this channel. Hold the POAP in your wallet to join." |
+| 400    | Already a member: "Already a member of this channel."                                                                          |
+
+**Server implementation (concept)**
+
+```typescript
+// For POAP channels: check ownership via POAP API scan for this event
+async function addressHoldsPoap(
+    address: string,
+    eventId: number,
+    apiKey: string
+): Promise<boolean> {
+    const url = `${POAP_API_BASE}/actions/scan/${encodeURIComponent(
+        address
+    )}/${eventId}`;
+    const res = await fetch(url, {
+        headers: { "X-API-Key": apiKey },
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : data?.tokens ?? data?.poaps ?? [];
+    return list.length > 0;
+}
+
+// Addresses to check: user address + Smart Wallet (for passkey users)
+const addressesToCheck = [normalizedAddress];
+const { data: userRow } = await supabase
+    .from("shout_users")
+    .select("smart_wallet_address")
+    .eq("wallet_address", normalizedAddress)
+    .maybeSingle();
+if (userRow?.smart_wallet_address?.toLowerCase() !== normalizedAddress) {
+    addressesToCheck.push(userRow.smart_wallet_address.toLowerCase());
+}
+let hasPoap = false;
+for (const addr of addressesToCheck) {
+    if (await addressHoldsPoap(addr, poapEventId, apiKey)) {
+        hasPoap = true;
+        break;
+    }
+}
+if (!hasPoap) {
+    return NextResponse.json(
+        {
+            error: "You need this POAP to join this channel. Hold the POAP in your wallet to join.",
+        },
+        { status: 403 }
+    );
+}
+```
+
+---
+
+### 5. Create a POAP-linked channel
 
 Creating a channel with `poapEventId` (and optionally `poapEventName`, `poapImageUrl`) creates a **POAP channel**: one channel per POAP event, Waku/Logos messaging, and default description.
 

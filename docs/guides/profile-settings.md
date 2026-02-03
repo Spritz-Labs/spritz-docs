@@ -6,12 +6,12 @@ Manage your Spritz profile, preferences, and account settings.
 
 ### Profile Information
 
-- **Username**: Set a unique username (optional)
-- **Bio**: Add a description about yourself (up to 160 characters)
-- **Status**: Share what you're up to
-- **Avatar**: Upload or create pixel art avatar
-- **Social Links**: Connect Twitter, Farcaster, Lens, Discord
-- **ENS Name**: Your ENS name is automatically resolved if you have one
+-   **Username**: Set a unique username (optional)
+-   **Bio**: Add a description about yourself (up to 160 characters)
+-   **Status**: Share what you're up to
+-   **Avatar**: Upload or create pixel art avatar
+-   **Social Links**: Connect Twitter, Farcaster, Lens, Discord
+-   **ENS Name**: Your ENS name is automatically resolved if you have one
 
 ### Public Profile
 
@@ -24,11 +24,12 @@ Enable a public landing page for your profile:
 5. Customize with Bento-style widgets
 
 **Features:**
-- **ENS Resolution**: If you have an ENS name, it displays automatically
-- **Public Bio**: Share what you're about with the world
-- **Social Links**: Visitors can find your other profiles
-- **Bento Widgets**: Customizable grid layout with various widget types
-- **Custom Themes**: Personalize colors, backgrounds, and card styles
+
+-   **ENS Resolution**: If you have an ENS name, it displays automatically
+-   **Public Bio**: Share what you're about with the world
+-   **Social Links**: Visitors can find your other profiles
+-   **Bento Widgets**: Customizable grid layout with various widget types
+-   **Custom Themes**: Personalize colors, backgrounds, and card styles
 
 **See it in action:** Check out the [Demo Profile](https://app.spritz.chat/user/demo) showcasing all available widgets!
 
@@ -40,75 +41,76 @@ Create a customizable Bento-style profile page with draggable widgets.
 
 **Core Widgets:**
 
-| Widget | Description | Sizes |
-|--------|-------------|-------|
-| **Map** | Show a location with dark theme tiles | 1x1, 2x1, 2x2 |
-| **Image** | Display an image | All sizes |
-| **Text** | Custom text block | All sizes |
-| **Social Embed** | Embed social posts | 2x1, 2x2 |
-| **NFT** | Showcase an NFT | 1x1, 2x1, 2x2 |
-| **Link** | Clickable link card | 1x1, 2x1 |
-| **Spotify** | Music embed | 2x1, 4x1 |
-| **GitHub** | GitHub profile/repo | 2x1, 2x2 |
-| **Video** | Video embed | 2x2, 4x2 |
-| **Countdown** | Event countdown | 1x1, 2x1 |
-| **Stats** | Display statistics | 1x1, 2x1 |
+| Widget           | Description                           | Sizes         |
+| ---------------- | ------------------------------------- | ------------- |
+| **Map**          | Show a location with dark theme tiles | 1x1, 2x1, 2x2 |
+| **Image**        | Display an image                      | All sizes     |
+| **Text**         | Custom text block                     | All sizes     |
+| **Social Embed** | Embed social posts                    | 2x1, 2x2      |
+| **NFT**          | Showcase an NFT                       | 1x1, 2x1, 2x2 |
+| **Link**         | Clickable link card                   | 1x1, 2x1      |
+| **Spotify**      | Music embed                           | 2x1, 4x1      |
+| **GitHub**       | GitHub profile/repo                   | 2x1, 2x2      |
+| **Video**        | Video embed                           | 2x2, 4x2      |
+| **Countdown**    | Event countdown                       | 1x1, 2x1      |
+| **Stats**        | Display statistics                    | 1x1, 2x1      |
 
 **Interactive & Fun Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Poll** | Let visitors vote on questions |
-| **Guestbook** | Visitors can leave messages |
-| **Reaction Wall** | Emoji reactions with flying animations |
-| **Virtual Pet** | Animated pet with moods (cat, dog, robot, etc.) |
-| **Fortune Cookie** | Click to reveal random wisdom/fortunes |
+| Widget             | Description                                     |
+| ------------------ | ----------------------------------------------- |
+| **Poll**           | Let visitors vote on questions                  |
+| **Guestbook**      | Visitors can leave messages                     |
+| **Reaction Wall**  | Emoji reactions with flying animations          |
+| **Virtual Pet**    | Animated pet with moods (cat, dog, robot, etc.) |
+| **Fortune Cookie** | Click to reveal random wisdom/fortunes          |
 
 **Aesthetic Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Photo Carousel** | Auto-rotating image slideshow |
-| **Mood Board** | Pinterest-style image collage |
-| **Color Palette** | Display brand/favorite colors (click to copy) |
-| **Vinyl Record** | Spinning album art with Spotify link |
-| **Polaroid Stack** | Stacked polaroid-style photos |
-| **Zodiac Sign** | Animated astrological sign display |
+| Widget             | Description                                   |
+| ------------------ | --------------------------------------------- |
+| **Photo Carousel** | Auto-rotating image slideshow                 |
+| **Mood Board**     | Pinterest-style image collage                 |
+| **Color Palette**  | Display brand/favorite colors (click to copy) |
+| **Vinyl Record**   | Spinning album art with Spotify link          |
+| **Polaroid Stack** | Stacked polaroid-style photos                 |
+| **Zodiac Sign**    | Animated astrological sign display            |
 
 **Entertainment Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Bookshelf** | Display books with covers and ratings |
-| **Game Now Playing** | Show current game with platform badge |
-| **Movie Queue** | Watch list with posters |
-| **Podcast Favorites** | Podcast grid with play buttons |
+| Widget                | Description                           |
+| --------------------- | ------------------------------------- |
+| **Bookshelf**         | Display books with covers and ratings |
+| **Game Now Playing**  | Show current game with platform badge |
+| **Movie Queue**       | Watch list with posters               |
+| **Podcast Favorites** | Podcast grid with play buttons        |
 
 **Productivity Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Availability Status** | Show if available/busy/away |
-| **Timezone Overlap** | Compare visitor's time vs yours |
-| **Streak Counter** | Track daily streaks with fire animation |
-| **Goals Checklist** | Public goals with progress bar |
+| Widget                  | Description                             |
+| ----------------------- | --------------------------------------- |
+| **Availability Status** | Show if available/busy/away             |
+| **Timezone Overlap**    | Compare visitor's time vs yours         |
+| **Streak Counter**      | Track daily streaks with fire animation |
+| **Goals Checklist**     | Public goals with progress bar          |
 
 **Fun Stats Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Fun Counter** | Count anything (coffees, commits, etc.) |
-| **Visitor Counter** | Retro hit counter style |
-| **Random Fact** | Cycling facts about you |
-| **Languages** | Display languages with proficiency bars |
+| Widget              | Description                             |
+| ------------------- | --------------------------------------- |
+| **Fun Counter**     | Count anything (coffees, commits, etc.) |
+| **Visitor Counter** | Retro hit counter style                 |
+| **Random Fact**     | Cycling facts about you                 |
+| **Languages**       | Display languages with proficiency bars |
 
 **Widget Sizes:**
-- `1x1` - Square, compact
-- `2x1` - Wide, single row
-- `1x2` - Tall, single column
-- `2x2` - Large square
-- `4x1` - Full-width banner
-- `4x2` - Full-width large
+
+-   `1x1` - Square, compact
+-   `2x1` - Wide, single row
+-   `1x2` - Tall, single column
+-   `2x2` - Large square
+-   `4x1` - Full-width banner
+-   `4x2` - Full-width large
 
 **Managing Widgets:**
 
@@ -122,32 +124,33 @@ Create a customizable Bento-style profile page with draggable widgets.
 
 **Spritz Feature Widgets:**
 
-| Widget | Description |
-|--------|-------------|
-| **Message Me** | Quick link to chat with you on Spritz |
-| **Wallet** | Display your wallet address with copy button |
-| **Let's Meet** | Book a call scheduling link |
-| **AI Agent** | Showcase your AI agent |
-| **Social Link** | Link to Twitter, GitHub, Discord, etc. |
+| Widget          | Description                                  |
+| --------------- | -------------------------------------------- |
+| **Message Me**  | Quick link to chat with you on Spritz        |
+| **Wallet**      | Display your wallet address with copy button |
+| **Let's Meet**  | Book a call scheduling link                  |
+| **AI Agent**    | Showcase your AI agent                       |
+| **Social Link** | Link to Twitter, GitHub, Discord, etc.       |
 
 **Security:**
 
 All widget URLs are validated to prevent malicious content:
-- External links use `rel="noopener noreferrer nofollow"`
-- Social links are verified against known domains
-- Video/audio embeds only from trusted platforms (YouTube, Spotify, etc.)
-- Images are sanitized to prevent tracking
+
+-   External links use `rel="noopener noreferrer nofollow"`
+-   Social links are verified against known domains
+-   Video/audio embeds only from trusted platforms (YouTube, Spotify, etc.)
+-   Images are sanitized to prevent tracking
 
 ### Profile Themes
 
 Customize your profile's appearance:
 
-- **Background**: Solid color, gradient, image, or mesh
-- **Accent Color**: Primary highlight color (default: orange)
-- **Text Color**: Main text color
-- **Card Style**: Rounded, sharp, or pill-shaped cards
-- **Card Background**: Semi-transparent backgrounds
-- **Font**: System, Inter, Mono, or Serif
+-   **Background**: Solid color, gradient, image, or mesh
+-   **Accent Color**: Primary highlight color (default: orange)
+-   **Text Color**: Main text color
+-   **Card Style**: Rounded, sharp, or pill-shaped cards
+-   **Card Background**: Semi-transparent backgrounds
+-   **Font**: System, Inter, Mono, or Serif
 
 ### Custom Avatar
 
@@ -160,9 +163,10 @@ Upload your own profile photo:
 5. Save your avatar
 
 **Avatar Options:**
-- **Custom Upload**: Your uploaded photo
-- **ENS Avatar**: Automatically fetched from your ENS name
-- **Pixel Art**: Create in the built-in editor
+
+-   **Custom Upload**: Your uploaded photo
+-   **ENS Avatar**: Automatically fetched from your ENS name
+-   **Pixel Art**: Create in the built-in editor
 
 Toggle between custom avatar and ENS avatar in settings.
 
@@ -177,10 +181,11 @@ Create custom 8-bit profile pictures:
 5. Save and set as avatar
 
 **Features:**
-- 16x16 or 32x32 pixel grid
-- Color palette
-- Undo/redo
-- Export/import designs
+
+-   16x16 or 32x32 pixel grid
+-   Color palette
+-   Undo/redo
+-   Export/import designs
 
 ### Social Links
 
@@ -189,10 +194,10 @@ Connect your social profiles:
 1. Go to Profile Settings
 2. Navigate to Social Links
 3. Add your profiles:
-   - Twitter/X
-   - Farcaster
-   - Lens Protocol
-   - Discord
+    - Twitter/X
+    - Farcaster
+    - Lens Protocol
+    - Discord
 4. Links appear on your profile
 
 ## Wallet Features
@@ -203,8 +208,8 @@ See your token balances across 8 supported EVM chains:
 
 1. Go to Settings → Wallet
 2. View balances for:
-   - ETH, USDC, and other tokens
-   - Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche
+    - ETH, USDC, and other tokens
+    - Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche
 3. Switch between networks to see chain-specific balances
 4. **Trusted Tokens**: Spam tokens are automatically filtered
 
@@ -216,9 +221,9 @@ View your past transactions:
 
 1. Go to Settings → Wallet → Transactions
 2. See all transactions including:
-   - Sent/received transfers
-   - x402 payments
-   - Smart account operations
+    - Sent/received transfers
+    - x402 payments
+    - Smart account operations
 3. Click any transaction for details on block explorer
 
 ### Buy Crypto (Coinbase Onramp)
@@ -233,29 +238,30 @@ Purchase crypto directly with fiat currency:
 6. Funds arrive in your wallet
 
 **Supported:**
-- Credit/debit cards
-- Bank transfers (ACH)
-- Apple Pay / Google Pay
+
+-   Credit/debit cards
+-   Bank transfers (ACH)
+-   Apple Pay / Google Pay
 
 ### Smart Wallet
 
 Your wallet type depends on how you signed in:
 
-| Auth Method | Wallet Owner | How to Sign | Passkey Required? |
-|-------------|--------------|-------------|-------------------|
-| **EVM Wallet** | Your wallet EOA | Connected wallet | No |
-| **Passkey** | Passkey signer | Your passkey | Built-in |
-| **Email** | Passkey signer | Your passkey | Must create |
-| **World ID** | Passkey signer | Your passkey | Must create |
-| **Alien ID** | Passkey signer | Your passkey | Must create |
-| **Solana** | Passkey signer | Your passkey | Must create |
+| Auth Method    | Wallet Owner    | How to Sign      | Passkey Required? |
+| -------------- | --------------- | ---------------- | ----------------- |
+| **EVM Wallet** | Your wallet EOA | Connected wallet | No                |
+| **Passkey**    | Passkey signer  | Your passkey     | Built-in          |
+| **Email**      | Passkey signer  | Your passkey     | Must create       |
+| **World ID**   | Passkey signer  | Your passkey     | Must create       |
+| **Alien ID**   | Passkey signer  | Your passkey     | Must create       |
+| **Solana**     | Passkey signer  | Your passkey     | Must create       |
 
 **Smart Account Features:**
 
-- **Same Address Everywhere**: One address across all 8 EVM chains
-- **Gas Sponsorship**: Free transactions on L2s (Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche)
-- **ERC-20 Gas**: Pay gas in USDC on Ethereum mainnet (no ETH needed)
-- **Passkey Signing**: Sign with Face ID, Touch ID, or Windows Hello
+-   **Same Address Everywhere**: One address across all 8 EVM chains
+-   **Gas Sponsorship**: Free transactions on L2s (Base, Arbitrum, Optimism, Polygon, BNB Chain, Unichain, Avalanche)
+-   **ERC-20 Gas**: Pay gas in USDC on Ethereum mainnet (no ETH needed)
+-   **Passkey Signing**: Sign with Face ID, Touch ID, or Windows Hello
 
 > ⚠️ **Important for Email/Digital ID users:** Your passkey controls your wallet. If you delete your passkey, you will lose access to any funds. Use a synced passkey (iCloud Keychain, Google Password Manager) for backup.
 
@@ -276,24 +282,26 @@ Add a backup recovery address to your Smart Wallet for extra security. This allo
 
 Your Safe wallet may be deployed on multiple chains. The security dashboard shows:
 
-| Status | Meaning |
-|--------|---------|
-| **Deployed** | Safe is active on this chain |
-| **Has Recovery** | Recovery signer already added |
-| **Needs Recovery** | Has funds but no recovery signer |
-| **Not Deployed** | Safe not yet created on this chain |
+| Status             | Meaning                            |
+| ------------------ | ---------------------------------- |
+| **Deployed**       | Safe is active on this chain       |
+| **Has Recovery**   | Recovery signer already added      |
+| **Needs Recovery** | Has funds but no recovery signer   |
+| **Not Deployed**   | Safe not yet created on this chain |
 
 **Important:**
-- Add recovery to chains where you have funds
-- Recovery signer can help you recover funds if passkey is lost
-- Safe uses 1-of-N threshold, so either signer can approve transactions
-- You can manage your Safe directly at [app.safe.global](https://app.safe.global)
+
+-   Add recovery to chains where you have funds
+-   Recovery signer can help you recover funds if passkey is lost
+-   Safe uses 1-of-N threshold, so either signer can approve transactions
+-   You can manage your Safe directly at [app.safe.global](https://app.safe.global)
 
 ## Account Settings
 
 ### Verification
 
 **Phone Verification:**
+
 1. Go to Settings → Verification
 2. Click "Verify Phone"
 3. Enter your phone number
@@ -301,6 +309,7 @@ Your Safe wallet may be deployed on multiple chains. The security dashboard show
 5. Phone number verified
 
 **Email Verification:**
+
 1. Go to Settings → Verification
 2. Click "Verify Email"
 3. Enter your email
@@ -309,19 +318,30 @@ Your Safe wallet may be deployed on multiple chains. The security dashboard show
 
 ### Privacy Settings
 
-- **Profile Visibility**: Control who can see your profile
-- **Friend Requests**: Who can send you requests
-- **Message Requests**: Who can message you
-- **Stream Visibility**: Who can see your streams
+-   **Profile Visibility**: Control who can see your profile
+-   **Friend Requests**: Who can send you requests
+-   **Message Requests**: Who can message you
+-   **Stream Visibility**: Who can see your streams
 
 ### Notification Settings
 
 Configure notifications for:
-- **Messages**: New messages from friends
-- **Friend Requests**: New friend requests
-- **Calls**: Incoming video calls
-- **Streams**: Friends going live
-- **Agents**: Agent-related notifications
+
+-   **Messages**: New messages from friends
+-   **Friend Requests**: New friend requests
+-   **Calls**: Incoming video calls
+-   **Streams**: Friends going live
+-   **Agents**: Agent-related notifications
+
+### Email updates (opt-in)
+
+You can opt in to receive product and update emails from Spritz:
+
+1. Go to Settings
+2. Verify your email first (required to opt in)
+3. Toggle "Email updates" on or off
+
+Opting out is always allowed; opting in requires a verified email on file. The API endpoints are GET/PATCH `/api/user/email-updates` (authenticated); see the [API reference](/docs/api/complete).
 
 ### Push Notifications
 
@@ -343,25 +363,27 @@ Enable browser push notifications:
 5. Confirm and claim
 
 **Requirements:**
-- 3-20 characters
-- Alphanumeric and underscores
-- Unique across platform
+
+-   3-20 characters
+-   Alphanumeric and underscores
+-   Unique across platform
 
 **Reserved Usernames:**
 
 Certain usernames are blocked to prevent impersonation and scams:
 
-- **Brand names**: spritz, spritzapp, spritz_support, etc.
-- **Official roles**: admin, moderator, support, staff, team
-- **Security terms**: security, root, sysadmin
-- **Financial terms**: wallet, treasury, payment
-- **Authority titles**: ceo, founder, developer
-- **Scam terms**: giveaway, airdrop, prize, verify
-- **Known figures**: vitalik, satoshi, elon
+-   **Brand names**: spritz, spritzapp, spritz_support, etc.
+-   **Official roles**: admin, moderator, support, staff, team
+-   **Security terms**: security, root, sysadmin
+-   **Financial terms**: wallet, treasury, payment
+-   **Authority titles**: ceo, founder, developer
+-   **Scam terms**: giveaway, airdrop, prize, verify
+-   **Known figures**: vitalik, satoshi, elon
 
 **Blocked patterns:**
-- Prefixes: `spritz_*`, `official_*`, `support_*`, `admin_*`
-- Suffixes: `*_official`, `*_support`, `*_admin`, `*_verified`
+
+-   Prefixes: `spritz_*`, `official_*`, `support_*`, `admin_*`
+-   Suffixes: `*_official`, `*_support`, `*_admin`, `*_verified`
 
 ### Change Username
 
@@ -469,7 +491,6 @@ POST /api/email/verify-code
 
 ## Next Steps
 
-- Learn about [Friends](/docs/guides/friends)
-- Explore [Groups](/docs/guides/groups)
-- Check out [Getting Started](/docs/getting-started)
-
+-   Learn about [Friends](/docs/guides/friends)
+-   Explore [Groups](/docs/guides/groups)
+-   Check out [Getting Started](/docs/getting-started)

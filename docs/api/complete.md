@@ -106,6 +106,13 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/profile/theme`   | Get profile theme      |
 | POST   | `/api/profile/theme`   | Update profile theme   |
 
+### User (Email & Preferences)
+
+| Method | Endpoint                  | Description                                                         |
+| ------ | ------------------------- | ------------------------------------------------------------------- |
+| GET    | `/api/user/email-updates` | Get email updates opt-in status (auth)                              |
+| PATCH  | `/api/user/email-updates` | Update email updates opt-in (auth; verify email required to opt in) |
+
 ### User Moderation (Mute, Block, Report)
 
 | Method | Endpoint            | Description                  |
@@ -122,24 +129,24 @@ This page provides a quick overview of all available API endpoints. For detailed
 
 ### Channels
 
-| Method | Endpoint                       | Description                                                                    |
-| ------ | ------------------------------ | ------------------------------------------------------------------------------ |
-| GET    | `/api/channels`                | List channels (optional: `?poapEventId=` for channel by POAP event)            |
-| POST   | `/api/channels`                | Create channel (supports POAP: `poapEventId`, `poapEventName`, `poapImageUrl`) |
-| GET    | `/api/channels/:id`            | Get channel                                                                    |
-| POST   | `/api/channels/:id/join`       | Join channel                                                                   |
-| POST   | `/api/channels/:id/leave`      | Leave channel                                                                  |
-| GET    | `/api/channels/:id/messages`   | Get messages                                                                   |
-| POST   | `/api/channels/:id/messages`   | Send message                                                                   |
-| GET    | `/api/channels/:id/agents`     | Get official agents in channel                                                 |
-| POST   | `/api/channels/agent-response` | Process @mentions                                                              |
+| Method | Endpoint                       | Description                                                                                   |
+| ------ | ------------------------------ | --------------------------------------------------------------------------------------------- |
+| GET    | `/api/channels`                | List channels (optional: `?poapEventId=` for channel by POAP event)                           |
+| POST   | `/api/channels`                | Create channel (supports POAP: `poapEventId`, `poapEventName`, `poapImageUrl`)                |
+| GET    | `/api/channels/:id`            | Get channel                                                                                   |
+| POST   | `/api/channels/:id/join`       | Join channel (POAP channels require holding the POAP; Smart Wallet checked for passkey users) |
+| POST   | `/api/channels/:id/leave`      | Leave channel                                                                                 |
+| GET    | `/api/channels/:id/messages`   | Get messages                                                                                  |
+| POST   | `/api/channels/:id/messages`   | Send message                                                                                  |
+| GET    | `/api/channels/:id/agents`     | Get official agents in channel                                                                |
+| POST   | `/api/channels/agent-response` | Process @mentions                                                                             |
 
 ### POAP (Proof of Attendance) Channels
 
-| Method | Endpoint                                       | Description                                          |
-| ------ | ---------------------------------------------- | ---------------------------------------------------- |
-| GET    | `/api/poap/scan?address=0x...`                 | Fetch user's POAPs (deduplicated events)             |
-| GET    | `/api/poap/events-with-channels?address=0x...` | User's POAP events with channel status (Create/Join) |
+| Method | Endpoint                                                             | Description                                                                                |
+| ------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| GET    | `/api/poap/scan?address=0x...`                                       | Fetch user's POAPs (deduplicated events)                                                   |
+| GET    | `/api/poap/events-with-channels?address=...` or `?addresses=0x1,0x2` | User's POAP events with channel status (multi-address supported; optional `memberAddress`) |
 
 See [POAP Channels Technical Guide](/docs/developers/poap-channels) for full integration details.
 
