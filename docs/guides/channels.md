@@ -49,6 +49,19 @@ If you hold **POAPs** (Proof of Attendance Protocol NFTs) from events (e.g. conf
 
 This requires the app to have POAP integration enabled (`POAP_API_KEY`). For technical details, API endpoints, and code examples, see [POAP Channels - Technical Integration](/docs/developers/poap-channels).
 
+#### Joining a POAP channel
+
+To join a POAP channel, you must **hold the POAP** for that event:
+
+1. Open **Browse Channels** and switch to **"From my POAPs"** (or find the channel by name).
+2. Find the channel for the event you attended and click **Join**.
+3. Spritz checks that your connected wallet (or your Spritz Smart Wallet, if you use a passkey) holds the POAP for that event.
+4. If you hold it, you join the channel. If not, you'll see a message that you need the POAP to join — make sure the wallet that holds the POAP is connected, or that you're signed in with the account that has the POAP on its Smart Wallet.
+
+:::tip Passkey users
+If you sign in with a passkey, Spritz also checks your **Smart Wallet** for the POAP. As long as the POAP is in either your identity wallet or your Smart Wallet, you can join.
+:::
+
 ### Search Channels
 
 -   Search by name or topic
@@ -62,6 +75,10 @@ This requires the app to have POAP integration enabled (`POAP_API_KEY`). For tec
 2. Click "Join Channel"
 3. Start participating in discussions
 4. Leave anytime if no longer interested
+
+:::note POAP channels
+**POAP channels** (event-based channels from "From my POAPs") require you to hold the POAP for that event to join. See [From my POAPs → Joining a POAP channel](#joining-a-poap-channel) above.
+:::
 
 ## Channel Features
 
