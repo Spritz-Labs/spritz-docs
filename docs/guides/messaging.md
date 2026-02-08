@@ -1,3 +1,19 @@
+---
+title: Messaging Guide
+description: "Use Spritz messaging with Logos Messaging for decentralized, peer-to-peer DMs and group chats. End-to-end encryption and censorship resistance."
+keywords:
+    [
+        Spritz,
+        messaging,
+        Logos Messaging,
+        DMs,
+        end-to-end encryption,
+        decentralized,
+    ]
+sidebar_label: Messaging
+sidebar_position: 1
+---
+
 # Messaging Guide
 
 Spritz uses **[Logos Messaging](https://logos.co/tech-stack)** for decentralized, peer-to-peer messaging with end-to-end encryption.
@@ -5,10 +21,11 @@ Spritz uses **[Logos Messaging](https://logos.co/tech-stack)** for decentralized
 ## Overview
 
 Messaging in Spritz is fully decentralized:
-- **No Central Server**: Messages are relayed through the Logos Messaging network
-- **End-to-End Encrypted**: All messages are encrypted before transmission
-- **Peer-to-Peer**: Direct communication between users
-- **Censorship Resistant**: No single point of failure
+
+-   **No Central Server**: Messages are relayed through the Logos Messaging network
+-   **End-to-End Encrypted**: All messages are encrypted before transmission
+-   **Peer-to-Peer**: Direct communication between users
+-   **Censorship Resistant**: No single point of failure
 
 ## Types of Messaging
 
@@ -48,6 +65,12 @@ Record and send voice notes:
 3. Send the audio file
 4. Recipients can play it back
 
+In **DMs**, voice memos are **end-to-end encrypted** (same key as text). The client encrypts before upload; only you and the recipient can decrypt. See [Encrypted Media](/docs/developers/encrypted-media) for technical details.
+
+### Encrypted Images (DMs)
+
+In **direct messages**, you can send images that are **end-to-end encrypted** with the same conversation key as text and voice. Images are encrypted on your device before upload; only you and the recipient can view them. For format and API, see [Encrypted Media](/docs/developers/encrypted-media).
+
 ### Pixel Art
 
 Create and share pixel art directly in chat:
@@ -59,9 +82,10 @@ Create and share pixel art directly in chat:
 5. Send to the chat
 
 **Features:**
-- Download any image by clicking the download button
-- Share pixel art to social media with OG card previews
-- Images are stored on IPFS via Pinata for decentralized hosting
+
+-   Download any image by clicking the download button
+-   Share pixel art to social media with OG card previews
+-   Images are stored on IPFS via Pinata for decentralized hosting
 
 ### Image Sharing
 
@@ -75,10 +99,11 @@ Share images in any chat:
 **Quick Share Actions:**
 
 When viewing pixel art or images, use quick share buttons:
-- **Share to X/Twitter**: Posts with automatic preview card
-- **Copy Link**: Get a shareable URL with OG tags
-- **More Options**: Share to Facebook, LinkedIn, Reddit, Telegram, WhatsApp
-- **Download**: Save the image to your device
+
+-   **Share to X/Twitter**: Posts with automatic preview card
+-   **Copy Link**: Get a shareable URL with OG tags
+-   **More Options**: Share to Facebook, LinkedIn, Reddit, Telegram, WhatsApp
+-   **Download**: Save the image to your device
 
 ### Location Sharing
 
@@ -91,10 +116,11 @@ Share your location in DMs and Group Chats:
 5. Send the location message
 
 **Location Message Features:**
-- **Interactive Map Preview**: Shows an OpenStreetMap embed with your pin
-- **Open in Maps**: Recipients can open in Google Maps or Apple Maps
-- **Address Display**: Shows resolved address when available
-- **Coordinates**: Displays latitude and longitude
+
+-   **Interactive Map Preview**: Shows an OpenStreetMap embed with your pin
+-   **Open in Maps**: Recipients can open in Google Maps or Apple Maps
+-   **Address Display**: Shows resolved address when available
+-   **Coordinates**: Displays latitude and longitude
 
 :::info Availability
 Location sharing is available in DMs and Group Chats only. For privacy reasons, it is not available in public Channels or Global Chat.
@@ -114,46 +140,48 @@ Organize your conversations with Telegram-style emoji folders.
 ### Assigning Chats to Folders
 
 **Quick assign:**
+
 1. Long-press or right-click any chat
 2. Select "Add to folder"
 3. Choose the target folder
 
 **From folder menu:**
+
 1. Click the folder button in the header
 2. Select the folder to manage
 3. Toggle chats on/off for that folder
 
 ### Default Folders
 
-| Emoji | Suggested Use |
-|-------|---------------|
-| 📥 | All chats (default view) |
-| ⭐ | Favorites / Important |
-| 💼 | Work |
-| 👨‍👩‍👧‍👦 | Family |
-| 🎮 | Gaming |
-| 🔔 | Unread |
+| Emoji | Suggested Use            |
+| ----- | ------------------------ |
+| 📥    | All chats (default view) |
+| ⭐    | Favorites / Important    |
+| 💼    | Work                     |
+| 👨‍👩‍👧‍👦    | Family                   |
+| 🎮    | Gaming                   |
+| 🔔    | Unread                   |
 
 ### Folder Behavior
 
-- Chats can belong to multiple folders
-- Folders sync across devices via your account
-- Removing a chat from a folder doesn't delete the chat
-- Delete a folder by long-pressing it
+-   Chats can belong to multiple folders
+-   Folders sync across devices via your account
+-   Removing a chat from a folder doesn't delete the chat
+-   Delete a folder by long-pressing it
 
 ## Message Actions
 
 Spritz provides a unified Telegram-style message menu for quick actions. Long-press or right-click any message to access:
 
-| Action | Description |
-|--------|-------------|
-| 📋 **Copy** | Copy message text to clipboard |
-| ↩️ **Reply** | Reply to the specific message |
-| ➡️ **Forward** | Forward message to another chat |
-| 😀 **React** | Add an emoji reaction |
-| ⬇️ **Download** | Download images or pixel art |
-| 🗑️ **Delete** | Delete your own messages |
-| 🚫 **Report** | Report inappropriate content |
+| Action          | Description                     |
+| --------------- | ------------------------------- |
+| 📋 **Copy**     | Copy message text to clipboard  |
+| ↩️ **Reply**    | Reply to the specific message   |
+| ➡️ **Forward**  | Forward message to another chat |
+| 😀 **React**    | Add an emoji reaction           |
+| ⬇️ **Download** | Download images or pixel art    |
+| 🗑️ **Delete**   | Delete your own messages        |
+| 🚫 **Report**   | Report inappropriate content    |
 
 ### Emoji Reactions
 
@@ -165,9 +193,10 @@ React to messages with emojis:
 4. Your reaction appears below the message
 
 **Reaction Features:**
-- View who reacted by tapping the reaction count
-- Remove your reaction by tapping it again
-- Animated reactions for added expressiveness
+
+-   View who reacted by tapping the reaction count
+-   Remove your reaction by tapping it again
+-   Animated reactions for added expressiveness
 
 ## User Moderation
 
@@ -192,10 +221,11 @@ Prevent a user from messaging you:
 3. Confirm the action
 
 **What happens when you block someone:**
-- They cannot send you messages
-- You cannot send them messages
-- Any friend relationship is removed
-- They won't see when you're online
+
+-   They cannot send you messages
+-   You cannot send them messages
+-   Any friend relationship is removed
+-   They won't see when you're online
 
 ### Report Users
 
@@ -204,14 +234,14 @@ Report inappropriate behavior to admins:
 1. Long-press the offending message
 2. Select "Report"
 3. Choose the reason:
-   - Spam
-   - Harassment
-   - Hate speech
-   - Violence
-   - Scam
-   - Impersonation
-   - Inappropriate content
-   - Other
+    - Spam
+    - Harassment
+    - Hate speech
+    - Violence
+    - Scam
+    - Impersonation
+    - Inappropriate content
+    - Other
 4. Add optional details
 5. Optionally block the user at the same time
 
@@ -222,24 +252,27 @@ Reports are reviewed by Spritz administrators. See the [User Moderation API](/do
 ### Link Previews
 
 When you share a URL, Spritz automatically generates a rich preview:
-- Page title and description
-- Preview image
-- Domain information
+
+-   Page title and description
+-   Preview image
+-   Domain information
 
 ### Message Status
 
 Track message delivery:
-- **Sending**: Message is being encrypted and sent
-- **Sent**: Message delivered to Logos Messaging network
-- **Delivered**: Message received by recipient
-- **Read**: Message has been read (if enabled)
+
+-   **Sending**: Message is being encrypted and sent
+-   **Sent**: Message delivered to Logos Messaging network
+-   **Delivered**: Message received by recipient
+-   **Read**: Message has been read (if enabled)
 
 ### Message Search
 
 Search through your message history:
-- Search by keyword
-- Filter by date range
-- Search across all conversations
+
+-   Search by keyword
+-   Filter by date range
+-   Search across all conversations
 
 ## Technical Details
 
@@ -251,9 +284,9 @@ Spritz uses a **bespoke implementation built directly on top of the [Logos Messa
 
 ```json
 {
-  "@waku/sdk": "^0.0.36",
-  "@waku/message-encryption": "^0.0.38",
-  "@waku/utils": "^0.0.27"
+    "@waku/sdk": "^0.0.36",
+    "@waku/message-encryption": "^0.0.38",
+    "@waku/utils": "^0.0.27"
 }
 ```
 
@@ -271,11 +304,11 @@ await node.waitForPeers([Protocols.LightPush, Protocols.Filter]);
 
 ### Protocols Used
 
-| Protocol | Purpose |
-|----------|---------|
-| **LightPush** | For sending messages to the network |
-| **Filter** | For subscribing to real-time incoming messages |
-| **Store** | For querying historical messages |
+| Protocol      | Purpose                                        |
+| ------------- | ---------------------------------------------- |
+| **LightPush** | For sending messages to the network            |
+| **Filter**    | For subscribing to real-time incoming messages |
+| **Store**     | For querying historical messages               |
 
 ### Message Format
 
@@ -295,46 +328,48 @@ message ChatMessage {
 
 Uses **ECDH key exchange with AES-256-GCM encryption**:
 
-- **DM keys** use ECDH (Elliptic Curve Diffie-Hellman) with P-256 curve
-  - Each user generates a P-256 keypair
-  - Shared secret derived via ECDH from peer's public key
-  - This is more secure than deterministic keys—knowing addresses alone cannot derive the encryption key
-- **Group keys** are randomly generated and shared with members
-- All messages are encrypted before being sent to Logos Messaging
+-   **DM keys** use ECDH (Elliptic Curve Diffie-Hellman) with P-256 curve
+    -   Each user generates a P-256 keypair
+    -   Shared secret derived via ECDH from peer's public key
+    -   This is more secure than deterministic keys—knowing addresses alone cannot derive the encryption key
+-   **Group keys** are randomly generated and shared with members
+-   All messages are encrypted before being sent to Logos Messaging
 
 **Key Backup (Optional):**
-- Keys stored locally by default for maximum security
-- Opt-in cloud backup protected by 12-word phrase + 6-digit PIN
-- PBKDF2 with 100,000 iterations for key derivation
+
+-   Keys stored locally by default for maximum security
+-   Opt-in cloud backup protected by 12-word phrase + 6-digit PIN
+-   PBKDF2 with 100,000 iterations for key derivation
 
 ### Content Topics
 
 Deterministic topic naming for routing:
 
-| Type | Topic Format |
-|------|--------------|
-| **DMs** | `/spritz/1/dm/{sorted-addresses}/proto` |
-| **Groups** | `/spritz/1/group/{groupId}/proto` |
+| Type       | Topic Format                            |
+| ---------- | --------------------------------------- |
+| **DMs**    | `/spritz/1/dm/{sorted-addresses}/proto` |
+| **Groups** | `/spritz/1/group/{groupId}/proto`       |
 
 ### Hybrid Persistence
 
 Since Logos Messaging's Store protocol has limited retention, Spritz uses a hybrid approach:
 
-| Layer | Purpose |
-|-------|---------|
-| **Logos Messaging Store** | Short-term message history from the P2P network |
-| **Spritz Database** | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
-| **localStorage** | Offline cache for instant loading |
+| Layer                     | Purpose                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Logos Messaging Store** | Short-term message history from the P2P network                                                         |
+| **Spritz Database**       | Long-term encrypted message storage (messages are encrypted with the same symmetric key before storage) |
+| **localStorage**          | Offline cache for instant loading                                                                       |
 
 ### Summary
 
 > Spritz uses a bespoke implementation built directly on the [Logos Messaging](https://logos.co/tech-stack) SDK. It's NOT using any pre-built chat solution.
 >
 > The implementation uses:
-> - Logos Messaging Light Node with LightPush, Filter, and Store protocols
-> - Symmetric key encryption for all messages
-> - Custom Protobuf message format
-> - Hybrid persistence (Logos Messaging + Spritz Database) for reliable delivery
+>
+> -   Logos Messaging Light Node with LightPush, Filter, and Store protocols
+> -   Symmetric key encryption for all messages
+> -   Custom Protobuf message format
+> -   Hybrid persistence (Logos Messaging + Spritz Database) for reliable delivery
 >
 > This gives full control over the UX while leveraging Logos Messaging's decentralized, censorship-resistant message relay network.
 
@@ -350,23 +385,23 @@ Since Logos Messaging's Store protocol has limited retention, Spritz uses a hybr
 
 ### Messages Not Sending
 
-- Check Logos Messaging connection status
-- Verify recipient is online
-- Check network connectivity
-- Try refreshing the connection
+-   Check Logos Messaging connection status
+-   Verify recipient is online
+-   Check network connectivity
+-   Try refreshing the connection
 
 ### Messages Not Receiving
 
-- Verify you're connected to Logos Messaging
-- Check if sender is online
-- Wait a few moments (network propagation delay)
-- Refresh the chat
+-   Verify you're connected to Logos Messaging
+-   Check if sender is online
+-   Wait a few moments (network propagation delay)
+-   Refresh the chat
 
 ### Encryption Errors
 
-- Verify your keys are valid
-- Check for key synchronization issues
-- Re-establish connection if needed
+-   Verify your keys are valid
+-   Check for key synchronization issues
+-   Re-establish connection if needed
 
 ## Client-Side Implementation
 
@@ -380,20 +415,17 @@ Messaging in Spritz is **entirely client-side** using the Logos Messaging SDK. T
 import { useWaku } from "@/hooks/useWaku";
 
 function ChatComponent({ recipientAddress }) {
-    const { 
-        sendMessage, 
-        messages, 
-        isConnected,
-        connectionStatus 
-    } = useWaku();
-    
+    const { sendMessage, messages, isConnected, connectionStatus } = useWaku();
+
     const handleSend = async (content: string) => {
         await sendMessage(recipientAddress, content);
     };
-    
+
     return (
         <div>
-            {messages.map(msg => <Message key={msg.id} {...msg} />)}
+            {messages.map((msg) => (
+                <Message key={msg.id} {...msg} />
+            ))}
             <MessageInput onSend={handleSend} disabled={!isConnected} />
         </div>
     );
@@ -404,9 +436,6 @@ For detailed technical implementation, see the [Messaging Technical Documentatio
 
 ## Next Steps
 
-- Learn about [Video Calls](/docs/guides/video-calls)
-- Explore [Groups](/docs/guides/groups)
-- Check out [Channels](/docs/guides/channels)
-
-
-
+-   Learn about [Video Calls](/docs/guides/video-calls)
+-   Explore [Groups](/docs/guides/groups)
+-   Check out [Channels](/docs/guides/channels)

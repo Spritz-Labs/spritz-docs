@@ -585,6 +585,48 @@ await createChannel({
 
 ---
 
+## POAP collections (channels by collection)
+
+Spritz also supports **POAP collections**: channels can be linked to a POAP **collection** (group of events) instead of a single event. One channel per collection. Join gating applies: users must hold at least one POAP from that collection to join.
+
+### List or search collections
+
+```http
+GET /api/poap/collections?offset=0&limit=20&query=...
+```
+
+| Parameter | Type   | Required | Description                     |
+| --------- | ------ | -------- | ------------------------------- |
+| `offset`  | number | No       | Pagination offset (default: 0). |
+| `limit`   | number | No       | Page size 1–100 (default: 20).  |
+| `query`   | string | No       | Search term; omit to list all.  |
+
+**Response (200):** `{ collections: [...], nextCursor: string | null }`. Each collection: `id`, `title`, `description`, `logoImageUrl`, `bannerImageUrl`, `dropsCount`, `year`.
+
+### Get collection by ID
+
+```http
+GET /api/poap/collections/:id
+```
+
+Returns a single collection including `dropIds` (event ids in the collection). Used to create a channel linked to that collection.
+
+### Collections for user (with channel status)
+
+```http
+GET /api/poap/collections-for-user?address=0x...&memberAddress=0x...
+```
+
+Or `?addresses=0x1,0x2` for multi-address (e.g. identity + Smart Wallet). Returns POAP collections where the user holds at least one POAP, with linked channel (if any) and `is_member`. Optional `memberAddress` for membership lookup (default: first address).
+
+**Response (200):** `{ collections: [{ id, title, description, logoImageUrl, bannerImageUrl, dropsCount, year, canJoin: true, channel }] }`.
+
+### Create channel by collection
+
+`POST /api/channels` accepts `poapCollectionId`, `poapCollectionName`, `poapCollectionImageUrl` (and optionally `name`). At most one channel per collection; join gating checks that the user holds at least one POAP from that collection's drops. Database columns: `poap_collection_id`, `poap_collection_name`, `poap_collection_image_url` (see migration `20260126_poap_collections.sql`).
+
+---
+
 ## End-to-end flow (Browse Channels → "From my POAPs")
 
 1. User opens Browse Channels and switches to **"From my POAPs"**.
@@ -599,14 +641,18 @@ await createChannel({
 
 ## File structure (eth-akash)
 
-| Path                                             | Purpose                                                                             |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `src/app/api/poap/scan/route.ts`                 | `GET /api/poap/scan` — fetch user POAPs, return deduplicated events.                |
-| `src/app/api/poap/events-with-channels/route.ts` | `GET /api/poap/events-with-channels` — POAP events + channel and membership.        |
-| `src/app/api/channels/route.ts`                  | `GET /api/channels` (with `poapEventId`) and `POST /api/channels` (with POAP body). |
-| `src/hooks/useChannels.ts`                       | `createChannel` with `poapEventId`, `poapEventName`, `poapImageUrl`.                |
-| `src/components/BrowseChannelsModal.tsx`         | "From my POAPs" tab, calls events-with-channels, create/join.                       |
-| `migrations/080_poap_channels.sql`               | Adds `poap_event_id`, `poap_event_name`, `poap_image_url` and unique index.         |
+| Path                                             | Purpose                                                                                                    |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `src/app/api/poap/scan/route.ts`                 | `GET /api/poap/scan` — fetch user POAPs, return deduplicated events.                                       |
+| `src/app/api/poap/events-with-channels/route.ts` | `GET /api/poap/events-with-channels` — POAP events + channel and membership.                               |
+| `src/app/api/poap/collections/route.ts`          | `GET /api/poap/collections` — list or search POAP collections.                                             |
+| `src/app/api/poap/collections/[id]/route.ts`     | `GET /api/poap/collections/:id` — get collection by ID (includes dropIds).                                 |
+| `src/app/api/poap/collections-for-user/route.ts` | `GET /api/poap/collections-for-user` — collections user can join + channel status.                         |
+| `src/app/api/channels/route.ts`                  | `GET /api/channels` (with `poapEventId` or `poapCollectionId`) and `POST` (POAP event or collection body). |
+| `src/hooks/useChannels.ts`                       | `createChannel` with `poapEventId`, `poapEventName`, `poapImageUrl`.                                       |
+| `src/components/BrowseChannelsModal.tsx`         | "From my POAPs" tab, calls events-with-channels, create/join.                                              |
+| `migrations/080_poap_channels.sql`               | Adds `poap_event_id`, `poap_event_name`, `poap_image_url` and unique index.                                |
+| `migrations/20260126_poap_collections.sql`       | Adds `poap_collection_id`, `poap_collection_name`, `poap_collection_image_url` and unique index.           |
 
 ---
 

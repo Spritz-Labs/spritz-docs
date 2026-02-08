@@ -374,41 +374,36 @@ Email-only users cannot make on-chain transactions until they create a passkey. 
 
 ---
 
-## Flow 4: World ID / Alien ID Login
+## Flow 4: World ID Login
 
 Privacy-preserving authentication using zero-knowledge proofs.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                      WORLD ID / ALIEN ID FLOW                            │
+│                         WORLD ID FLOW                                    │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  STEP 1: User verifies with World ID orb or Alien ID                    │
+│  STEP 1: User verifies with World ID orb                                │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │  World ID:                                                        │   │
 │  │  • User scans iris with World ID orb                             │   │
 │  │  • Generates ZK proof of unique personhood                       │   │
 │  │  • Returns: nullifier_hash (unique per user per app)             │   │
-│  │                                                                    │   │
-│  │  Alien ID:                                                        │   │
-│  │  • User authenticates via Alien                                   │   │
-│  │  • Returns: alienAddress                                          │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                              │                                           │
 │                              ▼                                           │
 │  STEP 2: Verify proof and create session                                │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │  POST /api/auth/world-id or /api/auth/alien-id                   │   │
+│  │  POST /api/auth/world-id                                         │   │
 │  │                                                                    │   │
 │  │  Server:                                                          │   │
-│  │  ✓ Verifies ZK proof with World ID / Alien servers               │   │
-│  │  ✓ Creates user with wallet_type = "world_id" or "alien_id"     │   │
-│  │  ✓ Spritz ID = nullifier_hash or alienAddress                    │   │
+│  │  ✓ Verifies ZK proof with World ID servers                       │   │
+│  │  ✓ Creates user with wallet_type = "world_id"                    │   │
+│  │  ✓ Spritz ID = nullifier_hash                                    │   │
 │  │  ✓ Creates JWT session                                            │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                              │                                           │
 │                              ▼                                           │
-│  STEP 3: Same as email - passkey required for wallet                    │
+│  STEP 3: Passkey required for wallet                                    │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │  ❌ Cannot make on-chain transactions until passkey created      │   │
 │  │  → User prompted to create passkey for wallet features           │   │
@@ -417,6 +412,89 @@ Privacy-preserving authentication using zero-knowledge proofs.
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Flow 5: Alien ID Login (SSO & Mini App)
+
+Alien ID authentication supports two entry points: browser-based **SSO** and embedded **Mini App** inside the Alien app.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     ALIEN ID LOGIN FLOW                                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────┐   ┌────────────────────────────┐       │
+│  │     SSO FLOW (Browser)     │   │   MINI APP FLOW (Embedded) │       │
+│  └─────────────┬──────────────┘   └─────────────┬──────────────┘       │
+│                │                                 │                       │
+│                ▼                                 ▼                       │
+│  STEP 1a: User clicks              STEP 1b: App detects Alien          │
+│  "Sign in with Alien ID"           environment via bridge               │
+│  ┌──────────────────────────┐     ┌──────────────────────────┐         │
+│  │  SignInButton opens SSO  │     │  isBridgeAvailable()     │         │
+│  │  modal → user auths →    │     │  = true → get authToken  │         │
+│  │  SDK returns JWT token + │     │  from getLaunchParams()   │         │
+│  │  tokenInfo with 'sub'    │     │  or window.__ALIEN_       │         │
+│  │                           │     │  AUTH_TOKEN__             │         │
+│  └─────────────┬────────────┘     └─────────────┬────────────┘         │
+│                │                                 │                       │
+│                ▼                                 ▼                       │
+│  STEP 2a: Client sends             STEP 2b: Client sends               │
+│  { alienAddress, token }            { token, isMiniApp: true }          │
+│                │                                 │                       │
+│                └────────────┬────────────────────┘                      │
+│                             ▼                                            │
+│  STEP 3: POST /api/auth/alien-id                                       │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  Server:                                                          │   │
+│  │  ✓ Validates JWT format and expiration                           │   │
+│  │  ✓ Extracts user identifier (sub claim)                          │   │
+│  │  ✓ SSO: Verifies alienAddress matches token                     │   │
+│  │  ✓ Mini App: Uses address from token directly                    │   │
+│  │  ✓ Creates/updates user with wallet_type = "alien_id"           │   │
+│  │  ✓ Auto-joins user to official "alien" channel                   │   │
+│  │  ✓ Creates JWT session cookie (7-day expiry)                    │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                              │                                           │
+│                              ▼                                           │
+│  STEP 4: Passkey required for wallet (same as email/World ID)          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  ✅ Social features work immediately (messaging, channels)       │   │
+│  │  ✅ User auto-joined to Alien channel                            │   │
+│  │  ❌ Cannot make on-chain transactions until passkey created      │   │
+│  │  → User prompted to create passkey for wallet features           │   │
+│  │  → Smart Wallet computed from passkey                            │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ✅ LOGIN COMPLETE                                                       │
+│  • Spritz ID = alienAddress (from JWT sub claim)                        │
+│  • Social features = Available immediately                              │
+│  • Smart Wallet = Requires passkey creation                             │
+│  • Auto-joined to Alien channel                                         │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Alien SSO vs Mini App: Key Differences
+
+| Aspect | SSO Flow | Mini App Flow |
+| --- | --- | --- |
+| **Entry Point** | "Sign in with Alien ID" button | Auto-detected via bridge |
+| **User Interaction** | User clicks button, authenticates in modal | Fully automatic (zero-click) |
+| **Token Source** | `useAuth()` hook after modal close | `getLaunchParams().authToken` |
+| **Address Verification** | Server verifies token matches provided address | Server extracts address from token |
+| **UI Mode** | Full Spritz UI with all auth options | Alien-only mode (hides other auth) |
+| **API Call** | `{ alienAddress, token }` | `{ token, isMiniApp: true }` |
+
+### Alien ID API Endpoints
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/api/auth/alien-id` | POST | Verify Alien token, create session |
+| `/api/auth/session` | POST | Refresh server session from stored token |
+
+For the complete integration guide with code examples, SDK setup, and troubleshooting, see [Alien Integration](/docs/developers/alien-integration).
 
 ---
 

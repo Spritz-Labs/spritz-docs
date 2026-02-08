@@ -1,3 +1,11 @@
+---
+title: Admin Guide
+description: "Administrative features for Spritz. User management, analytics, invite codes, beta access, and platform moderation. Admin-only access."
+keywords: [Spritz, admin, moderation, analytics, invite codes, beta access]
+sidebar_label: Admin
+sidebar_position: 9
+---
+
 # Admin Guide
 
 Administrative features and tools for managing the Spritz platform.
@@ -46,29 +54,29 @@ View a user's smart wallet deployment status across all supported chains:
 1. Go to Admin → Users
 2. Click on a user to open details
 3. View the chain deployment grid showing:
-   - Which chains have deployed smart wallets
-   - Balance on each chain
-   - Total balance across all chains (USD)
+    - Which chains have deployed smart wallets
+    - Balance on each chain
+    - Total balance across all chains (USD)
 
 **Chain Status Indicators:**
 
-| Status | Meaning |
-|--------|---------|
+| Status    | Meaning                       |
+| --------- | ----------------------------- |
 | ✓ (Green) | Wallet deployed on this chain |
-| - (Gray) | Wallet not deployed |
+| - (Gray)  | Wallet not deployed           |
 
 **Supported Chains:**
 
-| Chain | Chain ID |
-|-------|----------|
-| Ethereum | 1 |
-| Base | 8453 |
-| Arbitrum | 42161 |
-| Optimism | 10 |
-| Polygon | 137 |
-| BNB Chain | 56 |
-| Unichain | 130 |
-| Avalanche | 43114 |
+| Chain     | Chain ID |
+| --------- | -------- |
+| Ethereum  | 1        |
+| Base      | 8453     |
+| Arbitrum  | 42161    |
+| Optimism  | 10       |
+| Polygon   | 137      |
+| BNB Chain | 56       |
+| Unichain  | 130      |
+| Avalanche | 43114    |
 
 **API Endpoint:**
 
@@ -112,6 +120,7 @@ Individual user metrics:
 Track wallet usage across the platform:
 
 **Transaction Metrics:**
+
 -   Total transactions
 -   Transaction volume (USD)
 -   Transactions by network
@@ -119,17 +128,18 @@ Track wallet usage across the platform:
 
 **Network Usage:**
 
-| Network | Chain ID | Metrics Tracked |
-|---------|----------|-----------------|
-| Ethereum | 1 | Transactions, Volume, Users |
-| Base | 8453 | Transactions, Volume, Users |
-| Polygon | 137 | Transactions, Volume, Users |
-| Arbitrum | 42161 | Transactions, Volume, Users |
-| Optimism | 10 | Transactions, Volume, Users |
-| Avalanche | 43114 | Transactions, Volume, Users |
-| BNB Chain | 56 | Transactions, Volume, Users |
+| Network   | Chain ID | Metrics Tracked             |
+| --------- | -------- | --------------------------- |
+| Ethereum  | 1        | Transactions, Volume, Users |
+| Base      | 8453     | Transactions, Volume, Users |
+| Polygon   | 137      | Transactions, Volume, Users |
+| Arbitrum  | 42161    | Transactions, Volume, Users |
+| Optimism  | 10       | Transactions, Volume, Users |
+| Avalanche | 43114    | Transactions, Volume, Users |
+| BNB Chain | 56       | Transactions, Volume, Users |
 
 **User Wallet Stats:**
+
 -   `wallet_tx_count` - Total transactions per user
 -   `wallet_volume_usd` - Total volume per user
 -   `last_wallet_tx_at` - Last transaction timestamp
@@ -169,21 +179,21 @@ Spritz includes a comprehensive moderation system for managing chat in both glob
 
 ### Moderator Roles
 
-| Role | Permissions |
-|------|-------------|
-| **Super Admin** | All permissions + manage other admins |
-| **Admin** | All moderation permissions |
-| **Channel Owner** | Full permissions within their channel |
-| **Moderator** | Configurable permissions (pin, delete, mute) |
+| Role              | Permissions                                  |
+| ----------------- | -------------------------------------------- |
+| **Super Admin**   | All permissions + manage other admins        |
+| **Admin**         | All moderation permissions                   |
+| **Channel Owner** | Full permissions within their channel        |
+| **Moderator**     | Configurable permissions (pin, delete, mute) |
 
 ### Moderator Permissions
 
 Moderators can have granular permissions:
 
-- **can_pin**: Pin/unpin messages
-- **can_delete**: Soft delete messages (preserves audit trail)
-- **can_mute**: Mute/unmute users
-- **can_manage_mods**: Promote/demote other moderators
+-   **can_pin**: Pin/unpin messages
+-   **can_delete**: Soft delete messages (preserves audit trail)
+-   **can_mute**: Mute/unmute users
+-   **can_manage_mods**: Promote/demote other moderators
 
 ### Managing Moderators
 
@@ -232,11 +242,12 @@ POST /api/moderation
 ```
 
 **Duration formats:**
-- `1m`, `5m`, `30m` - Minutes
-- `1h`, `6h`, `24h` - Hours
-- `1d`, `7d`, `30d` - Days
-- `1w`, `2w` - Weeks
-- `permanent` - No expiration
+
+-   `1m`, `5m`, `30m` - Minutes
+-   `1h`, `6h`, `24h` - Hours
+-   `1d`, `7d`, `30d` - Days
+-   `1w`, `2w` - Weeks
+-   `permanent` - No expiration
 
 ### Deleting Messages
 
@@ -262,17 +273,18 @@ GET /api/moderation?action=mod-log&requestingUser=0x...&channelId=null
 ```
 
 Returns recent actions including:
-- Who performed the action
-- What action was taken
-- Who was affected
-- Timestamp and reason
+
+-   Who performed the action
+-   What action was taken
+-   Who was affected
+-   Timestamp and reason
 
 ### Protection Rules
 
-- Cannot mute admins (unless you're a super admin)
-- Cannot mute moderators (unless you're an admin)
-- Channel owners have full permissions in their channels
-- All actions are logged for accountability
+-   Cannot mute admins (unless you're a super admin)
+-   Cannot mute moderators (unless you're an admin)
+-   Channel owners have full permissions in their channels
+-   All actions are logged for accountability
 
 ## Bug Reports
 

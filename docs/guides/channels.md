@@ -1,3 +1,19 @@
+---
+title: Public Channels Guide
+description: "Discover and join public channels in Spritz. Browse official channels, POAP channels, and community discussions. Learn how to join, create, and use channels."
+keywords:
+    [
+        Spritz,
+        public channels,
+        POAP channels,
+        community,
+        Logos Messaging,
+        Browse Channels,
+    ]
+sidebar_label: Channels
+sidebar_position: 4
+---
+
 # Public Channels Guide
 
 Public channels in Spritz allow you to discover and join community discussions on various topics.
@@ -13,7 +29,7 @@ Public channels are:
 
 ## Official Channels
 
-Spritz includes **96 official channels** across multiple categories, verified by the Spritz team. Official channels are marked with a special badge and appear at the top of search results.
+Spritz includes **96+ official channels** across multiple categories, verified by the Spritz team. Official channels are marked with a special badge and appear at the top of search results.
 
 ### Channel Categories
 
@@ -27,8 +43,24 @@ Spritz includes **96 official channels** across multiple categories, verified by
 | **Music**     | Hip Hop, Electronic, Indie       | 8+    |
 | **Art**       | Digital Art, Photography, Design | 6+    |
 | **Languages** | English, Spanish, Mandarin       | 8+    |
+| **Partners**  | Alien                            | 1+    |
 
 Official channels are created and moderated by the Spritz team to ensure quality conversations.
+
+### Alien Channel
+
+The **Alien** channel is a dedicated official channel for the Alien ecosystem community. Users who authenticate with [Alien ID](/docs/developers/alien-integration) are **automatically joined** to this channel on their first login. The channel can also be accessed directly via its custom URL slug: `/channel/alien`.
+
+### Channel Slugs
+
+Official channels can have **custom URL slugs** for direct access:
+
+```
+https://app.spritz.chat/channel/alien
+https://app.spritz.chat/channel/ethereum
+```
+
+Slugs provide memorable, shareable links to channels without needing to know the channel's UUID.
 
 ## Discovering Channels
 
@@ -45,9 +77,9 @@ If you hold **POAPs** (Proof of Attendance Protocol NFTs) from events (e.g. conf
 
 -   Switch to **"From my POAPs"** in Browse Channels to see events you've attended
 -   For each event: **Create** a channel (if none exists yet) or **Join** the existing channel
--   POAP channels use **Logos Messaging** (Waku) and are limited to **one channel per POAP event**
+-   POAP channels use **Logos Messaging** (Waku) and are limited to **one channel per POAP event** (or per **POAP collection**, when using collections)
 
-This requires the app to have POAP integration enabled (`POAP_API_KEY`). For technical details, API endpoints, and code examples, see [POAP Channels - Technical Integration](/docs/developers/poap-channels).
+This requires the app to have POAP integration enabled (`POAP_API_KEY`). For technical details, API endpoints (including POAP collections), and code examples, see [POAP Channels - Technical Integration](/docs/developers/poap-channels).
 
 #### Joining a POAP channel
 
@@ -128,6 +160,18 @@ Pinned messages are great for:
 4. **Regular Participation**: Engage with the community
 5. **Follow Guidelines**: Respect channel rules
 
+## Location Chats
+
+Spritz supports **location-based chat rooms** that let users connect with others nearby. These are ephemeral, geographically-anchored channels.
+
+-   **Proximity-Based**: Chat with people in the same area
+-   **AI Agent Support**: AI agents can join location chats to provide local context
+-   **Discoverable**: Find active location chats near you
+
+Location chats complement public channels by providing spontaneous, location-aware conversations.
+
+---
+
 ## API Reference
 
 ### List Channels
@@ -153,6 +197,7 @@ GET /api/channels?category=tech&userAddress=0x...
             "description": "Discuss Ethereum development",
             "emoji": "⟠",
             "category": "crypto",
+            "slug": "ethereum",
             "is_official": true,
             "member_count": 1250,
             "message_count": 8420,
@@ -167,6 +212,14 @@ GET /api/channels?category=tech&userAddress=0x...
 ```typescript
 GET /api/channels/:id
 ```
+
+### Get Channel by Slug
+
+```typescript
+GET /api/channels/slug/:slug
+```
+
+Returns a channel by its custom URL slug (e.g., `alien`, `ethereum`).
 
 ### Join Channel
 
@@ -226,6 +279,7 @@ POST /api/channels/:id/messages/pin
 ## Next Steps
 
 -   [POAP Channels](/docs/developers/poap-channels) — Technical integration (API, schema, code)
+-   [Alien Integration](/docs/developers/alien-integration) — Alien SSO, Mini App, and auto-join channel
 -   [Groups](/docs/guides/groups) — Private group chats
 -   [Messaging](/docs/guides/messaging) — Direct and channel messaging
 -   [Friends](/docs/guides/friends) — Friends list and requests

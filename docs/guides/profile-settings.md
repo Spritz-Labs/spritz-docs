@@ -1,3 +1,11 @@
+---
+title: Profile & Settings Guide
+description: "Manage your Spritz profile, preferences, and account settings. Username, bio, avatar, widgets, themes, verification, and email updates opt-in."
+keywords: [Spritz, profile, settings, avatar, widgets, verification]
+sidebar_label: Profile Settings
+sidebar_position: 7
+---
+
 # Profile & Settings Guide
 
 Manage your Spritz profile, preferences, and account settings.

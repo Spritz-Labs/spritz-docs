@@ -248,8 +248,12 @@ GITHUB_TOKEN=your_github_personal_access_token
 NEXT_PUBLIC_WORLD_ID_APP_ID=app_your_world_id_app_id
 NEXT_PUBLIC_WORLD_ID_ACTION=your_action_name
 
-# Alien ID (coming soon)
+# Alien ID (SSO + Mini App)
+NEXT_PUBLIC_ALIEN_SSO_BASE_URL=https://sso.alien-api.com
+NEXT_PUBLIC_ALIEN_PROVIDER_ADDRESS=000000010400000000000f89739b0806
 ```
+
+Both Alien variables have sensible defaults and are only required if you have a custom Alien provider configuration. See [Alien Integration](/docs/developers/alien-integration) for the complete setup guide.
 
 </details>
 

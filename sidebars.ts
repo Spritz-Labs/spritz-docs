@@ -61,10 +61,12 @@ const sidebars: SidebarsConfig = {
                     collapsed: false,
                     items: [
                         "developers/authentication",
+                        "developers/alien-integration",
                         "developers/smart-wallets",
                         "developers/webauthn-signatures",
                         "developers/vaults",
                         "developers/messaging",
+                        "developers/encrypted-media",
                         "developers/video-calls",
                         "developers/livestreaming",
                         "developers/poap-channels",

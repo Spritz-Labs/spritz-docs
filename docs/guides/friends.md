@@ -1,3 +1,11 @@
+---
+title: Friends Guide
+description: "Connect with other users in Spritz. Send friend requests, organize friends with tags, and manage your network. Quick access to profiles and chat."
+keywords: [Spritz, friends, friend requests, contacts, social network]
+sidebar_label: Friends
+sidebar_position: 5
+---
+
 # Friends Guide
 
 The friends system in Spritz allows you to connect with other users, organize your network, and manage relationships.
@@ -5,10 +13,11 @@ The friends system in Spritz allows you to connect with other users, organize yo
 ## Overview
 
 Friends in Spritz enable:
-- **Friend Requests**: Send and receive friend requests
-- **Friend Management**: Organize friends with tags
-- **Quick Access**: Easy access to friends' profiles
-- **Social Features**: See friends' activity and status
+
+-   **Friend Requests**: Send and receive friend requests
+-   **Friend Management**: Organize friends with tags
+-   **Quick Access**: Easy access to friends' profiles
+-   **Social Features**: See friends' activity and status
 
 ## Adding Friends
 
@@ -48,10 +57,10 @@ Organize friends with custom tags:
 
 ### Friend List
 
-- View all your friends
-- Search friends by name
-- Filter by tags
-- See friends' online status
+-   View all your friends
+-   Search friends by name
+-   Filter by tags
+-   See friends' online status
 
 ### Remove Friend
 
@@ -65,18 +74,20 @@ Organize friends with custom tags:
 ### Status Updates
 
 See what friends are up to:
-- Online/offline status
-- Current activity
-- Status messages
-- Live streaming indicator
+
+-   Online/offline status
+-   Current activity
+-   Status messages
+-   Live streaming indicator
 
 ### Friend Activity
 
 View friends' recent activity:
-- Recent messages
-- New agents created
-- Streams started
-- Profile updates
+
+-   Recent messages
+-   New agents created
+-   Streams started
+-   Profile updates
 
 ## Best Practices
 
@@ -124,7 +135,6 @@ DELETE /api/friends/:id
 
 ## Next Steps
 
-- Learn about [Groups](/docs/guides/groups)
-- Explore [Messaging](/docs/guides/messaging)
-- Check out [Profile Settings](/docs/guides/profile-settings)
-
+-   Learn about [Groups](/docs/guides/groups)
+-   Explore [Messaging](/docs/guides/messaging)
+-   Check out [Profile Settings](/docs/guides/profile-settings)

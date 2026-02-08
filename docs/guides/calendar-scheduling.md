@@ -1,3 +1,11 @@
+---
+title: Calendar & Scheduling Guide
+description: "Connect Google Calendar to Spritz for scheduling, availability windows, and shareable booking links. Schedule calls and use x402 for paid sessions."
+keywords: [Spritz, calendar, scheduling, Google Calendar, availability, x402]
+sidebar_label: Calendar & Scheduling
+sidebar_position: 6
+---
+
 # Calendar & Scheduling Guide
 
 Spritz integrates with Google Calendar to enable scheduling, availability management, and shareable scheduling links.
@@ -5,11 +13,12 @@ Spritz integrates with Google Calendar to enable scheduling, availability manage
 ## Overview
 
 Calendar features include:
-- **Google Calendar Sync**: Connect your Google Calendar
-- **Availability Windows**: Set recurring availability
-- **Scheduling Links**: Create shareable booking links
-- **Call Scheduling**: Schedule calls with friends
-- **x402 Payments**: Charge for scheduled calls using the [x402 protocol](/docs/agents/x402)
+
+-   **Google Calendar Sync**: Connect your Google Calendar
+-   **Availability Windows**: Set recurring availability
+-   **Scheduling Links**: Create shareable booking links
+-   **Call Scheduling**: Schedule calls with friends
+-   **x402 Payments**: Charge for scheduled calls using the [x402 protocol](/docs/agents/x402)
 
 ## Connecting Google Calendar
 
@@ -23,9 +32,9 @@ Calendar features include:
 
 ### Permissions Required
 
-- **Read Calendar**: View your events
-- **Create Events**: Schedule new events
-- **Modify Events**: Update existing events
+-   **Read Calendar**: View your events
+-   **Create Events**: Schedule new events
+-   **Modify Events**: Update existing events
 
 ## Availability Windows
 
@@ -36,10 +45,10 @@ Create recurring availability windows:
 1. Go to Calendar Settings
 2. Click "Add Availability Window"
 3. Configure:
-   - **Days**: Which days of the week
-   - **Time Range**: Start and end time
-   - **Timezone**: Your timezone
-   - **Duration**: Meeting duration options
+    - **Days**: Which days of the week
+    - **Time Range**: Start and end time
+    - **Timezone**: Your timezone
+    - **Duration**: Meeting duration options
 4. Save your availability
 
 ### Example Availability
@@ -56,10 +65,10 @@ Available for: 30min, 60min meetings
 1. Go to Scheduling Settings
 2. Click "Create Shareable Link"
 3. Configure link settings:
-   - **Name**: Link identifier
-   - **Availability**: Which windows to use
-   - **Duration**: Default meeting length
-   - **Buffer Time**: Time between meetings
+    - **Name**: Link identifier
+    - **Availability**: Which windows to use
+    - **Duration**: Default meeting length
+    - **Buffer Time**: Time between meetings
 4. Get your shareable link
 5. Share with others
 
@@ -75,24 +84,25 @@ Available for: 30min, 60min meetings
 ## Timezone Handling
 
 Spritz handles timezones automatically:
-- **User Timezone**: Detected from browser
-- **Availability**: Stored in your timezone
-- **Display**: Shown in viewer's timezone
-- **Events**: Created in correct timezone
+
+-   **User Timezone**: Detected from browser
+-   **Availability**: Stored in your timezone
+-   **Display**: Shown in viewer's timezone
+-   **Events**: Created in correct timezone
 
 ## API Reference
 
 ### Connect Calendar
 
 ```typescript
-GET /api/calendar/connect
+GET / api / calendar / connect;
 // Redirects to Google OAuth
 ```
 
 ### Get Calendar Status
 
 ```typescript
-GET /api/calendar/status
+GET / api / calendar / status;
 // Returns connection status
 ```
 
@@ -154,28 +164,27 @@ The scheduling URL has been changed from `/book/` to `/cal/` for brevity.
 
 ### Calendar Not Syncing
 
-- Reconnect your Google Calendar
-- Check permissions in Google account
-- Verify OAuth token is valid
-- Check for API errors
+-   Reconnect your Google Calendar
+-   Check permissions in Google account
+-   Verify OAuth token is valid
+-   Check for API errors
 
 ### Availability Not Showing
 
-- Verify availability windows are set
-- Check timezone settings
-- Ensure windows don't conflict
-- Verify calendar connection
+-   Verify availability windows are set
+-   Check timezone settings
+-   Ensure windows don't conflict
+-   Verify calendar connection
 
 ### Scheduling Errors
 
-- Check calendar permissions
-- Verify time slot availability
-- Check for conflicting events
-- Review error messages
+-   Check calendar permissions
+-   Verify time slot availability
+-   Check for conflicting events
+-   Review error messages
 
 ## Next Steps
 
-- Learn about [x402 Payments](/docs/agents/x402)
-- Explore [Profile Settings](/docs/guides/profile-settings)
-- Check out [API Reference](/docs/api/intro)
-
+-   Learn about [x402 Payments](/docs/agents/x402)
+-   Explore [Profile Settings](/docs/guides/profile-settings)
+-   Check out [API Reference](/docs/api/intro)

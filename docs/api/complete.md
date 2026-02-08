@@ -62,7 +62,7 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/auth/session`              | Get current session                      |
 | POST   | `/api/auth/logout`               | Logout                                   |
 | POST   | `/api/auth/world-id`             | Verify World ID                          |
-| POST   | `/api/auth/alien-id`             | Verify Alien ID                          |
+| POST   | `/api/auth/alien-id`             | Verify Alien ID (SSO & Mini App flows)   |
 
 ### Passkeys
 
@@ -113,6 +113,15 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/user/email-updates` | Get email updates opt-in status (auth)                              |
 | PATCH  | `/api/user/email-updates` | Update email updates opt-in (auth; verify email required to opt in) |
 
+### Upload (Encrypted Media - DMs)
+
+| Method | Endpoint            | Description                                                                   |
+| ------ | ------------------- | ----------------------------------------------------------------------------- |
+| POST   | `/api/upload/image` | Upload encrypted image (multipart: file, conversationId, originalType; auth)  |
+| POST   | `/api/upload/voice` | Upload encrypted voice memo (multipart: file, conversationId, duration; auth) |
+
+Client encrypts media with the DM conversation key before upload. See [Encrypted Media](/docs/developers/encrypted-media) for format and crypto.
+
 ### User Moderation (Mute, Block, Report)
 
 | Method | Endpoint            | Description                  |
@@ -133,7 +142,8 @@ This page provides a quick overview of all available API endpoints. For detailed
 | ------ | ------------------------------ | --------------------------------------------------------------------------------------------- |
 | GET    | `/api/channels`                | List channels (optional: `?poapEventId=` for channel by POAP event)                           |
 | POST   | `/api/channels`                | Create channel (supports POAP: `poapEventId`, `poapEventName`, `poapImageUrl`)                |
-| GET    | `/api/channels/:id`            | Get channel                                                                                   |
+| GET    | `/api/channels/:id`            | Get channel by ID                                                                             |
+| GET    | `/api/channels/slug/:slug`     | Get channel by custom URL slug (e.g., `alien`, `ethereum`)                                    |
 | POST   | `/api/channels/:id/join`       | Join channel (POAP channels require holding the POAP; Smart Wallet checked for passkey users) |
 | POST   | `/api/channels/:id/leave`      | Leave channel                                                                                 |
 | GET    | `/api/channels/:id/messages`   | Get messages                                                                                  |
@@ -141,12 +151,27 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/channels/:id/agents`     | Get official agents in channel                                                                |
 | POST   | `/api/channels/agent-response` | Process @mentions                                                                             |
 
+### Location Chats
+
+| Method | Endpoint                          | Description                                          |
+| ------ | --------------------------------- | ---------------------------------------------------- |
+| GET    | `/api/location-chats`             | List nearby location chats                           |
+| POST   | `/api/location-chats`             | Create a location chat room                          |
+| GET    | `/api/location-chats/:id`         | Get location chat details                            |
+| POST   | `/api/location-chats/:id/join`    | Join a location chat                                 |
+| POST   | `/api/location-chats/:id/leave`   | Leave a location chat                                |
+| GET    | `/api/location-chats/:id/messages`| Get messages in a location chat                      |
+| POST   | `/api/location-chats/:id/messages`| Send message in a location chat                      |
+
 ### POAP (Proof of Attendance) Channels
 
-| Method | Endpoint                                                             | Description                                                                                |
-| ------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| GET    | `/api/poap/scan?address=0x...`                                       | Fetch user's POAPs (deduplicated events)                                                   |
-| GET    | `/api/poap/events-with-channels?address=...` or `?addresses=0x1,0x2` | User's POAP events with channel status (multi-address supported; optional `memberAddress`) |
+| Method | Endpoint                                                             | Description                                                                           |
+| ------ | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| GET    | `/api/poap/scan?address=0x...`                                       | Fetch user's POAPs (deduplicated events)                                              |
+| GET    | `/api/poap/events-with-channels?address=...` or `?addresses=0x1,0x2` | User's POAP events with channel status (multi-address; optional `memberAddress`)      |
+| GET    | `/api/poap/collections?offset=0&limit=20&query=...`                  | List or search POAP collections (paginated)                                           |
+| GET    | `/api/poap/collections/:id`                                          | Get POAP collection by ID (includes dropIds)                                          |
+| GET    | `/api/poap/collections-for-user?address=...` or `?addresses=0x1,0x2` | Collections user can join (holds POAP) with channel status (optional `memberAddress`) |
 
 See [POAP Channels Technical Guide](/docs/developers/poap-channels) for full integration details.
 

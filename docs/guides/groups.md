@@ -1,3 +1,11 @@
+---
+title: Groups Guide
+description: "Create and manage groups in Spritz for group chats, group calls, and shared activities. Invite friends, manage members, and collaborate."
+keywords: [Spritz, groups, group chat, group calls, invitations, collaboration]
+sidebar_label: Groups
+sidebar_position: 3
+---
+
 # Groups Guide
 
 Spritz allows you to create and manage groups for collaborative communication, group calls, and shared activities.
@@ -5,10 +13,11 @@ Spritz allows you to create and manage groups for collaborative communication, g
 ## Overview
 
 Groups in Spritz enable:
-- **Group Chats**: Multi-person conversations
-- **Group Calls**: Video calls with multiple participants
-- **Group Invitations**: Invite friends to join
-- **Group Management**: Organize and manage members
+
+-   **Group Chats**: Multi-person conversations
+-   **Group Calls**: Video calls with multiple participants
+-   **Group Invitations**: Invite friends to join
+-   **Group Management**: Organize and manage members
 
 ## Creating a Group
 
@@ -23,40 +32,40 @@ Groups in Spritz enable:
 
 ### Group Chat
 
-- Send messages to all group members
-- Share files and media
-- React to messages
-- Reply to specific messages
+-   Send messages to all group members
+-   Share files and media
+-   React to messages
+-   Reply to specific messages
 
 ### Group Calls
 
-- Start video calls with all members
-- Support for large groups
-- Screen sharing during calls
-- Record calls (via Huddle01 dashboard)
+-   Start video calls with all members
+-   Support for large groups
+-   Screen sharing during calls
+-   Record calls (via Huddle01 dashboard)
 
 ### Group Invitations
 
-- Send invitations to friends
-- Share invitation links
-- QR code invitations
-- Manage pending invitations
+-   Send invitations to friends
+-   Share invitation links
+-   QR code invitations
+-   Manage pending invitations
 
 ## Managing Groups
 
 ### Member Management
 
-- **Add Members**: Invite new members
-- **Remove Members**: Remove members (admin only)
-- **Promote Admins**: Make members administrators
-- **View Members**: See all group members
+-   **Add Members**: Invite new members
+-   **Remove Members**: Remove members (admin only)
+-   **Promote Admins**: Make members administrators
+-   **View Members**: See all group members
 
 ### Group Settings
 
-- **Group Name**: Change group name
-- **Description**: Update group description
-- **Privacy**: Set group visibility
-- **Notifications**: Configure notification settings
+-   **Group Name**: Change group name
+-   **Description**: Update group description
+-   **Privacy**: Set group visibility
+-   **Notifications**: Configure notification settings
 
 ## Best Practices
 
@@ -102,9 +111,6 @@ DELETE /api/groups/:id/members/:address
 
 ## Next Steps
 
-- Learn about [Channels](/docs/guides/channels)
-- Explore [Video Calls](/docs/guides/video-calls)
-- Check out [Messaging](/docs/guides/messaging)
-
-
-
+-   Learn about [Channels](/docs/guides/channels)
+-   Explore [Video Calls](/docs/guides/video-calls)
+-   Check out [Messaging](/docs/guides/messaging)

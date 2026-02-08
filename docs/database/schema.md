@@ -1,3 +1,11 @@
+---
+title: Database Schema
+description: "PostgreSQL schema for Spritz. Core tables, shout_agents, shout_public_channels, pgvector for RAG, and migration reference."
+keywords: [Spritz, database, schema, PostgreSQL, pgvector, Supabase]
+sidebar_label: Database Schema
+sidebar_position: 1
+---
+
 # Database Schema
 
 ## Overview
@@ -19,7 +27,7 @@ CREATE TABLE shout_users (
     last_login TIMESTAMPTZ,
     is_admin BOOLEAN DEFAULT FALSE,
     beta_access BOOLEAN DEFAULT FALSE,
-    
+
     -- Analytics
     messages_sent INTEGER DEFAULT 0,
     friends_count INTEGER DEFAULT 0,
@@ -87,37 +95,37 @@ CREATE TABLE shout_agents (
     -- Visibility: 'private', 'friends', 'public', 'official'
     visibility TEXT DEFAULT 'private'
         CHECK (visibility IN ('private', 'friends', 'public', 'official')),
-    
+
     -- Suggested questions (official agents, max 4)
     suggested_questions TEXT[],
-    
+
     -- Capabilities
     web_search_enabled BOOLEAN DEFAULT true,
     use_knowledge_base BOOLEAN DEFAULT true,
-    
+
     -- Stats
     message_count INTEGER DEFAULT 0,
-    
+
     -- Tags for discovery
     tags JSONB DEFAULT '[]',
-    
+
     -- x402 configuration
     x402_enabled BOOLEAN DEFAULT FALSE,
     x402_price_cents INTEGER DEFAULT 1,
     x402_network TEXT DEFAULT 'base-sepolia',
     x402_wallet_address TEXT,
     x402_pricing_mode TEXT DEFAULT 'global',
-    
+
     -- MCP & API tools
     mcp_servers JSONB DEFAULT '[]',
     api_tools JSONB DEFAULT '[]',
-    
+
     -- Timestamps
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
-    
+
     -- Constraints
-    CONSTRAINT unique_agent_name_per_user 
+    CONSTRAINT unique_agent_name_per_user
         UNIQUE (owner_address, name)
 );
 
@@ -156,35 +164,35 @@ Knowledge base URLs with optional Firecrawl integration for advanced scraping.
 CREATE TABLE shout_agent_knowledge (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_id UUID NOT NULL REFERENCES shout_agents(id) ON DELETE CASCADE,
-    
+
     -- Content info
     title TEXT NOT NULL,
     url TEXT NOT NULL,
     content_type TEXT DEFAULT 'webpage', -- 'webpage', 'github', 'docs'
-    
+
     -- Processing status
-    status TEXT DEFAULT 'pending' 
+    status TEXT DEFAULT 'pending'
         CHECK (status IN ('pending', 'processing', 'indexed', 'failed')),
     error_message TEXT,
-    
+
     -- Embedding reference
     embedding_id TEXT,
     chunk_count INTEGER DEFAULT 0,
-    
+
     -- Firecrawl options (Official agents only)
     scrape_method TEXT DEFAULT 'basic', -- 'basic' or 'firecrawl'
     crawl_depth INTEGER DEFAULT 1,      -- Max depth for Firecrawl crawls
     exclude_patterns TEXT[],            -- URL patterns to skip
-    
+
     -- Auto-sync configuration (Official agents only)
     auto_sync BOOLEAN DEFAULT false,
     sync_interval_hours INTEGER DEFAULT 24, -- Hours between syncs
     last_synced_at TIMESTAMPTZ,
-    
+
     -- Timestamps
     created_at TIMESTAMPTZ DEFAULT NOW(),
     indexed_at TIMESTAMPTZ,
-    
+
     -- Constraints
     CONSTRAINT unique_url_per_agent UNIQUE (agent_id, url)
 );
@@ -195,23 +203,23 @@ CREATE INDEX idx_agent_knowledge_status ON shout_agent_knowledge(status);
 
 ### `shout_agent_channel_memberships`
 
-Tracks which Official agents are present in which channels for @mention interactions.
+Tracks which Official agents are present in which channels and location chats for @mention interactions.
 
 ```sql
 CREATE TABLE shout_agent_channel_memberships (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_id UUID NOT NULL REFERENCES shout_agents(id) ON DELETE CASCADE,
-    channel_type TEXT NOT NULL CHECK (channel_type IN ('global', 'channel')),
-    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL for global
+    channel_type TEXT NOT NULL CHECK (channel_type IN ('global', 'channel', 'location')),
+    channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL for global/location
     created_at TIMESTAMPTZ DEFAULT NOW(),
     created_by TEXT, -- Admin who added the agent
-    
+
     UNIQUE(agent_id, channel_type, channel_id)
 );
 
-CREATE INDEX idx_agent_channel_memberships_channel 
+CREATE INDEX idx_agent_channel_memberships_channel
     ON shout_agent_channel_memberships(channel_type, channel_id);
-CREATE INDEX idx_agent_channel_memberships_agent 
+CREATE INDEX idx_agent_channel_memberships_agent
     ON shout_agent_channel_memberships(agent_id);
 
 -- RLS: Anyone can read, admins manage via API
@@ -240,9 +248,9 @@ CREATE TABLE shout_knowledge_chunks (
 );
 
 -- IVFFlat index for approximate nearest neighbor search
-CREATE INDEX idx_knowledge_chunks_embedding 
-ON shout_knowledge_chunks 
-USING ivfflat (embedding vector_cosine_ops) 
+CREATE INDEX idx_knowledge_chunks_embedding
+ON shout_knowledge_chunks
+USING ivfflat (embedding vector_cosine_ops)
 WITH (lists = 100);
 
 CREATE INDEX idx_knowledge_chunks_agent ON shout_knowledge_chunks(agent_id);
@@ -356,6 +364,7 @@ CREATE TABLE shout_public_channels (
     description TEXT,
     emoji TEXT DEFAULT '💬',
     category TEXT DEFAULT 'general',
+    slug TEXT UNIQUE,             -- Custom URL slug (e.g., 'alien', 'ethereum')
     creator_address TEXT,
     is_official BOOLEAN DEFAULT false,
     member_count INTEGER DEFAULT 0,
@@ -398,18 +407,42 @@ CREATE TABLE shout_channel_messages (
     sender_address TEXT NOT NULL,
     content TEXT NOT NULL,
     message_type TEXT DEFAULT 'text',
-    
+
     -- Pinned messages (admin feature)
     is_pinned BOOLEAN DEFAULT false,
     pinned_by TEXT,
     pinned_at TIMESTAMPTZ,
-    
+
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_channel_messages_channel ON shout_channel_messages(channel_id);
 CREATE INDEX idx_channel_messages_created ON shout_channel_messages(created_at DESC);
 CREATE INDEX idx_channel_messages_pinned ON shout_channel_messages(channel_id, is_pinned) WHERE is_pinned = true;
+```
+
+## Location Chat Tables
+
+### `shout_location_chats`
+
+Location-based chat rooms that allow users to connect with others nearby.
+
+```sql
+CREATE TABLE shout_location_chats (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    radius_meters INTEGER DEFAULT 1000,
+    creator_address TEXT NOT NULL,
+    member_count INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_location_chats_coords ON shout_location_chats(latitude, longitude);
+CREATE INDEX idx_location_chats_active ON shout_location_chats(is_active) WHERE is_active = true;
 ```
 
 ## Moderation System Tables
@@ -425,14 +458,14 @@ CREATE TABLE shout_moderators (
     channel_id UUID REFERENCES shout_public_channels(id) ON DELETE CASCADE, -- NULL = global chat
     granted_by TEXT NOT NULL,
     granted_at TIMESTAMPTZ DEFAULT NOW(),
-    
+
     -- Granular permissions
     can_pin BOOLEAN DEFAULT true,
     can_delete BOOLEAN DEFAULT true,
     can_mute BOOLEAN DEFAULT true,
     can_manage_mods BOOLEAN DEFAULT false,
     notes TEXT,
-    
+
     UNIQUE(user_address, channel_id)
 );
 
@@ -493,13 +526,13 @@ Messages support soft deletion for moderation:
 
 ```sql
 -- Added to shout_alpha_messages and shout_channel_messages
-ALTER TABLE shout_alpha_messages 
+ALTER TABLE shout_alpha_messages
 ADD COLUMN is_deleted BOOLEAN DEFAULT false,
 ADD COLUMN deleted_by TEXT,
 ADD COLUMN deleted_at TIMESTAMPTZ,
 ADD COLUMN delete_reason TEXT;
 
-ALTER TABLE shout_channel_messages 
+ALTER TABLE shout_channel_messages
 ADD COLUMN is_deleted BOOLEAN DEFAULT false,
 ADD COLUMN deleted_by TEXT,
 ADD COLUMN deleted_at TIMESTAMPTZ,
@@ -657,7 +690,7 @@ CREATE TABLE profile_themes (
 Additional columns on `shout_user_settings` for custom avatars:
 
 ```sql
-ALTER TABLE shout_user_settings 
+ALTER TABLE shout_user_settings
 ADD COLUMN custom_avatar_url TEXT,
 ADD COLUMN use_custom_avatar BOOLEAN DEFAULT FALSE;
 ```
@@ -682,9 +715,10 @@ CREATE INDEX idx_usernames_username ON shout_usernames(username);
 ```
 
 **Constraints:**
-- Username must be 3-20 characters
-- Only lowercase letters, numbers, and underscores allowed
-- Reserved usernames are blocked (see [Security](/docs/developers/security#reserved-usernames))
+
+-   Username must be 3-20 characters
+-   Only lowercase letters, numbers, and underscores allowed
+-   Reserved usernames are blocked (see [Security](/docs/developers/security#reserved-usernames))
 
 ## Authentication Tables
 
@@ -865,7 +899,7 @@ CREATE TABLE shout_stream_assets (
     download_url TEXT,
     duration_seconds NUMERIC,
     size_bytes BIGINT,
-    status TEXT DEFAULT 'processing' 
+    status TEXT DEFAULT 'processing'
         CHECK (status IN ('processing', 'ready', 'failed')),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -912,13 +946,13 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         kc.id,
         kc.content,
         1 - (kc.embedding <=> p_query_embedding) AS similarity,
         kc.metadata
     FROM shout_knowledge_chunks kc
-    WHERE 
+    WHERE
         kc.agent_id = p_agent_id
         AND 1 - (kc.embedding <=> p_query_embedding) > p_match_threshold
     ORDER BY kc.embedding <=> p_query_embedding
@@ -974,7 +1008,7 @@ BEGIN
     IF EXISTS (SELECT 1 FROM shout_admins WHERE wallet_address = LOWER(p_user_address)) THEN
         RETURN true;
     END IF;
-    
+
     -- Check moderator table
     RETURN EXISTS (
         SELECT 1 FROM shout_moderators
@@ -1070,7 +1104,7 @@ CREATE TABLE shout_user_reports (
     reporter_address TEXT NOT NULL,
     reported_address TEXT NOT NULL,
     report_type TEXT NOT NULL CHECK (report_type IN (
-        'spam', 'harassment', 'hate_speech', 'violence', 
+        'spam', 'harassment', 'hate_speech', 'violence',
         'scam', 'impersonation', 'inappropriate_content', 'other'
     )),
     description TEXT,
@@ -1119,57 +1153,64 @@ CREATE POLICY "Admins can update reports" ON shout_user_reports FOR UPDATE USING
 All migration scripts are located in `/migrations` directory:
 
 ### Core Tables
-- `agents.sql` - Agent configurations and chat history
-- `agents_x402.sql` - x402 payment fields
-- `agents_mcp.sql` - MCP server configuration
-- `agents_tags.sql` - Tags for discovery
-- `agents_api_tools.sql` - Custom API tools
-- `embeddings.sql` - Vector search setup (pgvector)
-- `favorite_agents.sql` - Agent favorites
-- `044_agent_avatar.sql` - Custom agent avatar uploads
+
+-   `agents.sql` - Agent configurations and chat history
+-   `agents_x402.sql` - x402 payment fields
+-   `agents_mcp.sql` - MCP server configuration
+-   `agents_tags.sql` - Tags for discovery
+-   `agents_api_tools.sql` - Custom API tools
+-   `embeddings.sql` - Vector search setup (pgvector)
+-   `favorite_agents.sql` - Agent favorites
+-   `044_agent_avatar.sql` - Custom agent avatar uploads
 
 ### Profile
-- `042_profile_widgets.sql` - Bento-style profile widgets
-- `043_custom_avatar.sql` - Custom profile avatar uploads
+
+-   `042_profile_widgets.sql` - Bento-style profile widgets
+-   `043_custom_avatar.sql` - Custom profile avatar uploads
 
 ### Communication
-- `group_chats.sql` - Group chat tables
-- `public_channels.sql` - Public channels system
-- `chat_enhancements.sql` - Typing status, read receipts, reactions
-- `channel_chat_enhancements.sql` - Channel reactions
-- `pinned_messages.sql` - Admin pinned messages in channels
-- `043_chat_folders.sql` - Chat folder organization
+
+-   `group_chats.sql` - Group chat tables
+-   `public_channels.sql` - Public channels system
+-   `chat_enhancements.sql` - Typing status, read receipts, reactions
+-   `channel_chat_enhancements.sql` - Channel reactions
+-   `pinned_messages.sql` - Admin pinned messages in channels
+-   `043_chat_folders.sql` - Chat folder organization
 
 ### Streaming & Calls
-- `call_history.sql` - Voice/video call history
-- `permanent_rooms.sql` - Permanent meeting rooms
-- `instant_rooms.sql` - Instant meeting rooms
+
+-   `call_history.sql` - Voice/video call history
+-   `permanent_rooms.sql` - Permanent meeting rooms
+-   `instant_rooms.sql` - Instant meeting rooms
 
 ### Authentication
-- `passkey_credentials.sql` - WebAuthn/passkey storage
-- `email_login.sql` - Email login verification
+
+-   `passkey_credentials.sql` - WebAuthn/passkey storage
+-   `email_login.sql` - Email login verification
 
 ### Scheduling
-- `google_calendar.sql` - Calendar connections and availability
-- `scheduling_links.sql` - Shareable scheduling links
-- `scheduling_settings.sql` - User scheduling preferences
+
+-   `google_calendar.sql` - Calendar connections and availability
+-   `scheduling_links.sql` - Shareable scheduling links
+-   `scheduling_settings.sql` - User scheduling preferences
 
 ### User Management
-- `user_analytics.sql` - User activity tracking
-- `friend_tags.sql` - Friend organization tags
-- `bug_reports.sql` - Bug report system
-- `admin_system.sql` - Admin functionality
+
+-   `user_analytics.sql` - User activity tracking
+-   `friend_tags.sql` - Friend organization tags
+-   `bug_reports.sql` - Bug report system
+-   `admin_system.sql` - Admin functionality
 
 ### Wallet & Analytics
-- `042_wallet_analytics.sql` - Wallet transaction tracking
+
+-   `042_wallet_analytics.sql` - Wallet transaction tracking
 
 ### Moderation
-- `041_moderation_system.sql` - Moderators, muted users, and audit log
+
+-   `041_moderation_system.sql` - Moderators, muted users, and audit log
 
 ### Usernames
-- `045_usernames.sql` - Username claims and reserved name validation
+
+-   `045_usernames.sql` - Username claims and reserved name validation
 
 See the repository's `/migrations` folder for complete migration scripts.
-
-
-

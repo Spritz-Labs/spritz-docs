@@ -1,3 +1,11 @@
+---
+title: Video Calls Guide
+description: "HD video and voice calls in Spritz with Huddle01 (default) or Agora. Group calls, screen sharing, and recording. Choose your provider in settings."
+keywords: [Spritz, video calls, Huddle01, Agora, voice calls, group calls]
+sidebar_label: Video Calls
+sidebar_position: 2
+---
+
 # Video Calls Guide
 
 Spritz provides high-quality video and voice calls with support for multiple providers. By default, Spritz uses **Huddle01** (decentralized), with **Agora** (centralized) available as an alternative. Users can choose their preferred provider in settings.

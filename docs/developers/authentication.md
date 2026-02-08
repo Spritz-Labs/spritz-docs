@@ -307,14 +307,14 @@ const response = await fetch("/api/auth/webauthn/verify", {
 
 WebAuthn uses **ECDSA with the P-256 curve** (also known as secp256r1 or prime256v1):
 
-| Parameter | Value |
-|-----------|-------|
-| **Curve** | P-256 (NIST) |
-| **Field Size** | 256 bits |
-| **Key Size** | 256 bits (private), 512 bits (public uncompressed) |
-| **Signature Size** | 512 bits (r: 256, s: 256) |
-| **Hash** | SHA-256 |
-| **Algorithm ID (COSE)** | -7 (ES256) |
+| Parameter               | Value                                              |
+| ----------------------- | -------------------------------------------------- |
+| **Curve**               | P-256 (NIST)                                       |
+| **Field Size**          | 256 bits                                           |
+| **Key Size**            | 256 bits (private), 512 bits (public uncompressed) |
+| **Signature Size**      | 512 bits (r: 256, s: 256)                          |
+| **Hash**                | SHA-256                                            |
+| **Algorithm ID (COSE)** | -7 (ES256)                                         |
 
 ### WebAuthn Signature Data Structure
 
@@ -382,8 +382,8 @@ The challenge is the **base64url-encoded** data that needs to be signed (e.g., U
 ### Signature Verification Process
 
 ```typescript
-import { p256 } from '@noble/curves/p256';
-import { sha256 } from '@noble/hashes/sha256';
+import { p256 } from "@noble/curves/p256";
+import { sha256 } from "@noble/hashes/sha256";
 
 /**
  * Complete WebAuthn P-256 signature verification
@@ -397,37 +397,40 @@ export function verifyWebAuthnSignature(
 ): boolean {
     // 1. Parse and validate clientDataJSON
     const clientData = JSON.parse(clientDataJSON);
-    
+
     // Verify type
-    if (clientData.type !== 'webauthn.get') {
-        throw new Error('Invalid clientData type');
+    if (clientData.type !== "webauthn.get") {
+        throw new Error("Invalid clientData type");
     }
-    
+
     // Verify origin
     const allowedOrigins = [
-        'https://app.spritz.chat',
-        'https://spritz.chat',
-        'http://localhost:3000',
+        "https://app.spritz.chat",
+        "https://spritz.chat",
+        "http://localhost:3000",
     ];
     if (!allowedOrigins.includes(clientData.origin)) {
-        throw new Error('Invalid origin');
+        throw new Error("Invalid origin");
     }
-    
+
     // Verify challenge matches
     const receivedChallenge = base64urlDecode(clientData.challenge);
     if (!arraysEqual(receivedChallenge, expectedChallenge)) {
-        throw new Error('Challenge mismatch');
+        throw new Error("Challenge mismatch");
     }
 
     // 2. Compute the signed message
     // WebAuthn signs: SHA256(authenticatorData || SHA256(clientDataJSON))
     const clientDataHash = sha256(new TextEncoder().encode(clientDataJSON));
-    const signedData = new Uint8Array([...authenticatorData, ...clientDataHash]);
+    const signedData = new Uint8Array([
+        ...authenticatorData,
+        ...clientDataHash,
+    ]);
     const messageHash = sha256(signedData);
 
     // 3. Parse DER-encoded signature
     const { r, s } = parseDERSignature(signature);
-    
+
     // 4. Verify with P-256
     const publicKeyBytes = new Uint8Array(65);
     publicKeyBytes[0] = 0x04; // Uncompressed point
@@ -463,14 +466,14 @@ Example:
  * Parse DER-encoded ECDSA signature to r and s components
  */
 export function parseDERSignature(der: Uint8Array): {
-    r: Uint8Array;  // 32 bytes
-    s: Uint8Array;  // 32 bytes
+    r: Uint8Array; // 32 bytes
+    s: Uint8Array; // 32 bytes
 } {
     let offset = 0;
 
     // SEQUENCE tag (0x30)
     if (der[offset++] !== 0x30) {
-        throw new Error('Expected SEQUENCE tag');
+        throw new Error("Expected SEQUENCE tag");
     }
 
     // Total length (may be 1 or 2 bytes)
@@ -486,7 +489,7 @@ export function parseDERSignature(der: Uint8Array): {
 
     // Parse r INTEGER
     if (der[offset++] !== 0x02) {
-        throw new Error('Expected INTEGER tag for r');
+        throw new Error("Expected INTEGER tag for r");
     }
     let rLength = der[offset++];
     let r = der.slice(offset, offset + rLength);
@@ -494,7 +497,7 @@ export function parseDERSignature(der: Uint8Array): {
 
     // Parse s INTEGER
     if (der[offset++] !== 0x02) {
-        throw new Error('Expected INTEGER tag for s');
+        throw new Error("Expected INTEGER tag for s");
     }
     let sLength = der[offset++];
     let s = der.slice(offset, offset + sLength);
@@ -533,7 +536,7 @@ interface IP256Verifier {
     /// @notice Verifies a P-256 signature
     /// @param messageHash The 32-byte message hash
     /// @param r The r component of the signature (32 bytes)
-    /// @param s The s component of the signature (32 bytes)  
+    /// @param s The s component of the signature (32 bytes)
     /// @param x The x coordinate of the public key (32 bytes)
     /// @param y The y coordinate of the public key (32 bytes)
     /// @return success 1 if valid, 0 if invalid
@@ -600,13 +603,13 @@ type AuthMethod =
 
 The system tracks `wallet_type` in the database to determine how to calculate Safe addresses and execute transactions:
 
-| Auth Method | Wallet Type | Safe Address Calculation |
-|-------------|-------------|--------------------------|
-| EVM Wallet | `eoa` | `getSafeAddress(walletAddress)` |
-| Passkey | `passkey` | `getPasskeySafeAddress(publicKeyX, publicKeyY)` |
-| World ID | `world_id` | Requires passkey creation → `passkey` |
-| Alien ID | `alien_id` | Requires passkey creation → `passkey` |
-| Email | `email` | Requires passkey creation → `passkey` |
+| Auth Method | Wallet Type | Safe Address Calculation                        |
+| ----------- | ----------- | ----------------------------------------------- |
+| EVM Wallet  | `eoa`       | `getSafeAddress(walletAddress)`                 |
+| Passkey     | `passkey`   | `getPasskeySafeAddress(publicKeyX, publicKeyY)` |
+| World ID    | `world_id`  | Requires passkey creation → `passkey`           |
+| Alien ID    | `alien_id`  | Requires passkey creation → `passkey`           |
+| Email       | `email`     | Requires passkey creation → `passkey`           |
 
 :::info Auto-fix on Login
 For existing users with missing `wallet_type`, the system automatically sets the correct value on login based on the authentication method used.
@@ -667,7 +670,7 @@ User wallet type is stored in the user settings table:
 
 ```sql
 -- wallet_type column in shout_user_settings
-ALTER TABLE shout_user_settings 
+ALTER TABLE shout_user_settings
 ADD COLUMN wallet_type TEXT;
 
 -- Possible values: 'eoa', 'passkey', 'world_id', 'alien_id', 'email'
@@ -734,16 +737,16 @@ export async function rateLimitMiddleware(
 
 ### Rate Limits by Endpoint
 
-| Endpoint               | Limit | Window   | Constant |
-| ---------------------- | ----- | -------- | -------- |
-| `/api/auth/verify` (GET) | 10    | 1 minute | `RATE_LIMIT_AUTH` |
-| `/api/auth/verify` (POST) | 5     | 1 minute | `RATE_LIMIT_STRICT` |
-| `/api/auth/webauthn/*` | 10    | 1 minute | `RATE_LIMIT_AUTH` |
-| `/api/agents/*/chat`   | 30    | 1 minute | `RATE_LIMIT_AI` |
-| `/api/streams`         | 5     | 1 minute | `RATE_LIMIT_STRICT` |
-| `/api/messages/*`      | 60    | 1 minute | `RATE_LIMIT_MESSAGING` |
-| `/api/contact`         | 3     | 1 minute | `RATE_LIMIT_CONTACT` |
-| General API routes     | 100   | 1 minute | `RATE_LIMIT_GENERAL` |
+| Endpoint                  | Limit | Window   | Constant               |
+| ------------------------- | ----- | -------- | ---------------------- |
+| `/api/auth/verify` (GET)  | 10    | 1 minute | `RATE_LIMIT_AUTH`      |
+| `/api/auth/verify` (POST) | 5     | 1 minute | `RATE_LIMIT_STRICT`    |
+| `/api/auth/webauthn/*`    | 10    | 1 minute | `RATE_LIMIT_AUTH`      |
+| `/api/agents/*/chat`      | 30    | 1 minute | `RATE_LIMIT_AI`        |
+| `/api/streams`            | 5     | 1 minute | `RATE_LIMIT_STRICT`    |
+| `/api/messages/*`         | 60    | 1 minute | `RATE_LIMIT_MESSAGING` |
+| `/api/contact`            | 3     | 1 minute | `RATE_LIMIT_CONTACT`   |
+| General API routes        | 100   | 1 minute | `RATE_LIMIT_GENERAL`   |
 
 ---
 
@@ -774,18 +777,111 @@ const spritzId = `world:${nullifier_hash}`;
 
 ### Alien ID
 
+Spritz supports two Alien authentication flows: **SSO** (browser-based) and **Mini App** (embedded inside the Alien app).
+
+#### SSO Flow
+
 ```typescript
-// Verify Alien ID token
-const alienResponse = await fetch("https://api.alien.xyz/verify", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${alienToken}` },
-});
+import { AlienSsoProvider, useAuth, SignInButton } from "@alien_org/sso-sdk-react";
 
-const { alienAddress, verified } = await alienResponse.json();
+// 1. Wrap app with AlienSsoProvider
+<AlienSsoProvider
+    config={{
+        ssoBaseUrl: "https://sso.alien-api.com",
+        providerAddress: "000000010400000000000f89739b0806",
+    }}
+>
+    {/* App content */}
+</AlienSsoProvider>
 
-// Use alienAddress as Spritz ID
-const spritzId = `alien:${alienAddress}`;
+// 2. Use the SignInButton and useAuth hook
+function AlienLogin() {
+    const { auth } = useAuth();
+
+    useEffect(() => {
+        if (auth?.isAuthenticated && auth?.token) {
+            // Extract alienAddress from token (priority: sub > user_id)
+            const alienAddress = auth.tokenInfo?.sub || auth.tokenInfo?.user_id;
+
+            // Create server session
+            fetch("/api/auth/alien-id", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include", // Required for session cookie
+                body: JSON.stringify({ alienAddress, token: auth.token }),
+            });
+        }
+    }, [auth?.isAuthenticated, auth?.token]);
+
+    return <SignInButton color="dark" />;
+}
 ```
+
+#### Mini App Flow
+
+```typescript
+import { isBridgeAvailable, getLaunchParams, send } from "@alien_org/bridge";
+
+// 1. Detect Mini App environment
+const isInAlienApp = isBridgeAvailable();
+
+if (isInAlienApp) {
+    // 2. Get auth token from launch params
+    const params = getLaunchParams();
+    const authToken = params?.authToken || window.__ALIEN_AUTH_TOKEN__;
+
+    // 3. Auto-authenticate with the injected token
+    await fetch("/api/auth/alien-id", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+            token: authToken,
+            isMiniApp: true, // Server extracts address from token
+        }),
+    });
+
+    // 4. Signal the host app that mini app is ready
+    send("app:ready", {});
+}
+```
+
+#### Server Validation (`POST /api/auth/alien-id`)
+
+```typescript
+// SSO Flow: alienAddress + token (verifies address matches token)
+// Mini App Flow: token + isMiniApp (extracts address from token)
+
+const { alienAddress: providedAddress, token, isMiniApp } = await request.json();
+
+// Decode JWT and extract user identifier
+const payload = JSON.parse(atob(token.split(".")[1]));
+const tokenAddress = payload.sub || payload.user_id;
+
+if (isMiniApp) {
+    // Mini App: trust the token's address
+    alienAddress = tokenAddress;
+} else {
+    // SSO: CRITICAL - verify provided address matches token
+    if (tokenAddress.toLowerCase() !== providedAddress.toLowerCase()) {
+        return NextResponse.json(
+            { error: "Token does not match claimed address" },
+            { status: 401 }
+        );
+    }
+    alienAddress = providedAddress;
+}
+
+// Check token expiration
+if (payload.exp && payload.exp * 1000 < Date.now()) {
+    return NextResponse.json({ error: "Token expired" }, { status: 401 });
+}
+
+// Create user with wallet_type = "alien_id" and session cookie
+return createAuthResponse(alienAddress, "alien_id", { success: true });
+```
+
+For the complete integration guide including bridge SDK setup, session management, and troubleshooting, see [Alien Integration](/docs/developers/alien-integration).
 
 ### Email (Magic Link)
 
@@ -801,7 +897,7 @@ await supabase.from("shout_magic_links").insert({
 await sendEmail({
     to: email,
     subject: "Sign in to Spritz",
-    body: `Click here to sign in: https://app.spritz.chat/auth/verify?token=${token}`,
+    body: `Sign in to Spritz: https://app.spritz.chat/auth/verify?token=${token}`,
 });
 
 // Verify magic link
