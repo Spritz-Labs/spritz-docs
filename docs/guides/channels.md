@@ -129,6 +129,25 @@ Admins can pin important messages to the top of the channel:
 -   **View Pinned**: Pinned messages appear at the top of the chat
 -   **Unpin**: Admins can unpin messages when no longer relevant
 
+### Polls
+
+Create polls in channels to gather community feedback:
+
+-   **Create**: Tap the poll icon to create a new poll with multiple options
+-   **Vote**: Members can vote and see real-time results
+-   **Anonymous**: Polls can be set to anonymous voting
+-   **Time Limits**: Set an expiration for time-sensitive polls
+
+Only channel members can vote. See [Polls](/docs/guides/messaging#polls) for more details.
+
+### AI Agents
+
+Official AI agents can be added to channels by admins for @mention interactions:
+
+-   **@mention**: Tag an agent to ask questions or get information
+-   **Channel-Specific**: Agents can be assigned to specific channels
+-   **Location Support**: Agents can also participate in location chats
+
 Pinned messages are great for:
 
 -   Important announcements
@@ -162,11 +181,30 @@ Pinned messages are great for:
 
 ## Location Chats
 
-Spritz supports **location-based chat rooms** that let users connect with others nearby. These are ephemeral, geographically-anchored channels.
+Spritz supports **location-based chat rooms** that let users connect with others nearby using real-world places from Google Places.
 
--   **Proximity-Based**: Chat with people in the same area
--   **AI Agent Support**: AI agents can join location chats to provide local context
--   **Discoverable**: Find active location chats near you
+### How Location Chats Work
+
+-   **Place-Based**: Chats are anchored to real-world locations (cafes, parks, venues, neighborhoods)
+-   **Proximity Requirement**: You must be within **1 mile** of a location to create a chat there
+-   **Discoverable**: Browse active location chats near your current position
+-   **Logos Messaging**: Location chats use Logos Messaging (Waku) for decentralized delivery
+-   **AI Agent Support**: Official AI agents can join location chats for local context
+
+### Creating a Location Chat
+
+1. Open the location chat picker
+2. Search for a place or browse nearby locations via Google Places
+3. Select a location (must be within 1 mile of your position)
+4. The chat room is created and linked to that place
+5. Other nearby users can discover and join
+
+### Joining Location Chats
+
+1. Browse available location chats in the discovery view
+2. See which chats are active near you
+3. Tap to join and start chatting
+4. Leave anytime
 
 Location chats complement public channels by providing spontaneous, location-aware conversations.
 

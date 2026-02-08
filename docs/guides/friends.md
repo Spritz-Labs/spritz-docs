@@ -133,6 +133,36 @@ DELETE /api/friends/:id
 }
 ```
 
+## Contact Notes
+
+Add private notes to any contact for your own reference:
+
+-   **Personal Notes**: Write private notes about friends or contacts that only you can see
+-   **Quick Access**: View notes when you open a contact's profile card
+-   **Persistent**: Notes are stored securely and persist across sessions
+
+### Managing Contact Notes
+
+```http
+GET /api/user/contact-notes?userAddress=0x...&targetAddress=0x...
+```
+
+```http
+PUT /api/user/contact-notes
+```
+
+```json
+{
+    "userAddress": "0x...",
+    "targetAddress": "0x...",
+    "notes": "Met at ETHDenver 2026. Works on DeFi protocols."
+}
+```
+
+:::info
+Contact notes are completely private. The person you add notes about cannot see them.
+:::
+
 ## Next Steps
 
 -   Learn about [Groups](/docs/guides/groups)

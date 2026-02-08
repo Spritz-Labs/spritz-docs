@@ -1,6 +1,6 @@
 ---
 title: Frequently Asked Questions (FAQ)
-description: Find answers to common questions about Spritz, including installation, AI agents, livestreaming, authentication, payments, and more.
+description: "Answers to common questions about Spritz. Covers authentication, AI agents, livestreaming, payments, Spritz Wallets, messaging, and troubleshooting."
 keywords:
     [
         Spritz FAQ,
@@ -131,9 +131,9 @@ Yes! You can sign in using Face ID, Touch ID, or Windows Hello. A smart account 
 - **Email recovery**: Recover access if you lose your passkey
 - **Multiple passkeys**: Register multiple devices
 
-### What is a Smart Wallet?
+### What is a Spritz Wallet?
 
-When you sign in with a passkey, Spritz creates a Safe Smart Account for you. This provides:
+When you sign in with a passkey, Spritz creates a Safe Smart Account (Spritz Wallet) for you. This provides:
 
 - **No seed phrase**: Your passkey (biometrics) is your key
 - **Gasless transactions**: Sponsored where available

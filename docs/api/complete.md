@@ -150,6 +150,10 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | POST   | `/api/channels/:id/messages`   | Send message                                                                                  |
 | GET    | `/api/channels/:id/agents`     | Get official agents in channel                                                                |
 | POST   | `/api/channels/agent-response` | Process @mentions                                                                             |
+| GET    | `/api/channels/:id/polls`      | List polls in channel                                                                         |
+| POST   | `/api/channels/:id/polls`      | Create a poll in channel                                                                      |
+| PATCH  | `/api/channels/:id/polls/:pid` | Update poll (vote, edit, close)                                                               |
+| DELETE | `/api/channels/:id/polls/:pid` | Delete a poll                                                                                 |
 
 ### Location Chats
 
@@ -162,6 +166,46 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | POST   | `/api/location-chats/:id/leave`   | Leave a location chat                                |
 | GET    | `/api/location-chats/:id/messages`| Get messages in a location chat                      |
 | POST   | `/api/location-chats/:id/messages`| Send message in a location chat                      |
+| GET    | `/api/location-chats/:id/members` | Get members of a location chat                       |
+| GET    | `/api/location-chats/joined`      | Get user's joined location chats                     |
+
+### Starred Messages
+
+| Method | Endpoint                | Description                          |
+| ------ | ----------------------- | ------------------------------------ |
+| GET    | `/api/messages/starred` | Get starred messages for a user      |
+| POST   | `/api/messages/starred` | Star a message                       |
+| DELETE | `/api/messages/starred` | Unstar a message                     |
+
+### Polls
+
+| Method | Endpoint                          | Description                      |
+| ------ | --------------------------------- | -------------------------------- |
+| GET    | `/api/channels/:id/polls`         | List polls in a channel          |
+| POST   | `/api/channels/:id/polls`         | Create a channel poll            |
+| PATCH  | `/api/channels/:id/polls/:pid`    | Vote, edit, or close a poll      |
+| DELETE | `/api/channels/:id/polls/:pid`    | Delete a channel poll            |
+| GET    | `/api/groups/:id/polls`           | List polls in a group            |
+| POST   | `/api/groups/:id/polls`           | Create a group poll              |
+| PATCH  | `/api/groups/:id/polls/:pid`      | Vote, edit, or close a poll      |
+| DELETE | `/api/groups/:id/polls/:pid`      | Delete a group poll              |
+| GET    | `/api/alpha/polls`                | List polls in alpha chat         |
+| POST   | `/api/alpha/polls`                | Create an alpha chat poll        |
+| PATCH  | `/api/alpha/polls/:pid`           | Vote, edit, or close a poll      |
+
+### Contact Notes
+
+| Method | Endpoint                  | Description                        |
+| ------ | ------------------------- | ---------------------------------- |
+| GET    | `/api/user/contact-notes` | Get notes for a contact            |
+| PUT    | `/api/user/contact-notes` | Create or update a contact note    |
+
+### Email Updates
+
+| Method | Endpoint                  | Description                        |
+| ------ | ------------------------- | ---------------------------------- |
+| GET    | `/api/user/email-updates` | Get email update preferences       |
+| PATCH  | `/api/user/email-updates` | Update email notification settings |
 
 ### POAP (Proof of Attendance) Channels
 

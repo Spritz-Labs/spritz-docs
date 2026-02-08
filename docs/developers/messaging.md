@@ -1,3 +1,21 @@
+---
+title: Messaging Technical Documentation
+description: "Complete technical guide to Spritz messaging with Logos Messaging (Waku). ECDH encryption, AES-256-GCM, key management, and peer-to-peer protocol integration."
+keywords:
+    [
+        Spritz,
+        Logos Messaging,
+        Waku,
+        encryption,
+        ECDH,
+        AES-256-GCM,
+        peer-to-peer,
+        decentralized messaging,
+    ]
+sidebar_label: Messaging
+sidebar_position: 5
+---
+
 # Messaging Technical Documentation
 
 Complete technical documentation for implementing Spritz messaging, including encryption protocols, key management, and integration patterns.
@@ -1226,3 +1244,12 @@ function ChatComponent({ recipientAddress }) {
     );
 }
 ```
+
+---
+
+## Next Steps
+
+-   [Encrypted Media](/docs/developers/encrypted-media) - End-to-end encrypted images and voice memos
+-   [Messaging Guide](/docs/guides/messaging) - User-facing messaging features
+-   [Channels Guide](/docs/guides/channels) - Public channel messaging
+-   [Groups Guide](/docs/guides/groups) - Group chat messaging

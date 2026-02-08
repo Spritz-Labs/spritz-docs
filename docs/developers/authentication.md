@@ -1,3 +1,22 @@
+---
+title: Authentication Technical Documentation
+description: "Complete technical reference for Spritz authentication. SIWE, SIWS, passkeys, Alien ID, session management, rate limiting, and security best practices."
+keywords:
+    [
+        Spritz,
+        authentication,
+        SIWE,
+        SIWS,
+        passkey,
+        WebAuthn,
+        session management,
+        Alien ID,
+        rate limiting,
+    ]
+sidebar_label: Authentication
+sidebar_position: 1
+---
+
 # Authentication Technical Documentation
 
 Complete technical documentation for Spritz authentication, including wallet connections, passkeys, and session management.
@@ -978,3 +997,13 @@ interface AuthErrorResponse {
     retryAfter?: number; // For rate limiting
 }
 ```
+
+---
+
+## Next Steps
+
+-   [Login Flow & Account Creation](/docs/developers/login-flow) - End-to-end login flow documentation
+-   [Alien Integration](/docs/developers/alien-integration) - Alien SSO and Mini App authentication
+-   [Spritz Wallets](/docs/developers/smart-wallets) - Safe Smart Account architecture and transaction signing
+-   [WebAuthn Signatures](/docs/developers/webauthn-signatures) - P-256 signature deep dive
+-   [Security](/docs/developers/security) - Security architecture and best practices

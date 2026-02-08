@@ -1,3 +1,21 @@
+---
+title: Knowledge Base (RAG) - Technical Deep Dive
+description: "Technical deep dive into Spritz RAG system. Vector embeddings, pgvector, semantic search, document chunking, and Google Gemini text-embedding-004 integration."
+keywords:
+    [
+        Spritz,
+        RAG,
+        knowledge base,
+        vector embeddings,
+        pgvector,
+        semantic search,
+        Google Gemini,
+        AI agents,
+    ]
+sidebar_label: RAG Technical
+sidebar_position: 2
+---
+
 # Knowledge Base (RAG) - Technical Deep Dive
 
 ## Overview

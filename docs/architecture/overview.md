@@ -828,3 +828,13 @@ const response = await paidFetch(
 ### Environment Variables
 
 See [Developer Installation Guide](/docs/developers/installation#environment-variables) for complete configuration.
+
+---
+
+## Next Steps
+
+-   [Developer Installation](/docs/developers/installation) - Setup guide and environment variables
+-   [Database Schema](/docs/database/schema) - Complete PostgreSQL schema reference
+-   [Authentication](/docs/developers/authentication) - Authentication deep dive
+-   [Messaging Technical](/docs/developers/messaging) - Logos Messaging protocol details
+-   [API Reference](/docs/api/intro) - Complete API documentation

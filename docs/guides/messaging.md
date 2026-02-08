@@ -381,6 +381,73 @@ Since Logos Messaging's Store protocol has limited retention, Spritz uses a hybr
 4. **Report Abuse**: Report inappropriate content
 5. **Network Status**: Check Logos Messaging connection status
 
+## Starred Messages
+
+Save important messages for quick access later:
+
+-   **Star a Message**: Long-press or right-click a message and select "Star"
+-   **View Starred**: Access all starred messages from the message menu
+-   **Unstar**: Remove messages from your starred list when no longer needed
+
+Starred messages are stored per-user and persist across sessions. They work in DMs, groups, and channels.
+
+### Starred Messages API
+
+```http
+GET /api/messages/starred?userAddress=0x...
+```
+
+```http
+POST /api/messages/starred
+```
+
+```json
+{
+    "userAddress": "0x...",
+    "messageId": "uuid",
+    "content": "Message text",
+    "senderAddress": "0x...",
+    "chatType": "dm"
+}
+```
+
+```http
+DELETE /api/messages/starred?userAddress=0x...&messageId=uuid
+```
+
+---
+
+## Polls
+
+Create polls in group chats and channels to gather opinions from members.
+
+### Creating a Poll
+
+1. Open a group chat or channel
+2. Tap the poll icon in the message composer
+3. Enter your question and answer options (2-10 choices)
+4. Configure options:
+    - **Anonymous voting**: Hide who voted for what
+    - **Multiple choice**: Allow selecting more than one option
+    - **Time limit**: Set an expiration time for the poll
+5. Send the poll
+
+### Voting
+
+-   Tap an option to vote
+-   Change your vote before the poll closes
+-   View results in real-time as votes come in
+
+### Poll Management
+
+-   **Edit**: Poll creator can edit the question and options before anyone votes
+-   **Delete**: Poll creator or admins can delete polls
+-   **Close**: Polls auto-close when the time limit expires
+
+Polls are available in **group chats**, **public channels**, and **alpha chat**.
+
+---
+
 ## Troubleshooting
 
 ### Messages Not Sending

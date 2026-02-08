@@ -1,3 +1,21 @@
+---
+title: Spritz Wallets Technical Documentation
+description: "Complete technical guide to Spritz Wallets. Safe Smart Accounts, ERC-4337 account abstraction, passkey signing, gas sponsorship, and multi-chain deployment."
+keywords:
+    [
+        Spritz,
+        Spritz Wallet,
+        Safe Smart Account,
+        ERC-4337,
+        account abstraction,
+        passkey,
+        gas sponsorship,
+        Pimlico,
+    ]
+sidebar_label: Smart Wallets
+sidebar_position: 3
+---
+
 # Spritz Wallets Technical Documentation
 
 Complete technical documentation for Spritz Wallets, implementing Safe accounts with ERC-4337 account abstraction.
@@ -1627,3 +1645,12 @@ try {
     }
 }
 ```
+
+---
+
+## Next Steps
+
+-   [Authentication](/docs/developers/authentication) - Authentication methods and session management
+-   [WebAuthn Signatures](/docs/developers/webauthn-signatures) - P-256 signature generation and verification
+-   [Vaults](/docs/developers/vaults) - DeFi vault integration with Spritz Wallets
+-   [Developer Installation](/docs/developers/installation) - Setup Pimlico and RPC configuration

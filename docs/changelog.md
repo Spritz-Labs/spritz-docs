@@ -1,6 +1,6 @@
 ---
 title: Changelog
-description: Release notes and version history for Spritz. Track new features, improvements, and bug fixes.
+description: "Release notes and version history for Spritz. Track new features, improvements, bug fixes, and breaking changes across all platform updates."
 keywords:
     [
         Spritz changelog,

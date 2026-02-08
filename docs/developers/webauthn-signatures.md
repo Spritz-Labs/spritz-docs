@@ -1,3 +1,21 @@
+---
+title: WebAuthn & Passkey Signatures
+description: "Complete technical reference for WebAuthn P-256 signature generation, DER parsing, on-chain verification, and Safe Smart Account integration in Spritz."
+keywords:
+    [
+        Spritz,
+        WebAuthn,
+        passkey,
+        P-256,
+        ECDSA,
+        signature verification,
+        RIP-7212,
+        Safe Smart Account,
+    ]
+sidebar_label: WebAuthn Signatures
+sidebar_position: 4
+---
+
 # WebAuthn & Passkey Signatures
 
 Complete technical reference for WebAuthn signature generation, verification, and blockchain integration in Spritz.

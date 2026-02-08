@@ -75,6 +75,50 @@ Groups in Spritz enable:
 4. **Regular Cleanup**: Remove inactive members
 5. **Privacy**: Be mindful of group privacy settings
 
+## Polls in Groups
+
+Create polls to make group decisions:
+
+1. Tap the poll icon in the message composer
+2. Write your question and add answer options
+3. Configure poll settings (anonymous, multiple choice, time limit)
+4. Send and watch votes come in
+
+Group members can vote, change their vote, and view live results. See [Polls](/docs/guides/messaging#polls) for detailed usage.
+
+## Password-Protected Groups
+
+Groups can be secured with a password for private access:
+
+-   **Set Password**: Group creator sets a password during creation or in group settings
+-   **Join with Password**: New members must enter the correct password to join
+-   **Encrypted Access**: Password is used to derive an encryption key (PBKDF2-SHA256), adding a layer of protection to group access
+-   **Change Password**: Group admin can update the password at any time
+
+:::warning
+If a group password is changed, existing members retain access but new members must use the updated password.
+:::
+
+## Pinned Messages
+
+Pin important messages to the top of the group chat:
+
+-   Any group member can pin messages
+-   View all pinned messages from the group header
+-   Unpin messages when they are no longer relevant
+
+Pinned messages are useful for rules, announcements, or important links.
+
+## Read Receipts
+
+Group chats support read receipts so members can see who has read messages:
+
+-   **Blue checkmarks**: Indicate when your message has been read
+-   **Read status**: See which members have read a specific message
+-   Mark conversations as read with a single tap
+
+---
+
 ## API Reference
 
 ### Create Group

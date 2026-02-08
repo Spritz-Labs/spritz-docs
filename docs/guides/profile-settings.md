@@ -489,6 +489,32 @@ POST /api/email/verify-code
 }
 ```
 
+## Email Updates
+
+Opt in to receive email updates from Spritz:
+
+-   **Requirement**: You must have a verified email address
+-   **Opt-In**: Toggle email updates on in your profile settings
+-   **Content**: Receive product updates, feature announcements, and community news
+-   **Unsubscribe**: Turn off anytime from settings or via the unsubscribe link
+
+### Email Updates API
+
+```http
+GET /api/user/email-updates?userAddress=0x...
+```
+
+```http
+PATCH /api/user/email-updates
+```
+
+```json
+{
+    "userAddress": "0x...",
+    "emailUpdatesEnabled": true
+}
+```
+
 ## Best Practices
 
 1. **Complete Profile**: Fill out your profile information

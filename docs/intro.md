@@ -1,6 +1,6 @@
 ---
 title: Welcome to Spritz
-description: Spritz is a decentralized social platform that combines Web3 messaging, AI agents, livestreaming, and peer-to-peer communication. Learn how to build on Web3 with censorship-resistant messaging, AI agents, and decentralized livestreaming.
+description: "Spritz is a decentralized social platform combining Web3 messaging, AI agents, livestreaming, and peer-to-peer communication for the open internet."
 keywords:
     [
         Spritz,
@@ -12,6 +12,8 @@ keywords:
         peer-to-peer,
         Logos Messaging,
     ]
+sidebar_label: Introduction
+sidebar_position: 0
 ---
 
 # Welcome to Spritz

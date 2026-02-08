@@ -1,6 +1,6 @@
 ---
 title: Getting Started with Spritz
-description: Learn how to use Spritz - the censorship-resistant messaging app for Web3. Sign in, add friends, chat, make video calls, and explore AI agents.
+description: "Step-by-step guide to using Spritz. Sign in with a wallet or passkey, add friends, chat with end-to-end encryption, make video calls, and explore AI agents."
 keywords:
     [
         Spritz,
@@ -16,7 +16,7 @@ keywords:
 
 # Getting Started
 
-Welcome to Spritz! This guide will help you get up and running in just a few minutes.
+Welcome to Spritz! This guide will help you get up and running in a few minutes.
 
 ## What is Spritz?
 
