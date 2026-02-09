@@ -335,6 +335,18 @@ Uses **ECDH key exchange with AES-256-GCM encryption**:
 -   **Group keys** are randomly generated and shared with members
 -   All messages are encrypted before being sent to Logos Messaging
 
+**PIN-Based Encryption (Email, Alien ID, World ID, Solana users):**
+
+-   Set a 6-digit numeric PIN to generate your encryption keys
+-   Same PIN + same account = same key on any device (deterministic)
+-   PIN is never stored — only a verification hash is kept locally
+-   Uses PBKDF2 with 600,000 iterations for brute-force resistance
+-   Alternative to passkey for users who lack hardware WebAuthn support
+
+:::tip
+PIN encryption is the recommended setup for email, Alien ID, and Solana users. It enables cross-device messaging without requiring passkey hardware support.
+:::
+
 **Key Backup (Optional):**
 
 -   Keys stored locally by default for maximum security
@@ -445,6 +457,48 @@ Create polls in group chats and channels to gather opinions from members.
 -   **Close**: Polls auto-close when the time limit expires
 
 Polls are available in **group chats**, **public channels**, and **alpha chat**.
+
+---
+
+## Message Deletion
+
+You can delete your own messages across all chat types. Admins and moderators can also delete other users' messages.
+
+### Deleting Your Messages
+
+1. Long-press or right-click a message you sent
+2. Select **Delete**
+3. Confirm the deletion
+
+:::warning
+Deleted messages cannot be recovered. In DMs, channels, and groups, deleted messages are replaced with "[Message deleted]" (soft delete). In location chats, messages are permanently removed.
+:::
+
+### Admin & Moderator Deletion
+
+-   **Channel creators** and **global admins** can delete any message in their channels
+-   **Group moderators** can delete messages in their groups
+-   **Alpha Chat moderators** with delete permissions can remove messages (all deletions are logged to an audit trail)
+-   **Location chat creators** and global admins can delete any message
+
+---
+
+## Blocking Users
+
+Block users to prevent them from messaging you. Blocking is bidirectional — neither party can see the other's messages.
+
+### How to Block
+
+1. Open the user's profile
+2. Tap the **Block** option
+3. Optionally provide a reason
+
+### What Happens When You Block
+
+-   Messages from the blocked user are hidden across **all** chat types (DMs, groups, channels, location chats, Alpha Chat)
+-   Any friend relationship with the blocked user is removed
+-   The blocked user cannot send you messages or see your messages
+-   You can unblock at any time to restore messaging
 
 ---
 

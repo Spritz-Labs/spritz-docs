@@ -71,7 +71,130 @@ MEK v3 uses **deterministic key derivation** - the same keypair is generated on 
 | **EOA Wallet**            | Wallet signature  | ✅ Yes                   | ✅ Yes          |
 | **Passkey**               | PRF extension     | ✅ Yes (synced passkeys) | ✅ Yes          |
 | **Passkey (no PRF)**      | Random + backup   | ❌ Manual                | ❌ No           |
-| **Email/World ID/Solana** | Requires passkey  | ✅ With passkey          | ✅ With passkey |
+| **PIN (6+ digits)**       | PBKDF2-SHA256     | ✅ Yes                   | ✅ Yes          |
+| **Email/World ID/Solana** | PIN or passkey    | ✅ With PIN or passkey   | ✅ With PIN     |
+| **Alien ID**              | PIN or passkey    | ✅ With PIN or passkey   | ✅ With PIN     |
+
+---
+
+## PIN-Based Messaging Encryption
+
+For users without wallet signing capability (email, Alien ID, World ID, Solana), Spritz offers **PIN-based key derivation** as a deterministic alternative to passkey-derived keys.
+
+### Why PIN Encryption?
+
+PIN encryption solves a key problem: users who authenticate with email, Alien ID, or World ID may not have a passkey with PRF support. A 6-digit numeric PIN provides deterministic, cross-device key derivation without requiring any hardware-specific capabilities.
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   PIN Key Derivation Flow                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  User enters 6+ digit PIN                                       │
+│         ↓                                                        │
+│  PBKDF2-SHA256 (600,000 iterations)                             │
+│  Salt: "spritz.chat:messaging-key:v3:pin-salt:{address}"        │
+│         ↓                                                        │
+│  256-bit key material                                            │
+│         ↓                                                        │
+│  HKDF domain separation                                         │
+│         ↓                                                        │
+│  Deterministic X25519 keypair                                    │
+│         ↓                                                        │
+│  Public key uploaded to Supabase (source="pin")                 │
+│  Verification hash stored locally (not the PIN)                  │
+│                                                                  │
+│  ✅ Same PIN + same address = same key on any device             │
+│  ✅ 600k iterations makes brute-force ~100ms per guess           │
+│  ✅ PIN never stored; only a verification hash                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Implementation
+
+```typescript
+const PIN_PBKDF2_ITERATIONS = 600_000;
+
+export async function deriveMekFromPin(
+    pin: string,
+    userAddress: string
+): Promise<MessagingKeyResult> {
+    // PIN validation: 6+ digits, numbers only
+    if (!pin || pin.length < 6 || !/^\d+$/.test(pin)) {
+        return {
+            success: false,
+            error: "PIN must be at least 6 digits (numbers only)",
+        };
+    }
+
+    // Import PIN as key material for PBKDF2
+    const pinKeyMaterial = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(pin),
+        "PBKDF2",
+        false,
+        ["deriveBits"]
+    );
+
+    // User-specific salt for domain separation
+    const pbkdf2Salt = new TextEncoder().encode(
+        `${MEK_CONTEXT}:pin-salt:${userAddress.toLowerCase()}`
+    );
+
+    // Derive 256 bits with 600k iterations
+    const pinBytes = new Uint8Array(
+        await crypto.subtle.deriveBits(
+            {
+                name: "PBKDF2",
+                hash: "SHA-256",
+                salt: pbkdf2Salt,
+                iterations: PIN_PBKDF2_ITERATIONS,
+            },
+            pinKeyMaterial,
+            256
+        )
+    );
+
+    // Derive seed via HKDF, then generate X25519 keypair
+    const seed = await deriveSeedFromSignature(pinBytes, userAddress);
+    const keypair = generateDeterministicKeypair(seed);
+
+    // Store verification hash (NOT the PIN) for future unlocking
+    const verifyInput = new TextEncoder().encode(
+        `${MEK_CONTEXT}:pin-verify:${userAddress.toLowerCase()}:${keypair.publicKey}`
+    );
+    const verifyHash = await crypto.subtle.digest("SHA-256", verifyInput);
+    storePinVerificationHash(userAddress, hexFromBuffer(verifyHash));
+
+    // Upload public key to server for cross-device verification
+    await uploadPublicKeyToSupabase(userAddress, keypair.publicKey, "pin");
+
+    return { success: true, keypair, isNewKey: true };
+}
+```
+
+### Security Properties
+
+| Property | Details |
+|----------|---------|
+| **Iterations** | 600,000 PBKDF2-SHA256 (~100ms per guess) |
+| **Brute-force resistance** | 10^6 guesses (6-digit PIN) takes ~28 hours |
+| **PIN storage** | Never stored; only a SHA-256 verification hash |
+| **Cross-device** | Same PIN + address = same key on any device |
+| **Public key sync** | Uploaded to Supabase with `source="pin"` for verification |
+| **Priority** | If a PIN-derived key exists (locally or remotely), it takes priority to avoid overwriting keys |
+
+### PIN vs Passkey Key Derivation
+
+| Aspect | PIN | Passkey (PRF) | Passkey (no PRF) |
+|--------|-----|---------------|------------------|
+| **Input** | 6+ digit number | Biometric/PIN | Biometric/PIN |
+| **Deterministic** | ✅ Yes | ✅ Yes | ❌ No (random) |
+| **Cross-device** | ✅ Any device | ✅ Synced passkeys | ❌ Manual backup |
+| **Hardware required** | ❌ None | ✅ WebAuthn support | ✅ WebAuthn support |
+| **Best for** | Email, Alien ID, Solana users | Passkey-native users | Fallback |
 
 ---
 
@@ -1244,6 +1367,139 @@ function ChatComponent({ recipientAddress }) {
     );
 }
 ```
+
+---
+
+## Message Deletion
+
+Spritz supports message deletion across all chat types. Deletion behavior varies by context:
+
+| Chat Type | Own Messages | Admin/Moderator | Deletion Method |
+|-----------|-------------|-----------------|-----------------|
+| **DMs** | ✅ | ✅ Global admin | Soft delete (`is_deleted: true`) |
+| **Channels** | ✅ | ✅ Creator or global admin | Soft delete (`is_deleted: true`) |
+| **Groups** | ✅ | ✅ Moderator | Soft delete |
+| **Location Chats** | ✅ | ✅ Creator or global admin | Hard delete (removed from DB) |
+| **Alpha Chat** | ✅ | ✅ Moderators with `canDelete` | Moderation API (logged) |
+
+### DM Deletion
+
+```http
+POST /api/messages/delete
+```
+
+```json
+{
+    "messageId": "uuid-of-message"
+}
+```
+
+The sender or a global admin can delete DM messages. Content is replaced with `[Message deleted]` and `is_deleted` is set to `true`.
+
+### Channel Message Deletion
+
+```http
+DELETE /api/channels/:channelId/messages/:messageId
+```
+
+The message sender, channel creator, or a global admin can delete channel messages. Uses the same soft-delete pattern.
+
+### Location Chat Message Deletion
+
+```http
+DELETE /api/location-chats/:id/messages?messageId=uuid
+```
+
+Location chat messages are **hard deleted** (removed from the database entirely), unlike other chat types which use soft deletes.
+
+### Moderation Deletion (Alpha Chat)
+
+Admin-level deletions in Alpha Chat go through the moderation API and are logged to an audit trail:
+
+```typescript
+await fetch("/api/moderation", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+        action: "delete-message",
+        moderatorAddress: userAddress,
+        messageId: "uuid",
+        messageType: "alpha",
+        reason: "Violation of community guidelines",
+    }),
+});
+```
+
+---
+
+## Block & Ban System
+
+Spritz implements a bidirectional block system and admin-level bans for moderation.
+
+### User Blocking
+
+When a user blocks another user:
+
+1. **Messages hidden**: Messages from the blocked user are filtered client-side across all chat types
+2. **Bidirectional**: Neither party can message the other
+3. **Friend cleanup**: Any friend relationship is removed
+4. **Reason tracking**: An optional reason is stored
+
+```http
+POST /api/users/block
+```
+
+```json
+{
+    "userAddress": "0x1234...",
+    "reason": "Spam"
+}
+```
+
+```http
+DELETE /api/users/block
+```
+
+```json
+{
+    "userAddress": "0x1234..."
+}
+```
+
+### Block Filtering in Chat
+
+Messages from blocked users are filtered on the client in every chat modal:
+
+```typescript
+const { isBlocked: isUserBlocked } = useBlockedUsers(userAddress);
+
+// Filter blocked messages in any chat type
+const messages = useMemo(
+    () => rawMessages.filter((msg) => !isUserBlocked(msg.sender_address)),
+    [rawMessages, isUserBlocked]
+);
+```
+
+The `isBlocked` check is bidirectional — it returns `true` if you blocked the user **or** the user blocked you.
+
+### Admin Bans
+
+Global admins can ban users platform-wide:
+
+```http
+POST /api/admin/ban
+```
+
+```json
+{
+    "userAddress": "0x1234...",
+    "ban": true,
+    "reason": "Repeated violations"
+}
+```
+
+Banned users have `is_banned: true` set in the `shout_users` table. All admin ban/unban actions are logged to the `shout_admin_activity` audit table.
 
 ---
 

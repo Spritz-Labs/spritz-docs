@@ -143,6 +143,19 @@ const encrypted = await crypto.subtle.encrypt(
 -   **Integrity**: GCM authentication tag
 -   **Replay Protection**: Unique IV per message
 
+### PIN-Based Key Derivation
+
+For users without wallet signing or passkey PRF support (email, Alien ID, World ID, Solana), Spritz provides **PIN-based deterministic key derivation** as an alternative:
+
+| Component | Details |
+| --------- | ------- |
+| **PIN** | 6+ digits (numbers only) |
+| **Key Derivation** | PBKDF2-SHA256, 600,000 iterations |
+| **Output** | Deterministic X25519 keypair |
+| **Cross-device** | Same PIN + same address = same key on any device |
+
+See [PIN-Based Messaging Encryption](/docs/developers/messaging#pin-based-messaging-encryption) for the full technical implementation.
+
 ### Key Backup (Optional)
 
 Users can opt-in to cloud backup with PIN protection:

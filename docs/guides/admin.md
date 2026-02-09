@@ -15,6 +15,9 @@ Administrative features and tools for managing the Spritz platform.
 Admin features include:
 
 -   **User Management**: View and manage users
+-   **User Bans**: Ban and unban users platform-wide
+-   **Message Moderation**: Delete messages across all chat types
+-   **Image Uploads**: Send images in Alpha Chat (admin-only)
 -   **Analytics Dashboard**: Track platform metrics
 -   **Invite Codes**: Create and manage invite codes
 -   **Beta Access**: Grant beta access to features
@@ -408,6 +411,76 @@ POST /api/admin/grant-invites
 }
 ```
 
+## User Bans
+
+Global admins can ban users from the platform entirely. Banning a user prevents them from participating in any chats.
+
+### Banning a User
+
+```http
+POST /api/admin/ban
+```
+
+```json
+{
+    "userAddress": "0x1234...",
+    "ban": true,
+    "reason": "Repeated community guideline violations"
+}
+```
+
+### Unbanning a User
+
+```http
+POST /api/admin/ban
+```
+
+```json
+{
+    "userAddress": "0x1234...",
+    "ban": false
+}
+```
+
+All ban/unban actions are logged to the `shout_admin_activity` audit table, recording the admin who took the action, the target user, and the reason.
+
+---
+
+## Message Moderation
+
+Admins can delete messages across all chat types for moderation purposes:
+
+| Chat Type | Who Can Delete |
+|-----------|----------------|
+| **DMs** | Global admins |
+| **Channels** | Channel creator or global admins |
+| **Groups** | Group moderators |
+| **Location Chats** | Location chat creator or global admins |
+| **Alpha Chat** | Moderators with `canDelete` permission |
+
+In Alpha Chat, all moderator deletions are logged through the moderation API with a reason and audit trail.
+
+---
+
+## Image Uploads (Alpha Chat)
+
+Admins can upload and send images in Alpha Chat. This feature is **admin-only** for moderation purposes.
+
+### Supported Formats
+
+| Format | MIME Type |
+|--------|-----------|
+| JPEG | `image/jpeg` |
+| PNG | `image/png` |
+| GIF | `image/gif` |
+| WebP | `image/webp` |
+
+**Maximum file size**: 5 MB
+
+Images are uploaded via `/api/upload` with `context: "global"` and sent as an `[IMAGE]` message format in the chat.
+
+---
+
 ## Best Practices
 
 1. **Privacy**: Respect user privacy in analytics
@@ -415,12 +488,14 @@ POST /api/admin/grant-invites
 3. **Monitoring**: Regularly review analytics
 4. **Invite Management**: Monitor invite code usage
 5. **Beta Testing**: Carefully select beta testers
+6. **Ban Sparingly**: Use bans as a last resort; document reasons
+7. **Audit Regularly**: Review the admin activity log for moderation actions
 
 ## Security
 
 -   **Admin Verification**: Always verify admin status
 -   **Access Control**: Limit admin features to authorized users
--   **Audit Logs**: Track admin actions
+-   **Audit Logs**: All ban/unban and moderation actions are logged to `shout_admin_activity`
 -   **Rate Limiting**: Protect admin endpoints
 
 ## Next Steps

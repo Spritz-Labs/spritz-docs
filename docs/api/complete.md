@@ -169,6 +169,27 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | GET    | `/api/location-chats/:id/members` | Get members of a location chat                       |
 | GET    | `/api/location-chats/joined`      | Get user's joined location chats                     |
 
+### Message Deletion
+
+| Method | Endpoint                                        | Description                                              |
+| ------ | ----------------------------------------------- | -------------------------------------------------------- |
+| POST   | `/api/messages/delete`                          | Soft delete a DM message (sender or global admin)        |
+| DELETE | `/api/channels/:id/messages/:messageId`         | Soft delete a channel message (sender, creator, or admin)|
+| DELETE | `/api/location-chats/:id/messages?messageId=`   | Hard delete a location chat message (sender or admin)    |
+| POST   | `/api/moderation`                               | Moderation action (delete, warn) with audit log (admin)  |
+
+### Admin
+
+| Method | Endpoint            | Description                                  |
+| ------ | ------------------- | -------------------------------------------- |
+| POST   | `/api/admin/ban`    | Ban or unban a user (admin only, logged)     |
+
+### Image Upload (Admin)
+
+| Method | Endpoint       | Description                                              |
+| ------ | -------------- | -------------------------------------------------------- |
+| POST   | `/api/upload`  | Upload image for Alpha Chat (admin, 5MB max, JPEG/PNG/GIF/WebP) |
+
 ### Starred Messages
 
 | Method | Endpoint                | Description                          |

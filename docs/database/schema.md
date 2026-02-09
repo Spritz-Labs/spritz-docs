@@ -28,6 +28,10 @@ CREATE TABLE shout_users (
     is_admin BOOLEAN DEFAULT FALSE,
     beta_access BOOLEAN DEFAULT FALSE,
 
+    -- Moderation
+    is_banned BOOLEAN DEFAULT FALSE,
+    ban_reason TEXT,
+
     -- Analytics
     messages_sent INTEGER DEFAULT 0,
     friends_count INTEGER DEFAULT 0,
@@ -522,21 +526,48 @@ CREATE INDEX idx_mod_log_created ON shout_moderation_log(created_at DESC);
 
 ### Message Soft Delete
 
-Messages support soft deletion for moderation:
+Messages support soft deletion for moderation across all chat types:
 
 ```sql
--- Added to shout_alpha_messages and shout_channel_messages
+-- DM messages: soft delete (content replaced with "[Message deleted]")
+ALTER TABLE shout_messages
+ADD COLUMN is_deleted BOOLEAN DEFAULT false;
+
+-- Alpha chat messages
 ALTER TABLE shout_alpha_messages
 ADD COLUMN is_deleted BOOLEAN DEFAULT false,
 ADD COLUMN deleted_by TEXT,
 ADD COLUMN deleted_at TIMESTAMPTZ,
 ADD COLUMN delete_reason TEXT;
 
+-- Channel messages
 ALTER TABLE shout_channel_messages
 ADD COLUMN is_deleted BOOLEAN DEFAULT false,
 ADD COLUMN deleted_by TEXT,
 ADD COLUMN deleted_at TIMESTAMPTZ,
 ADD COLUMN delete_reason TEXT;
+```
+
+:::info
+Location chat messages use **hard deletes** (the row is removed from `shout_location_chat_messages` entirely) rather than soft deletes.
+:::
+
+### `shout_admin_activity`
+
+Audit log for admin actions (bans, unbans, moderation).
+
+```sql
+CREATE TABLE shout_admin_activity (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_address TEXT NOT NULL,
+    action TEXT NOT NULL,           -- 'ban_user', 'unban_user', etc.
+    target_address TEXT,
+    details JSONB,                  -- { reason: "..." }
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_admin_activity_admin ON shout_admin_activity(admin_address);
+CREATE INDEX idx_admin_activity_target ON shout_admin_activity(target_address);
 ```
 
 ## Calendar & Scheduling Tables
