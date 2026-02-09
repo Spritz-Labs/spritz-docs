@@ -500,6 +500,8 @@ Images are uploaded via `/api/upload` with `context: "global"` and sent as an `[
 
 ## Next Steps
 
+-   [Room Rules & Moderation](/docs/developers/moderation) — Room rules, moderators, and bans
+-   [User Moderation API](/docs/api/user-moderation) — Mute, block, and report users
 -   Learn about [API Reference](/docs/api/intro)
 -   Explore [Architecture Overview](/docs/architecture/overview)
 -   Check out [Database Schema](/docs/database/schema)

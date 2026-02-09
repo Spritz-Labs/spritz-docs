@@ -70,6 +70,7 @@ const sidebars: SidebarsConfig = {
                         "developers/video-calls",
                         "developers/livestreaming",
                         "developers/poap-channels",
+                        "developers/moderation",
                         "developers/security",
                     ],
                 },

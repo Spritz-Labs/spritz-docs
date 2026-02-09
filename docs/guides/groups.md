@@ -155,6 +155,7 @@ DELETE /api/groups/:id/members/:address
 
 ## Next Steps
 
+-   [Room Rules & Moderation](/docs/developers/moderation) — Configure room rules, moderators, and bans
 -   Learn about [Channels](/docs/guides/channels)
 -   Explore [Video Calls](/docs/guides/video-calls)
 -   Check out [Messaging](/docs/guides/messaging)

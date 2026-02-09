@@ -316,6 +316,7 @@ POST /api/channels/:id/messages/pin
 
 ## Next Steps
 
+-   [Room Rules & Moderation](/docs/developers/moderation) — Configure room rules, moderators, and bans
 -   [POAP Channels](/docs/developers/poap-channels) — Technical integration (API, schema, code)
 -   [Alien Integration](/docs/developers/alien-integration) — Alien SSO, Mini App, and auto-join channel
 -   [Groups](/docs/guides/groups) — Private group chats

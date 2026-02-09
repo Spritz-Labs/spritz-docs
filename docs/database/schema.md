@@ -524,6 +524,61 @@ CREATE INDEX idx_mod_log_action ON shout_moderation_log(action_type);
 CREATE INDEX idx_mod_log_created ON shout_moderation_log(created_at DESC);
 ```
 
+### `shout_chat_rules`
+
+Room-level content and behavior rules.
+
+```sql
+CREATE TABLE shout_chat_rules (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chat_type TEXT NOT NULL CHECK (chat_type IN ('channel', 'alpha', 'location', 'group')),
+    chat_id TEXT,
+    links_allowed BOOLEAN DEFAULT true,
+    photos_allowed BOOLEAN DEFAULT true,
+    pixel_art_allowed BOOLEAN DEFAULT true,
+    gifs_allowed BOOLEAN DEFAULT true,
+    polls_allowed BOOLEAN DEFAULT true,
+    location_sharing_allowed BOOLEAN DEFAULT true,
+    voice_allowed BOOLEAN DEFAULT true,
+    slow_mode_seconds INTEGER DEFAULT 0,
+    read_only BOOLEAN DEFAULT false,
+    max_message_length INTEGER DEFAULT 0,
+    rules_text TEXT,
+    updated_by TEXT,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(chat_type, chat_id)
+);
+
+CREATE INDEX idx_chat_rules_lookup ON shout_chat_rules(chat_type, chat_id);
+```
+
+### `shout_room_bans`
+
+Per-room user bans with optional expiration.
+
+```sql
+CREATE TABLE shout_room_bans (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chat_type TEXT NOT NULL CHECK (chat_type IN ('channel', 'alpha', 'location', 'group')),
+    chat_id TEXT,
+    user_address TEXT NOT NULL,
+    banned_by TEXT NOT NULL,
+    reason TEXT,
+    banned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    banned_until TIMESTAMP WITH TIME ZONE,  -- NULL = permanent
+    is_active BOOLEAN DEFAULT true
+);
+
+CREATE UNIQUE INDEX idx_room_bans_unique
+    ON shout_room_bans(chat_type, COALESCE(chat_id, '__global__'), user_address)
+    WHERE is_active = true;
+CREATE INDEX idx_room_bans_lookup
+    ON shout_room_bans(chat_type, chat_id, user_address, is_active);
+CREATE INDEX idx_room_bans_user ON shout_room_bans(user_address, is_active);
+```
+
+See [Room Rules & Moderation](/docs/developers/moderation) for full API documentation.
+
 ### Message Soft Delete
 
 Messages support soft deletion for moderation across all chat types:

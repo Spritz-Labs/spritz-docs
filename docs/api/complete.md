@@ -176,7 +176,11 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | POST   | `/api/messages/delete`                          | Soft delete a DM message (sender or global admin)        |
 | DELETE | `/api/channels/:id/messages/:messageId`         | Soft delete a channel message (sender, creator, or admin)|
 | DELETE | `/api/location-chats/:id/messages?messageId=`   | Hard delete a location chat message (sender or admin)    |
-| POST   | `/api/moderation`                               | Moderation action (delete, warn) with audit log (admin)  |
+| GET    | `/api/moderation?action=permissions`            | Get user's moderation permissions for a channel          |
+| GET    | `/api/moderation?action=moderators`             | List moderators for a channel                            |
+| GET    | `/api/moderation?action=muted`                  | List muted users in a channel                            |
+| GET    | `/api/moderation?action=mod-log`                | View moderation audit log                                |
+| POST   | `/api/moderation`                               | Moderation action (promote, demote, mute, delete, pin)   |
 
 ### Admin
 
@@ -189,6 +193,17 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | Method | Endpoint       | Description                                              |
 | ------ | -------------- | -------------------------------------------------------- |
 | POST   | `/api/upload`  | Upload image for Alpha Chat (admin, 5MB max, JPEG/PNG/GIF/WebP) |
+
+### Chat Room Rules & Bans
+
+| Method | Endpoint                                        | Description                                              |
+| ------ | ----------------------------------------------- | -------------------------------------------------------- |
+| GET    | `/api/chat-rules?chatType=&chatId=`             | Get room rules for a chat                                |
+| POST   | `/api/chat-rules`                               | Update room rules (admin/mod)                            |
+| GET    | `/api/chat-rules/ban?chatType=&chatId=`         | List active room bans                                    |
+| POST   | `/api/chat-rules/ban`                           | Ban or unban a user from a room                          |
+
+See [Room Rules & Moderation](/docs/developers/moderation) for the full moderation system documentation.
 
 ### Starred Messages
 
