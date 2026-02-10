@@ -579,6 +579,29 @@ CREATE INDEX idx_room_bans_user ON shout_room_bans(user_address, is_active);
 
 See [Room Rules & Moderation](/docs/developers/moderation) for full API documentation.
 
+### `shout_blocked_words`
+
+Global or per-room blocked words/phrases for anti-scam and content filtering.
+
+```sql
+CREATE TABLE shout_blocked_words (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    word TEXT NOT NULL,
+    scope TEXT NOT NULL DEFAULT 'global' CHECK (scope IN ('global', 'room')),
+    chat_type TEXT CHECK (chat_type IN ('channel', 'alpha', 'location', 'group')),
+    chat_id TEXT,
+    action TEXT NOT NULL DEFAULT 'block' CHECK (action IN ('block', 'flag', 'mute')),
+    is_regex BOOLEAN DEFAULT false,
+    added_by TEXT NOT NULL,
+    added_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_active BOOLEAN DEFAULT true
+);
+
+CREATE UNIQUE INDEX idx_blocked_words_unique
+    ON shout_blocked_words(LOWER(word), scope, COALESCE(chat_type, '__none__'), COALESCE(chat_id, '__global__'))
+    WHERE is_active = true;
+```
+
 ### Message Soft Delete
 
 Messages support soft deletion for moderation across all chat types:

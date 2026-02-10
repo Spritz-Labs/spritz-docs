@@ -23,7 +23,7 @@ Spritz provides a comprehensive moderation system for managing chat rooms across
 
 ## Overview
 
-The moderation system has three layers:
+The moderation system has four layers:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -32,19 +32,26 @@ The moderation system has three layers:
 │                                                                  │
 │  1. Room Rules (content control)                                 │
 │     ┌──────────────────────────────────────────────────┐        │
-│     │ Toggle content types, slow mode, read-only,      │        │
-│     │ max message length, custom guidelines text       │        │
+│     │ Role-based content toggles, slow mode, read-only,  │        │
+│     │ max message length, custom guidelines text        │        │
 │     └──────────────────────────────────────────────────┘        │
 │                                                                  │
-│  2. Moderator Permissions (role-based)                           │
+│  2. Blocked Words (anti-scam / content filter)                    │
 │     ┌──────────────────────────────────────────────────┐        │
-│     │ Pin, delete, mute, manage mods — per moderator   │        │
+│     │ Global or per-room blocked words/phrases, regex,   │        │
+│     │ actions: block, flag, mute                        │        │
 │     └──────────────────────────────────────────────────┘        │
 │                                                                  │
-│  3. Room Bans (user-level enforcement)                           │
+│  3. Moderator Permissions (role-based)                           │
 │     ┌──────────────────────────────────────────────────┐        │
-│     │ Temporary or permanent bans with reasons,        │        │
-│     │ removes user from room membership                │        │
+│     │ Pin, delete, mute, manage mods — per moderator;    │        │
+│     │ shared moderators for official channels            │        │
+│     └──────────────────────────────────────────────────┘        │
+│                                                                  │
+│  4. Room Bans (user-level enforcement)                           │
+│     ┌──────────────────────────────────────────────────┐        │
+│     │ Temporary or permanent bans with reasons,          │        │
+│     │ removes user from room membership                  │        │
 │     └──────────────────────────────────────────────────┘        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -63,19 +70,33 @@ The moderation system has three layers:
 
 ## Room Rules
 
-Room rules control what types of content can be posted and set behavioral constraints for a chat room.
+Room rules control what types of content can be posted and set behavioral constraints for a chat room. Content permissions are **role-based**: you can allow everyone, restrict to moderators only, or disable a content type entirely.
+
+### Content Permission Levels
+
+Each content type (links, photos, GIFs, etc.) uses one of three levels:
+
+| Level | Value | Description |
+|-------|-------|-------------|
+| **Everyone** | `everyone` | All members can use this content type |
+| **Mods only** | `mods_only` | Only admins and moderators can use it |
+| **Disabled** | `disabled` | No one can use this content type |
+
+:::info Legacy Support
+The API accepts legacy boolean values: `true` is treated as `everyone`, `false` as `disabled`.
+:::
 
 ### Available Settings
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `links_allowed` | `boolean` | `true` | Allow URLs and links in messages |
-| `photos_allowed` | `boolean` | `true` | Allow photo uploads |
-| `pixel_art_allowed` | `boolean` | `true` | Allow pixel art messages |
-| `gifs_allowed` | `boolean` | `true` | Allow GIF images |
-| `polls_allowed` | `boolean` | `true` | Allow creating polls |
-| `location_sharing_allowed` | `boolean` | `true` | Allow location sharing |
-| `voice_allowed` | `boolean` | `true` | Allow voice messages |
+| `links_allowed` | `everyone` \| `mods_only` \| `disabled` | `everyone` | URLs and links in messages |
+| `photos_allowed` | same | `everyone` | Photo uploads |
+| `pixel_art_allowed` | same | `everyone` | Pixel art messages |
+| `gifs_allowed` | same | `everyone` | GIF images |
+| `polls_allowed` | same | `everyone` | Creating polls |
+| `location_sharing_allowed` | same | `everyone` | Location sharing |
+| `voice_allowed` | same | `everyone` | Voice messages |
 | `read_only` | `boolean` | `false` | Only admins and moderators can post |
 | `slow_mode_seconds` | `integer` | `0` | Minimum seconds between messages (0 = off) |
 | `max_message_length` | `integer` | `0` | Maximum characters per message (0 = unlimited) |
@@ -390,15 +411,104 @@ You cannot ban admins or yourself. Only admins, room owners, and moderators with
 
 ---
 
+## Blocked Words (Anti-Scam)
+
+The blocked words system lets admins and moderators block or flag specific words or phrases (including regex patterns) to reduce scam and abuse. Words can be **global** (platform-wide) or **room-specific**.
+
+### Scope and Actions
+
+| Scope | Description | Who Can Manage |
+|-------|-------------|----------------|
+| **global** | Applies to all chats | Admins and global moderators |
+| **room** | Applies to one channel, group, location chat, or Alpha | Room owner, admins, or moderators with `can_manage_mods` |
+
+| Action | Description |
+|--------|-------------|
+| **block** | Message is rejected; user sees an error |
+| **flag** | Message can be flagged for review (future use) |
+| **mute** | Treated as restricted (message rejected with generic message) |
+
+### Blocked Words API
+
+#### List Blocked Words
+
+```http
+GET /api/blocked-words?scope=global
+GET /api/blocked-words?scope=room&chatType=channel&chatId=xxx
+GET /api/blocked-words?scope=all&chatType=channel&chatId=xxx
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| `scope` | `global`, `room`, or `all` (global + room combined) |
+| `chatType` | Required for `room`/`all`: `channel`, `alpha`, `location`, `group` |
+| `chatId` | Room ID for room scope |
+
+#### Add a Blocked Word
+
+```http
+POST /api/blocked-words
+```
+
+```json
+{
+    "word": "scam-phrase",
+    "scope": "global",
+    "chatType": null,
+    "chatId": null,
+    "action": "block",
+    "isRegex": false
+}
+```
+
+- **word**: The word or phrase (or regex pattern if `isRegex: true`). Stored lowercased for non-regex.
+- **scope**: `global` or `room`.
+- **chatType** / **chatId**: Required when `scope` is `room`.
+- **action**: `block`, `flag`, or `mute`.
+- **isRegex**: If `true`, `word` is treated as a case-insensitive regex pattern.
+
+#### Remove a Blocked Word
+
+```http
+DELETE /api/blocked-words
+```
+
+```json
+{ "id": "uuid-of-blocked-word" }
+```
+
+Soft delete: the word is set to `is_active: false`.
+
+### Shared Moderators for Official Channels
+
+For **official channels** (`is_official: true`), global moderators (moderators with `channel_id: null`) can also manage that channel. They can manage blocked words, room rules, and moderation for any official channel without being added as a per-channel moderator.
+
+---
+
+## Role Badges
+
+Spritz shows role badges next to usernames in all chat types so members can see who is staff or a moderator:
+
+| Badge | Role | Description |
+|-------|------|-------------|
+| **Spritz Team** | Super admin | Platform super admins |
+| **Admin** | Admin | Platform admins |
+| **Mod** | Moderator | Global or channel moderator |
+
+Badges are resolved via the `useRoleBadges` hook (admins and global/channel moderators). For a given channel, both global moderators and channel-specific moderators are considered.
+
+---
+
 ## Message Validation
 
 When a user sends a message, the server validates it against the room's rules:
 
 1. **Ban check** — Is the user banned from this room?
 2. **Read-only check** — Is the room read-only? (admins/mods are exempt)
-3. **Content type check** — Is the message type allowed? (links, photos, GIFs, etc.)
-4. **Link detection** — If links are disabled, scan text messages for URLs
-5. **Length check** — Does the message exceed `max_message_length`?
+3. **Content type check** — Is the message type allowed for this user's role? (everyone vs mods_only vs disabled)
+4. **Blocked words check** — For text messages, content is checked against global and room-specific blocked words (exact or regex). Violations return an error and the message is not sent.
+5. **Link detection** — If links are disabled for the user's role, scan text messages for URLs
+6. **Length check** — Does the message exceed `max_message_length`?
 
 ```typescript
 // Server-side validation flow
@@ -481,6 +591,29 @@ CREATE UNIQUE INDEX idx_room_bans_unique
     WHERE is_active = true;
 CREATE INDEX idx_room_bans_lookup
     ON shout_room_bans(chat_type, chat_id, user_address, is_active);
+```
+
+### Blocked Words Table
+
+```sql
+CREATE TABLE shout_blocked_words (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    word TEXT NOT NULL,
+    scope TEXT NOT NULL DEFAULT 'global' CHECK (scope IN ('global', 'room')),
+    chat_type TEXT CHECK (chat_type IN ('channel', 'alpha', 'location', 'group')),
+    chat_id TEXT,
+    action TEXT NOT NULL DEFAULT 'block' CHECK (action IN ('block', 'flag', 'mute')),
+    is_regex BOOLEAN DEFAULT false,
+    added_by TEXT NOT NULL,
+    added_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_active BOOLEAN DEFAULT true
+);
+
+CREATE UNIQUE INDEX idx_blocked_words_unique
+    ON shout_blocked_words(LOWER(word), scope, COALESCE(chat_type, '__none__'), COALESCE(chat_id, '__global__'))
+    WHERE is_active = true;
+CREATE INDEX idx_blocked_words_global ON shout_blocked_words(scope, is_active) WHERE scope = 'global' AND is_active = true;
+CREATE INDEX idx_blocked_words_room ON shout_blocked_words(chat_type, chat_id, is_active) WHERE scope = 'room' AND is_active = true;
 ```
 
 ### Moderators Table

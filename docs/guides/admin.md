@@ -17,6 +17,8 @@ Admin features include:
 -   **User Management**: View and manage users
 -   **User Bans**: Ban and unban users platform-wide
 -   **Message Moderation**: Delete messages across all chat types
+-   **Blocked Words**: Global or per-room blocked words for anti-scam
+-   **Admin Broadcast**: Send a DM to all of your friends (signed request)
 -   **Image Uploads**: Send images in Alpha Chat (admin-only)
 -   **Analytics Dashboard**: Track platform metrics
 -   **Invite Codes**: Create and manage invite codes
@@ -478,6 +480,40 @@ Admins can upload and send images in Alpha Chat. This feature is **admin-only** 
 **Maximum file size**: 5 MB
 
 Images are uploaded via `/api/upload` with `context: "global"` and sent as an `[IMAGE]` message format in the chat.
+
+---
+
+## Admin Broadcast
+
+Admins can send a single DM to **all of their friends** at once (e.g. for announcements). The endpoint requires a **signed admin message** in the request headers to prove admin identity.
+
+### How It Works
+
+1. **GET** `/api/admin/broadcast` — Returns your friend count and sender address (for preview). Requires signed headers.
+2. **POST** `/api/admin/broadcast` — Sends the message to every friend. Body: `{ "message": "Your text here" }`. Max length 2000 characters. Messages are inserted into `shout_messages` with `message_type: "broadcast"`.
+
+### Authentication
+
+Requests must include:
+
+| Header | Description |
+|--------|-------------|
+| `x-admin-address` | Your wallet address |
+| `x-admin-signature` | Signature of the admin message (viem `verifyMessage`) |
+| `x-admin-message` | Base64-encoded message string (must include "Issued At:" timestamp; valid for 24 hours) |
+
+The server verifies the signature and checks that the signer is in `shout_admins`. Messages older than 24 hours or in the future are rejected.
+
+### Response
+
+```json
+{
+    "success": true,
+    "sent": 42,
+    "failed": 0,
+    "total": 42
+}
+```
 
 ---
 

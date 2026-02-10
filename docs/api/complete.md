@@ -187,6 +187,8 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | Method | Endpoint            | Description                                  |
 | ------ | ------------------- | -------------------------------------------- |
 | POST   | `/api/admin/ban`    | Ban or unban a user (admin only, logged)     |
+| GET    | `/api/admin/broadcast` | Get friend count for broadcast (signed admin headers) |
+| POST   | `/api/admin/broadcast` | Send DM to all friends (admin, signed; max 2000 chars) |
 
 ### Image Upload (Admin)
 
@@ -204,6 +206,14 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | POST   | `/api/chat-rules/ban`                           | Ban or unban a user from a room                          |
 
 See [Room Rules & Moderation](/docs/developers/moderation) for the full moderation system documentation.
+
+### Blocked Words (Anti-Scam)
+
+| Method | Endpoint                                        | Description                                              |
+| ------ | ----------------------------------------------- | -------------------------------------------------------- |
+| GET    | `/api/blocked-words?scope=global\|room\|all`    | List blocked words (optional `chatType`, `chatId`)      |
+| POST   | `/api/blocked-words`                             | Add blocked word (word, scope, action, isRegex)          |
+| DELETE | `/api/blocked-words`                             | Remove blocked word (body: `{ id }`, soft delete)        |
 
 ### Starred Messages
 
@@ -285,6 +295,12 @@ See [POAP Channels Technical Guide](/docs/developers/poap-channels) for full int
 | GET    | `/api/calendar/connect`        | Connect Google Calendar |
 | GET    | `/api/calendar/status`         | Get calendar status     |
 | POST   | `/api/calendar/disconnect`     | Disconnect calendar     |
+
+### Profile & Widgets
+
+| Method | Endpoint                | Description                                      |
+| ------ | ----------------------- | ------------------------------------------------ |
+| GET    | `/api/spotify/search?q=&type=` | Search Spotify (track, album, playlist, artist; requires env) |
 
 ### Utility
 
