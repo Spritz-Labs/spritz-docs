@@ -366,6 +366,10 @@ const chat = await response.json();
 - [Error Reference](/docs/api/error-codes): Complete error code documentation
 - [Quick Reference](/docs/api/complete): All endpoints overview
 
+:::info For AI agents and LLMs
+A single-file, machine-readable API reference is available at **[llms.txt](/llms.txt)**. It includes base URL, authentication steps, all major endpoints, request/response patterns, x402 paid agent chat, and links to full documentation so agents can parse and call Spritz APIs correctly.
+:::
+
 ## Next Steps
 
 - Explore [Agents API - Detailed Reference](/docs/api/agents-detailed)

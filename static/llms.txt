@@ -1,0 +1,384 @@
+# Spritz Documentation — LLM-Oriented API Reference
+
+This file is for AI agents and LLMs that need to call Spritz APIs. Use it to resolve base URLs, authentication, request/response shapes, and where to find full docs.
+
+Base URL for all API requests: https://app.spritz.chat
+Documentation site: https://docs.spritz.chat
+
+---
+
+## FOR AI AGENTS: QUICK RULES
+
+1. Always send credentials: use credentials: 'include' (fetch) or equivalent so session cookies are sent.
+2. Auth is cookie-based: after POST /api/auth/verify, the session is in an HTTP-only cookie; no Bearer token needed for browser-style clients.
+3. Success responses often use { "success": true, "data": ... }. Errors use { "error": "message" } or { "error": { "code": "...", "message": "..." } }.
+4. Rate limits: auth 10/min, strict 5/min, general 100/min. On 429, respect Retry-After.
+5. IDs: agents use UUID; channels and many resources use UUID; token chats use id like tc_xxxxxxxxxxxxxxxx.
+6. Public agent chat with payment: POST https://app.spritz.chat/api/public/agents/{agentId}/chat — if agent has x402 enabled, send X-Payment header (see x402 section below) or client will receive 402 and must pay then retry.
+
+---
+
+## AUTHENTICATION
+
+Most endpoints require an authenticated session. Session is created via Sign-In with Ethereum (SIWE) or Sign-In with Solana (SIWS), then stored in an HTTP-only cookie.
+
+### SIWE (Ethereum) — 3 steps
+
+1. GET https://app.spritz.chat/api/auth/verify?address=0x...
+   Returns: { "message": "<SIWE message string>", "nonce": "..." }
+
+2. Sign the "message" string with the user's Ethereum wallet (personal_sign). Do not modify the message.
+
+3. POST https://app.spritz.chat/api/auth/verify
+   Content-Type: application/json
+   Body: { "address": "0x...", "message": "<same message>", "signature": "0x..." }
+   Always send credentials: 'include' so the session cookie is stored.
+
+After this, all subsequent requests to app.spritz.chat must include credentials: 'include' (or the cookie will be sent automatically in browser context).
+
+### Session check
+
+GET https://app.spritz.chat/api/auth/session
+With credentials: 'include'. Returns current user address or unauthenticated state.
+
+### Logout
+
+POST https://app.spritz.chat/api/auth/logout
+With credentials: 'include'.
+
+### Other auth methods (documented on docs site)
+
+- POST /api/auth/verify-solana — Sign-In with Solana (SIWS)
+- POST /api/auth/world-id — World ID verification
+- POST /api/auth/alien-id — Alien ID (SSO and Mini App flows)
+- Passkey: POST /api/passkey/login/options, POST /api/passkey/login/verify
+- Email: POST /api/email/login/send-code, POST /api/email/login/verify
+
+Full auth details: https://docs.spritz.chat/docs/api/intro#authentication
+
+---
+
+## RESPONSE AND ERROR FORMATS
+
+Success (typical):
+  { "success": true, "data": { ... } }
+  or endpoint-specific payloads (e.g. { "agents": [...] }, { "message": "..." }).
+
+Error (typical):
+  { "error": "Human-readable message" }
+  or { "error": { "code": "ERROR_CODE", "message": "..." } }
+
+HTTP status: 401 Unauthorized (not logged in), 403 Forbidden (insufficient permissions), 404 Not Found, 429 Too Many Requests (rate limit), 500 Server Error.
+
+Rate limit headers when applicable: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After (on 429).
+
+---
+
+## AI AGENTS (CREATE, CHAT, DISCOVER)
+
+List agents (authenticated):
+  GET https://app.spritz.chat/api/agents
+  Query: userAddress (optional), visibility (optional), limit (optional)
+
+Create agent (authenticated):
+  POST https://app.spritz.chat/api/agents
+  Body: { "name": "...", "description": "...", "visibility": "public"|"friends"|"private", ... }
+
+Get one agent:
+  GET https://app.spritz.chat/api/agents/{id}
+
+Chat with agent (authenticated):
+  POST https://app.spritz.chat/api/agents/{id}/chat
+  Body: { "message": "...", "sessionId": null or "existing-session-id" }
+  Returns: { "message": "...", "sessionId": "..." } (and/or streaming depending on implementation)
+
+Public agent chat (no auth; payment required if x402 enabled):
+  POST https://app.spritz.chat/api/public/agents/{id}/chat
+  Body: { "message": "...", "sessionId": null }
+  If agent has x402 enabled: first request may return 402 with paymentRequirements; client must send payment (see x402 below) and retry with X-Payment header.
+
+Discover public agents:
+  GET https://app.spritz.chat/api/agents/discover
+  GET https://app.spritz.chat/api/public/agents/{id} — public agent info and pricing
+
+Agent knowledge base:
+  GET /api/agents/{id}/knowledge
+  POST /api/agents/{id}/knowledge — add knowledge URL
+  POST /api/agents/{id}/knowledge/index — trigger indexing
+
+Full agents API: https://docs.spritz.chat/docs/api/agents-detailed
+x402 (paid agent chat): https://docs.spritz.chat/docs/agents/x402
+
+---
+
+## X402 — PAID PUBLIC AGENT CHAT
+
+When an agent has x402 enabled, POST /api/public/agents/{id}/chat requires payment in USDC on Base (or Base Sepolia for test). No session cookie; payment is the auth.
+
+Flow for an AI agent or client:
+1. POST /api/public/agents/{id}/chat with body { "message": "...", "sessionId": null }.
+2. If response is 402: parse JSON body for paymentRequirements (x402Version, accepts array with scheme, network, maxAmountRequired, asset, payTo, etc.). Use x402-fetch or equivalent to sign and send USDC payment, then retry the same POST with header X-Payment: <signed-payment-json>.
+3. If response is 200: body contains agent reply and sessionId for continuity.
+
+Price is per message; stored in cents (e.g. 1 = $0.01). Networks: base (mainnet), base-sepolia (testnet). USDC contract Base mainnet: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913.
+
+Full x402 doc: https://docs.spritz.chat/docs/agents/x402
+
+---
+
+## CHANNELS (PUBLIC CHANNELS)
+
+List channels:
+  GET https://app.spritz.chat/api/channels
+  Query: poapEventId (optional) — channel by POAP event
+
+Get channel by ID or slug:
+  GET https://app.spritz.chat/api/channels/{id}
+  GET https://app.spritz.chat/api/channels/slug/{slug}   e.g. slug=alien, ethereum
+
+Join / leave:
+  POST https://app.spritz.chat/api/channels/{id}/join
+  POST https://app.spritz.chat/api/channels/{id}/leave
+  (POAP channels require holding the POAP; join checks wallet and Spritz Wallet.)
+
+Messages:
+  GET https://app.spritz.chat/api/channels/{id}/messages
+  POST https://app.spritz.chat/api/channels/{id}/messages   Body: { "content": "..." }
+
+Polls:
+  GET/POST https://app.spritz.chat/api/channels/{id}/polls
+  PATCH/DELETE https://app.spritz.chat/api/channels/{id}/polls/{pid}
+
+---
+
+## TOKEN-GATED CHATS (TOKEN CHATS)
+
+Token chats are rooms gated by holding a minimum balance of an ERC-20 token on a given chain.
+
+List/browse:
+  GET https://app.spritz.chat/api/token-chats?userAddress=0x...&mode=browse|my&search=...&chainId=...
+  mode=browse: all token chats; mode=my: user's joined chats. chainId filters by chain.
+
+Create (authenticated):
+  POST https://app.spritz.chat/api/token-chats
+  Body: { "userAddress": "0x...", "name": "...", "tokenAddress": "0x...", "tokenChainId": 8453, "minBalance": "0", "tokenName", "tokenSymbol", "tokenDecimals", "description", "emoji", "isOfficial": false }
+
+Join:
+  POST https://app.spritz.chat/api/token-chats/{id}/join
+  Body: { "userAddress": "0x..." }
+  Server checks EOA, Spritz Wallet, and vaults for sufficient token balance; returns error if balance too low.
+
+Messages / members:
+  GET/POST https://app.spritz.chat/api/token-chats/{id}/messages
+  GET https://app.spritz.chat/api/token-chats/{id}/members
+
+Token metadata:
+  GET https://app.spritz.chat/api/token-chats/token-info?address=0x...&chainId=8453
+  GET https://app.spritz.chat/api/token-chats/suggest-tokens?q=...
+
+---
+
+## LOCATION CHATS
+
+List nearby:
+  GET https://app.spritz.chat/api/location-chats?latitude=...&longitude=...&radiusMeters=...
+
+Create:
+  POST https://app.spritz.chat/api/location-chats   Body: { "name", "latitude", "longitude", "radiusMeters", "creatorAddress", ... }
+
+Join / leave:
+  POST https://app.spritz.chat/api/location-chats/{id}/join
+  POST https://app.spritz.chat/api/location-chats/{id}/leave
+
+Messages:
+  GET/POST https://app.spritz.chat/api/location-chats/{id}/messages
+  DELETE https://app.spritz.chat/api/location-chats/{id}/messages?messageId=...  (hard delete)
+
+Joined list:
+  GET https://app.spritz.chat/api/location-chats/joined
+
+---
+
+## POAP (PROOF OF ATTENDANCE) CHANNELS
+
+User's POAPs (for join eligibility and “From my POAPs”):
+  GET https://app.spritz.chat/api/poap/scan?address=0x...
+  Returns deduplicated POAP events.
+
+Events with channel status:
+  GET https://app.spritz.chat/api/poap/events-with-channels?address=0x...  or ?addresses=0x1,0x2
+  Optional: &memberAddress=0x... for is_member lookup.
+
+Collections (list/search):
+  GET https://app.spritz.chat/api/poap/collections?offset=0&limit=20&query=...
+  GET https://app.spritz.chat/api/poap/collections/{id}
+
+Collections user can join (holds POAP):
+  GET https://app.spritz.chat/api/poap/collections-for-user?address=... or ?addresses=0x1,0x2
+
+Create channel with POAP: POST /api/channels with body including poapEventId, poapEventName, poapImageUrl (see Channels).
+
+Full POAP integration: https://docs.spritz.chat/docs/developers/poap-channels
+
+---
+
+## MESSAGING (DMs), FRIENDS, BLOCK, MUTE
+
+DMs are delivered over Logos Messaging (Waku); the REST API is used for auth, user resolution, and server-side features. Message send/receive is typically handled by the client over Waku. For server-side message deletion:
+
+  POST https://app.spritz.chat/api/messages/delete   Body: { "messageId": "uuid" }   (sender or global admin)
+
+Friends:
+  GET https://app.spritz.chat/api/friends
+  (Other friend endpoints may exist; see API complete reference.)
+
+Block:
+  GET https://app.spritz.chat/api/users/block   — list blocked
+  POST https://app.spritz.chat/api/users/block   Body: { "userAddress": "0x...", "reason": "optional" }
+  DELETE https://app.spritz.chat/api/users/block   Body: { "userAddress": "0x..." }
+
+Mute:
+  GET/POST/DELETE https://app.spritz.chat/api/users/mute   (conversation mute; body includes conversationType, conversationId, duration.)
+
+Report:
+  POST https://app.spritz.chat/api/users/report   Body: { "reportedAddress", "reportType", "description", ... }
+
+---
+
+## MODERATION AND ROOM RULES
+
+Chat rules (per-room content and behavior):
+  GET https://app.spritz.chat/api/chat-rules?chatType=channel|alpha|location|group&chatId=...
+  POST https://app.spritz.chat/api/chat-rules   Body: { "chatType", "chatId", "rules": { ... } }   (admin/mod)
+
+Room bans:
+  GET https://app.spritz.chat/api/chat-rules/ban?chatType=...&chatId=...
+  POST https://app.spritz.chat/api/chat-rules/ban   Body: { "action": "ban"|"unban", "chatType", "chatId", "targetAddress", "reason", "duration" }
+
+Moderation actions (promote/demote mod, mute, delete message, pin):
+  GET https://app.spritz.chat/api/moderation?action=permissions|moderators|muted|mod-log&userAddress=...&channelId=...
+  POST https://app.spritz.chat/api/moderation   Body: { "action": "promote-mod"|"demote-mod"|"mute-user"|"unmute-user"|"delete-message"|"pin-message", "moderatorAddress", "channelId", ... }
+
+Blocked words (anti-scam):
+  GET https://app.spritz.chat/api/blocked-words?scope=global|room|all&chatType=...&chatId=...
+  POST https://app.spritz.chat/api/blocked-words   Body: { "word", "scope", "chatType", "chatId", "action": "block"|"flag"|"mute", "isRegex": false }
+  DELETE https://app.spritz.chat/api/blocked-words   Body: { "id": "uuid" }
+
+Full moderation: https://docs.spritz.chat/docs/developers/moderation
+
+---
+
+## STREAMING (LIVESTREAMS)
+
+Create stream:
+  POST https://app.spritz.chat/api/streams   Body: { "name": "...", "record": false }   (record is beta, default false)
+
+Get stream:
+  GET https://app.spritz.chat/api/streams/{id}
+
+Stream assets (recordings):
+  GET https://app.spritz.chat/api/streams/{id}/assets   (only for streams created with record: true)
+
+Stream chat:
+  GET/POST https://app.spritz.chat/api/streams/{id}/chat
+
+Viewers:
+  POST https://app.spritz.chat/api/streams/{id}/viewers   Body: { "userAddress": "0x..." }
+  DELETE https://app.spritz.chat/api/streams/{id}/viewers   Body: { "userAddress": "0x..." }
+
+Public stream info (no auth):
+  GET https://app.spritz.chat/api/public/streams/{id}
+
+Streaming deep dive: https://docs.spritz.chat/docs/streaming/technical
+
+---
+
+## WALLET, USERNAME, PROFILE
+
+Balances:
+  GET https://app.spritz.chat/api/wallet/balances?address=0x...
+
+Smart wallet (Safe):
+  POST https://app.spritz.chat/api/wallet/smart-wallet   (get or create)
+  GET https://app.spritz.chat/api/wallet/safe-status
+
+Username:
+  GET https://app.spritz.chat/api/username?address=0x...
+  POST https://app.spritz.chat/api/username   Body: { "address", "username" }
+  GET https://app.spritz.chat/api/username/resolve?username=...
+
+Profile:
+  GET/POST https://app.spritz.chat/api/profile/theme
+  GET/POST https://app.spritz.chat/api/profile/widgets
+
+---
+
+## ADMIN (REQUIRES ADMIN SESSION OR SIGNED HEADERS)
+
+Ban user:
+  POST https://app.spritz.chat/api/admin/ban   Body: { "userAddress": "0x...", "ban": true|false, "reason": "..." }
+
+Broadcast DM to all friends (signed admin message required):
+  GET https://app.spritz.chat/api/admin/broadcast   Headers: x-admin-address, x-admin-signature, x-admin-message
+  POST https://app.spritz.chat/api/admin/broadcast   Body: { "message": "..." }   (max 2000 chars)
+
+Analytics:
+  GET https://app.spritz.chat/api/admin/analytics?period=24h|7d|30d
+  GET https://app.spritz.chat/api/admin/analytics/v2?section=overview&period=7d   (signed admin headers)
+
+---
+
+## SCHEDULING AND CALENDAR
+
+List scheduled calls:
+  GET https://app.spritz.chat/api/scheduling/list
+
+Schedule a call:
+  POST https://app.spritz.chat/api/scheduling/schedule   (body may include payment for x402-paid scheduling)
+
+Availability:
+  GET https://app.spritz.chat/api/scheduling/availability
+  POST https://app.spritz.chat/api/scheduling/settings
+
+Calendar (Google):
+  GET https://app.spritz.chat/api/calendar/connect
+  GET https://app.spritz.chat/api/calendar/status
+  POST https://app.spritz.chat/api/calendar/disconnect
+
+---
+
+## ROOMS (INSTANT MEETING ROOMS)
+
+  POST https://app.spritz.chat/api/rooms   — create room
+  GET https://app.spritz.chat/api/rooms
+  GET https://app.spritz.chat/api/rooms/{code}
+  POST https://app.spritz.chat/api/rooms/{code}/token   — get Huddle01 token
+
+---
+
+## COMPLETE ENDPOINT LIST AND ERROR CODES
+
+Full endpoint tables and error code reference:
+  https://docs.spritz.chat/docs/api/complete
+  https://docs.spritz.chat/docs/api/error-codes
+
+---
+
+## DOCUMENTATION SITEMAP (FOR DEEP DIVES)
+
+  Intro:              https://docs.spritz.chat/docs/intro
+  Getting started:   https://docs.spritz.chat/docs/getting-started
+  API intro:          https://docs.spritz.chat/docs/api/intro
+  API complete:       https://docs.spritz.chat/docs/api/complete
+  Agents detailed:   https://docs.spritz.chat/docs/api/agents-detailed
+  Agents x402:        https://docs.spritz.chat/docs/agents/x402
+  Authentication:     https://docs.spritz.chat/docs/developers/authentication
+  Alien integration:  https://docs.spritz.chat/docs/developers/alien-integration
+  POAP channels:      https://docs.spritz.chat/docs/developers/poap-channels
+  Moderation:         https://docs.spritz.chat/docs/developers/moderation
+  Messaging (tech):   https://docs.spritz.chat/docs/developers/messaging
+  Streaming:          https://docs.spritz.chat/docs/streaming/technical
+  Database schema:   https://docs.spritz.chat/docs/database/schema
+  Changelog:          https://docs.spritz.chat/docs/changelog
+
+This file was generated for AI agents and LLMs. When in doubt, prefer the linked documentation pages for full request/response schemas and edge cases.

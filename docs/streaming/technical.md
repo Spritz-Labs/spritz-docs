@@ -29,8 +29,8 @@ Spritz uses **Livepeer** for livestreaming infrastructure, combining WebRTC for 
 ### 1. Stream Creation
 
 ```typescript
-// Create stream on Livepeer
-const livepeerStream = await createLivepeerStream(streamName);
+// Create stream on Livepeer (recording off by default)
+const livepeerStream = await createLivepeerStream(streamName, record = false);
 
 // Response includes:
 {
@@ -38,9 +38,13 @@ const livepeerStream = await createLivepeerStream(streamName);
     streamKey: "stream-key-for-webrtc",
     playbackId: "playback-id-for-hls",
     rtmpIngestUrl: "rtmp://rtmp.livepeer.com/live/{streamKey}",
-    record: true
+    record: false   // Set true only when user enables recording (beta)
 }
 ```
+
+:::info Recording (Beta)
+**Recording is disabled by default.** When creating a stream, pass `record: true` only if the broadcaster has explicitly enabled recording in the Go Live modal. Recording is a **beta-only** feature: the recording toggle in the UI is shown only to users with beta access. This reduces storage and processing costs and keeps recording opt-in.
+:::
 
 ### 2. WebRTC Ingestion (WHIP)
 
@@ -147,14 +151,14 @@ if (livepeerStream?.isActive) {
 
 ## Recording
 
-### Automatic Recording
+### Recording (Beta, Opt-In)
 
-Streams are automatically recorded when `record: true`:
+Streams are **not** recorded by default. Recording runs only when the stream is created with `record: true` (e.g. when the broadcaster enables the recording toggle in the Go Live modal; the toggle is shown only to users with beta access). Assets (recordings) are fetched and saved only for streams that had recording enabled.
 
 ```typescript
-// Spritz app: lib/livepeer.ts uses these profiles (no fpsDen/quality/gop/profile)
-const livepeerStream = await createLivepeerStream(streamName);
-// createLivepeerStream sends: record: true, profiles: [720p 2Mbps, 480p 1Mbps, 360p 500kbps]
+// Spritz app: createLivepeerStream(name, record = false)
+const livepeerStream = await createLivepeerStream(streamName, record === true);
+// When record is true: profiles [720p 2Mbps, 480p 1Mbps, 360p 500kbps] are used for recording
 ```
 
 ### Asset Retrieval

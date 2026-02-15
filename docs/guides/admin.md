@@ -382,6 +382,23 @@ GET / api / admin / users;
 GET /api/admin/analytics?period=30d
 ```
 
+The main analytics endpoint returns platform-wide metrics. Results are paginated internally so large datasets (e.g. all users or all messages) are not capped at 1000 rows.
+
+### Get Analytics v2 (Richer Insights)
+
+```http
+GET /api/admin/analytics/v2?section=overview&period=7d
+```
+
+Requires the same signed admin headers as other admin endpoints. Use for the admin dashboard's richer insights:
+
+| Parameter | Description |
+| --------- | ----------- |
+| `section` | `overview` (default), or other section identifiers used by the dashboard |
+| `period` | `24h`, `7d`, `30d`, `90d`, or `365d` |
+
+The v2 endpoint loads data by section (e.g. overview KPIs, DAU sparkline, segments, funnel, comparison) and uses RPC/aggregates for better performance.
+
 ### Track Analytics
 
 ```typescript

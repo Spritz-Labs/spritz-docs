@@ -51,6 +51,10 @@ Official channels are created and moderated by the Spritz team to ensure quality
 
 The **Alien** channel is a dedicated official channel for the Alien ecosystem community. Users who authenticate with [Alien ID](/docs/developers/alien-integration) are **automatically joined** to this channel on their first login. The channel can also be accessed directly via its custom URL slug: `/channel/alien`.
 
+### Token-Gated Chats (Token Chats)
+
+Spritz supports **token-gated chat rooms**: rooms where membership requires holding a minimum balance of an ERC-20 token on a chosen chain (Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Avalanche, Unichain). When you browse "Token Chats," you can filter by chain and search by name. To **join** a token chat, the app checks your connected wallet, your Spritz Wallet (if you use a passkey), and any vaults you belong to; if any of these holds at least the required minimum balance, you can join. Official token chats can show an **official** badge. For API details, see the [Complete API Reference](/docs/api/complete#token-gated-chats-token-chats).
+
 ### Channel Slugs
 
 Official channels can have **custom URL slugs** for direct access:
@@ -119,6 +123,14 @@ If you sign in with a passkey, Spritz also checks your **Smart Wallet** for the 
 -   Send messages to all channel members
 -   Share links and media
 -   React to messages with emojis
+
+### Sharing POAPs in chat (/poap command)
+
+In any channel (and in groups, location chats, and Alpha Chat), you can insert a **POAP embed** from your own collection. Type **`/poap`** followed by a space and part of an event name; an autocomplete list shows your POAPs that match. Select one to insert a rich POAP card (event name and image) into the message.
+
+-   **How it works:** Your POAPs are loaded from the same data used for "From my POAPs" (your connected wallet and, if you use a passkey, your Spritz Wallet). The composer converts your selection into a `[poap:eventId:eventName:imageUrl]` embed that other members see as a POAP card.
+-   **Where it works:** Channels, groups, location chats, and Alpha Chat.
+-   **Use case:** Share proof of attendance or event badges in conversation without leaving the app.
 -   Reply with message quotes
 
 ### Pinned Messages

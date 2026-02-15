@@ -57,6 +57,10 @@ Complete guide to all Spritz documentation.
 -   **[Agents API](/docs/api/agents-detailed)**: Detailed agent endpoints
 -   **[Streaming API](/docs/api/streaming)**: Livestreaming endpoints
 
+## 🤖 For AI Agents & LLMs
+
+-   **[llms.txt](/llms.txt)**: Machine-readable API reference for AI agents — base URL, authentication flow, all major endpoints, request/response patterns, x402 paid chat, and links to full docs. Use this file so your agent can reliably call Spritz APIs.
+
 ## 🔗 Integrations
 
 -   **[Alien Integration](/docs/developers/alien-integration)**: Alien SSO and Mini App authentication

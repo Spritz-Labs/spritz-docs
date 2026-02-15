@@ -155,6 +155,21 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | PATCH  | `/api/channels/:id/polls/:pid` | Update poll (vote, edit, close)                                                               |
 | DELETE | `/api/channels/:id/polls/:pid` | Delete a poll                                                                                 |
 
+### Token-Gated Chats (Token Chats)
+
+| Method | Endpoint                                | Description                                              |
+| ------ | --------------------------------------- | -------------------------------------------------------- |
+| GET    | `/api/token-chats?userAddress=&mode=&search=&chainId=` | List/browse token chats (mode: browse \| my)             |
+| POST   | `/api/token-chats`                       | Create token chat (token + chain + min balance, auth)    |
+| POST   | `/api/token-chats/:id/join`              | Join token chat (body: `userAddress`; must hold min balance) |
+| GET    | `/api/token-chats/:id/messages`          | Get messages                                             |
+| POST   | `/api/token-chats/:id/messages`          | Send message                                             |
+| GET    | `/api/token-chats/:id/members`           | Get members                                              |
+| GET    | `/api/token-chats/token-info?address=&chainId=` | Get token metadata for a contract                      |
+| GET    | `/api/token-chats/suggest-tokens?q=`     | Suggest tokens for creating a chat                      |
+
+Token chats are gated by holding a minimum balance of an ERC-20 token on a given chain. Join checks the user's EOA, Spritz Wallet, and vaults for sufficient balance.
+
 ### Location Chats
 
 | Method | Endpoint                          | Description                                          |
@@ -189,6 +204,8 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | POST   | `/api/admin/ban`    | Ban or unban a user (admin only, logged)     |
 | GET    | `/api/admin/broadcast` | Get friend count for broadcast (signed admin headers) |
 | POST   | `/api/admin/broadcast` | Send DM to all friends (admin, signed; max 2000 chars) |
+| GET    | `/api/admin/analytics` | Platform analytics (period=24h\|7d\|30d; paginated)     |
+| GET    | `/api/admin/analytics/v2?section=&period=` | Richer analytics by section (overview, etc.) |
 
 ### Image Upload (Admin)
 

@@ -198,6 +198,20 @@ React to messages with emojis:
 -   Remove your reaction by tapping it again
 -   Animated reactions for added expressiveness
 
+### Emoji Shortcodes
+
+In the message composer you can type **emoji shortcodes** for quick insertion. Type a colon followed by a shortcode name; an autocomplete list appears. Select an option to insert the emoji.
+
+| You type   | Result |
+| ---------- | ------ |
+| `:heart:`  | ❤️     |
+| `:thumbsup:` or `:+1:` | 👍 |
+| `:fire:` or `:lit:` | 🔥 |
+| `:gm:`     | 🌅     |
+| `:eth:`    | ⟠      |
+
+Shortcodes cover smileys, gestures, animals, food, travel, activities, objects, symbols, flags, and common crypto/Web3 terms (e.g. `gm`, `wagmi`, `lfg`). Use the autocomplete to discover more.
+
 ## User Moderation
 
 Keep your conversations safe with built-in moderation tools.
