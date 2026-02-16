@@ -195,7 +195,7 @@ const isValid = nacl.sign.detached.verify(
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  1. Generate Challenge                                       │
-│  ┌──────────┐    GET /api/auth/webauthn/register-options    │
+│  ┌──────────┐    POST /api/passkey/register/options         │
 │  │  Server  │ ────────────────────────────────►             │
 │  └──────────┘    { challenge, rpId, user: {...} }           │
 │                                                              │
@@ -235,7 +235,7 @@ const isValid = nacl.sign.detached.verify(
 │  }                                                           │
 │                                                              │
 │  3. Store Credential                                         │
-│  ┌──────────┐    POST /api/auth/webauthn/register           │
+│  ┌──────────┐    POST /api/passkey/register/verify           │
 │  │  Client  │ ────────────────────────────────►             │
 │  └──────────┘    { credential, publicKey: {x, y} }          │
 │                                                              │
@@ -283,7 +283,7 @@ export function extractP256PublicKey(
 
 ```typescript
 // 1. Get authentication options
-const { challenge } = await fetch("/api/auth/webauthn/auth-options").then((r) =>
+const { challenge } = await fetch("/api/passkey/login/options", { method: "POST", body: JSON.stringify({ userAddress: "0x..." }) }).then((r) =>
     r.json()
 );
 
@@ -305,15 +305,12 @@ const credential = await navigator.credentials.get({
 });
 
 // 3. Verify on server
-const response = await fetch("/api/auth/webauthn/verify", {
+const response = await fetch("/api/passkey/login/verify", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-        credentialId: credential.id,
-        authenticatorData: bufferToBase64url(
-            credential.response.authenticatorData
-        ),
-        clientDataJSON: bufferToBase64url(credential.response.clientDataJSON),
-        signature: bufferToBase64url(credential.response.signature),
+        credential: credential,
+        challenge: challenge,
     }),
 });
 ```
@@ -760,7 +757,7 @@ export async function rateLimitMiddleware(
 | ------------------------- | ----- | -------- | ---------------------- |
 | `/api/auth/verify` (GET)  | 10    | 1 minute | `RATE_LIMIT_AUTH`      |
 | `/api/auth/verify` (POST) | 5     | 1 minute | `RATE_LIMIT_STRICT`    |
-| `/api/auth/webauthn/*`    | 10    | 1 minute | `RATE_LIMIT_AUTH`      |
+| `/api/passkey/*`         | 10    | 1 minute | `RATE_LIMIT_AUTH`      |
 | `/api/agents/*/chat`      | 30    | 1 minute | `RATE_LIMIT_AI`        |
 | `/api/streams`            | 5     | 1 minute | `RATE_LIMIT_STRICT`    |
 | `/api/messages/*`         | 60    | 1 minute | `RATE_LIMIT_MESSAGING` |

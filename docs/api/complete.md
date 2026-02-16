@@ -24,7 +24,8 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/agents`                     | List agents              |
 | POST   | `/api/agents`                     | Create agent             |
 | GET    | `/api/agents/:id`                 | Get agent details        |
-| DELETE | `/api/agents/:id`                 | Delete agent             |
+| PATCH  | `/api/agents/:id`                 | Update agent            |
+| DELETE | `/api/agents/:id`                 | Delete agent            |
 | POST   | `/api/agents/:id/chat`            | Chat with agent          |
 | GET    | `/api/agents/:id/chat`            | Get chat history         |
 | DELETE | `/api/agents/:id/chat`            | Clear chat history       |
@@ -46,8 +47,10 @@ This page provides a quick overview of all available API endpoints. For detailed
 | GET    | `/api/streams`             | List streams      |
 | POST   | `/api/streams`             | Create stream     |
 | GET    | `/api/streams/:id`         | Get stream        |
+| PATCH  | `/api/streams/:id`         | Update stream (action, title, description; go live / end) |
 | DELETE | `/api/streams/:id`         | Delete stream     |
 | GET    | `/api/streams/:id/assets`  | Get recordings    |
+| GET    | `/api/streams/:id/chat`    | Get stream chat messages (optional `since`) |
 | POST   | `/api/streams/:id/chat`    | Send chat message |
 | POST   | `/api/streams/:id/viewers` | Join stream       |
 | DELETE | `/api/streams/:id/viewers` | Leave stream      |
@@ -73,7 +76,7 @@ This page provides a quick overview of all available API endpoints. For detailed
 | POST   | `/api/passkey/login/options`    | Get login options        |
 | POST   | `/api/passkey/login/verify`     | Verify login             |
 | GET    | `/api/passkey/credentials`      | List passkeys            |
-| DELETE | `/api/passkey/credential`       | Remove passkey           |
+| DELETE | `/api/passkey/credentials?id=`  | Remove passkey (query: credential DB id) |
 
 ### Wallet
 
@@ -142,8 +145,7 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | ------ | ------------------------------ | --------------------------------------------------------------------------------------------- |
 | GET    | `/api/channels`                | List channels (optional: `?poapEventId=` for channel by POAP event)                           |
 | POST   | `/api/channels`                | Create channel (supports POAP: `poapEventId`, `poapEventName`, `poapImageUrl`)                |
-| GET    | `/api/channels/:id`            | Get channel by ID                                                                             |
-| GET    | `/api/channels/slug/:slug`     | Get channel by custom URL slug (e.g., `alien`, `ethereum`)                                    |
+| GET    | `/api/channels/:id`            | Get channel by ID or slug (`:id` can be UUID or slug e.g. `alien`, `ethereum`)               |
 | POST   | `/api/channels/:id/join`       | Join channel (POAP channels require holding the POAP; Smart Wallet checked for passkey users) |
 | POST   | `/api/channels/:id/leave`      | Leave channel                                                                                 |
 | GET    | `/api/channels/:id/messages`   | Get messages                                                                                  |
@@ -160,15 +162,21 @@ Client encrypts media with the DM conversation key before upload. See [Encrypted
 | Method | Endpoint                                | Description                                              |
 | ------ | --------------------------------------- | -------------------------------------------------------- |
 | GET    | `/api/token-chats?userAddress=&mode=&search=&chainId=` | List/browse token chats (mode: browse \| my)             |
-| POST   | `/api/token-chats`                       | Create token chat (token + chain + min balance, auth)    |
+| POST   | `/api/token-chats`                       | Create token chat (token + chain + min balance, auth; optional `messagingType`: waku \| standard) |
 | POST   | `/api/token-chats/:id/join`              | Join token chat (body: `userAddress`; must hold min balance) |
+| POST   | `/api/token-chats/:id/leave`             | Leave token chat (body: `userAddress`)                   |
+| GET    | `/api/token-chats/:id/settings`          | Get token chat settings (public)                       |
+| PATCH  | `/api/token-chats/:id/settings`          | Update name, description, emoji (creator or admin)      |
+| POST   | `/api/token-chats/:id/icon`             | Upload custom icon (multipart: file, userAddress; 2MB max, JPEG/PNG/GIF/WebP; creator/admin/mod) |
 | GET    | `/api/token-chats/:id/messages`          | Get messages                                             |
 | POST   | `/api/token-chats/:id/messages`          | Send message                                             |
+| DELETE | `/api/token-chats/:id/messages?messageId=&userAddress=` | Delete message (sender or creator/admin/mod)   |
 | GET    | `/api/token-chats/:id/members`           | Get members                                              |
 | GET    | `/api/token-chats/token-info?address=&chainId=` | Get token metadata for a contract                      |
-| GET    | `/api/token-chats/suggest-tokens?q=`     | Suggest tokens for creating a chat                      |
+| GET    | `/api/token-chats/suggest-tokens?userAddress=0x...` | Suggest tokens from user's balances (EOA + Spritz Wallet + vaults via Graph API); optional `q` to filter |
+| GET    | `/api/public/token-chats/:id`                       | Get public token chat info (no auth; for invite/share pages)                                             |
 
-Token chats are gated by holding a minimum balance of an ERC-20 token on a given chain. Join checks the user's EOA, Spritz Wallet, and vaults for sufficient balance.
+Token chats are gated by holding a minimum balance of an ERC-20 token on a given chain. Join checks the user's EOA, Spritz Wallet, and vaults for sufficient balance. Creators and members with admin/moderator roles can update settings, upload a custom icon, and manage [chat rules](/docs/developers/moderation) (use `chatType: "token"`, `chatId`: token chat id).
 
 ### Location Chats
 
@@ -178,7 +186,7 @@ Token chats are gated by holding a minimum balance of an ERC-20 token on a given
 | POST   | `/api/location-chats`             | Create a location chat room                          |
 | GET    | `/api/location-chats/:id`         | Get location chat details                            |
 | POST   | `/api/location-chats/:id/join`    | Join a location chat                                 |
-| POST   | `/api/location-chats/:id/leave`   | Leave a location chat                                |
+| DELETE | `/api/location-chats/:id/join`    | Leave a location chat                                |
 | GET    | `/api/location-chats/:id/messages`| Get messages in a location chat                      |
 | POST   | `/api/location-chats/:id/messages`| Send message in a location chat                      |
 | GET    | `/api/location-chats/:id/members` | Get members of a location chat                       |
@@ -326,7 +334,6 @@ See [POAP Channels Technical Guide](/docs/developers/poap-channels) for full int
 | GET    | `/api/leaderboard`  | Get leaderboard        |
 | GET    | `/api/points`       | Get user points        |
 | POST   | `/api/points/daily` | Claim daily points     |
-| POST   | `/api/push/send`    | Send push notification |
 | POST   | `/api/bug-reports`  | Submit bug report      |
 
 ## Next Steps

@@ -131,6 +131,10 @@ In any channel (and in groups, location chats, and Alpha Chat), you can insert a
 -   **How it works:** Your POAPs are loaded from the same data used for "From my POAPs" (your connected wallet and, if you use a passkey, your Spritz Wallet). The composer converts your selection into a `[poap:eventId:eventName:imageUrl]` embed that other members see as a POAP card.
 -   **Where it works:** Channels, groups, location chats, and Alpha Chat.
 -   **Use case:** Share proof of attendance or event badges in conversation without leaving the app.
+
+When **creating** a token chat, use `GET /api/token-chats/suggest-tokens?userAddress=0x...` to get suggested tokens from the user's balances (EOA, Spritz Wallet, and vaults via Graph API); optional `q` filters by name/symbol.
+
+**Creator and admin features:** Chat creators and members with admin or moderator roles can update the chat name, description, and emoji via `PATCH /api/token-chats/:id/settings`, upload a custom icon via `POST /api/token-chats/:id/icon` (2MB max, JPEG/PNG/GIF/WebP), and configure [room rules and moderation](/docs/developers/moderation) (use chat type `token` with the token chat id). Pixel art and other media in token chats follow the same chat rules as channels. For invite or share pages, use `GET /api/public/token-chats/:id` (no auth) to fetch public token chat info (name, description, icon, token details, member count, etc.).
 -   Reply with message quotes
 
 ### Pinned Messages
@@ -263,13 +267,13 @@ GET /api/channels?category=tech&userAddress=0x...
 GET /api/channels/:id
 ```
 
-### Get Channel by Slug
+### Get Channel by ID or Slug
 
 ```typescript
-GET /api/channels/slug/:slug
+GET /api/channels/:id
 ```
 
-Returns a channel by its custom URL slug (e.g., `alien`, `ethereum`).
+Returns a channel by its UUID or by its custom URL slug (e.g., `alien`, `ethereum`). Use the slug as `:id` for slug lookups.
 
 ### Join Channel
 

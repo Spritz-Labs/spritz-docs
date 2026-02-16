@@ -132,9 +132,8 @@ List channels:
   GET https://app.spritz.chat/api/channels
   Query: poapEventId (optional) — channel by POAP event
 
-Get channel by ID or slug:
+Get channel by ID or slug (:id can be UUID or slug, e.g. alien, ethereum):
   GET https://app.spritz.chat/api/channels/{id}
-  GET https://app.spritz.chat/api/channels/slug/{slug}   e.g. slug=alien, ethereum
 
 Join / leave:
   POST https://app.spritz.chat/api/channels/{id}/join
@@ -163,18 +162,26 @@ Create (authenticated):
   POST https://app.spritz.chat/api/token-chats
   Body: { "userAddress": "0x...", "name": "...", "tokenAddress": "0x...", "tokenChainId": 8453, "minBalance": "0", "tokenName", "tokenSymbol", "tokenDecimals", "description", "emoji", "isOfficial": false }
 
-Join:
-  POST https://app.spritz.chat/api/token-chats/{id}/join
-  Body: { "userAddress": "0x..." }
-  Server checks EOA, Spritz Wallet, and vaults for sufficient token balance; returns error if balance too low.
+Join / leave:
+  POST https://app.spritz.chat/api/token-chats/{id}/join   Body: { "userAddress": "0x..." }
+  POST https://app.spritz.chat/api/token-chats/{id}/leave   Body: { "userAddress": "0x..." }
+  Server checks EOA, Spritz Wallet, and vaults for sufficient token balance on join; returns error if balance too low.
+
+Settings and icon (creator or admin/mod):
+  PATCH https://app.spritz.chat/api/token-chats/{id}/settings   Body: { "userAddress": "0x...", "name", "description", "emoji" } (only provided fields updated)
+  POST https://app.spritz.chat/api/token-chats/{id}/icon   Multipart: file, userAddress; 2MB max; JPEG/PNG/GIF/WebP. Creator, admin, or moderator only.
 
 Messages / members:
   GET/POST https://app.spritz.chat/api/token-chats/{id}/messages
+  DELETE https://app.spritz.chat/api/token-chats/{id}/messages?messageId=...&userAddress=0x...   (sender or creator/admin/mod)
   GET https://app.spritz.chat/api/token-chats/{id}/members
 
-Token metadata:
+Token metadata and suggestions:
   GET https://app.spritz.chat/api/token-chats/token-info?address=0x...&chainId=8453
-  GET https://app.spritz.chat/api/token-chats/suggest-tokens?q=...
+  GET https://app.spritz.chat/api/token-chats/suggest-tokens?userAddress=0x...   (required; returns tokens user holds across EOA, Spritz Wallet, vaults via Graph API; optional q to filter)
+
+Public token chat (no auth; for invite/share pages):
+  GET https://app.spritz.chat/api/public/token-chats/{id}   Returns chat id, name, description, emoji, icon_url, token_*, min_balance, is_official, member_count, messaging_type, created_at.
 
 ---
 
@@ -188,7 +195,7 @@ Create:
 
 Join / leave:
   POST https://app.spritz.chat/api/location-chats/{id}/join
-  POST https://app.spritz.chat/api/location-chats/{id}/leave
+  DELETE https://app.spritz.chat/api/location-chats/{id}/join   (leave)
 
 Messages:
   GET/POST https://app.spritz.chat/api/location-chats/{id}/messages

@@ -115,3 +115,9 @@ Complete guide to all Spritz documentation.
 -   **GitHub Repository**: [Spritz-Labs/spritz](https://github.com/Spritz-Labs/spritz)
 -   **Issues**: [GitHub Issues](https://github.com/Spritz-Labs/spritz/issues)
 -   **Support**: connect@spritz.chat
+
+---
+
+## For AI Agents & LLMs
+
+Machine-readable API reference: **[llms.txt](/llms.txt)** — base URL, authentication, all major endpoints, request/response patterns, x402 paid chat, and links to full docs. Use this file so your agent can reliably call Spritz APIs.

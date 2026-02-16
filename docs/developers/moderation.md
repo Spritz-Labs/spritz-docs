@@ -62,9 +62,12 @@ The moderation system has four layers:
 | Chat Type | Room Rules | Moderators | Room Bans |
 |-----------|-----------|------------|-----------|
 | **Channels** | ✅ | ✅ | ✅ |
+| **Token Chats** | ✅ | ✅ (admin/mod roles) | ✅ |
 | **Groups** | ✅ | ✅ | ✅ |
 | **Location Chats** | ✅ | ✅ | ✅ |
 | **Alpha Chat** | ✅ | ✅ | ✅ |
+
+For token chats, use `chatType: "token"` and `chatId` set to the token chat id (e.g. `tc_xxxxxxxxxxxxxxxx`). Only the chat creator or members with admin/moderator role can manage rules and bans.
 
 ---
 
@@ -134,7 +137,7 @@ GET /api/chat-rules?chatType=channel&chatId={channelId}
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `chatType` | `enum` | Yes | `channel`, `alpha`, `location`, `group` |
+| `chatType` | `enum` | Yes | `channel`, `alpha`, `location`, `group`, `token` |
 | `chatId` | `string` | Yes | Chat room ID (or `null` for Alpha Chat) |
 
 #### Response
@@ -441,7 +444,7 @@ GET /api/blocked-words?scope=all&chatType=channel&chatId=xxx
 | Parameter | Description |
 |-----------|-------------|
 | `scope` | `global`, `room`, or `all` (global + room combined) |
-| `chatType` | Required for `room`/`all`: `channel`, `alpha`, `location`, `group` |
+| `chatType` | Required for `room`/`all`: `channel`, `alpha`, `location`, `group`, `token` |
 | `chatId` | Room ID for room scope |
 
 #### Add a Blocked Word
