@@ -92,3 +92,13 @@ security:
     label: Security
     permalink: /security
     description: Posts about security, scams, and identity verification
+
+surveillance:
+    label: Surveillance
+    permalink: /surveillance
+    description: Posts about surveillance, power balance, and state control
+
+human-rights:
+    label: Human Rights
+    permalink: /human-rights
+    description: Posts about human rights, freedom, and democratic accountability
