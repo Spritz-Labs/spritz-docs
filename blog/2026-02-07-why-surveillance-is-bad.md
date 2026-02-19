@@ -1,8 +1,8 @@
 ---
 slug: why-surveillance-is-bad
 title: "Why Surveillance Is Bad (And It's Not Because It's 'Dystopian')"
-description: "Vitalik Buterin on why we should stop using 'dystopian' as a thought-terminating cliché — and instead focus on power balance, the Dictator's Handbook, and why privacy helps the weak."
-authors: [kevin-jones]
+description: "A reflection on Vitalik Buterin's post about surveillance, power balance, and why 'dystopian' is a thought-terminating cliché — with reactions to Vitalik's key points."
+authors: [anonymous]
 tags: [privacy, surveillance, vitalik, decentralization, censorship-resistance, human-rights]
 keywords:
     [
@@ -20,9 +20,7 @@ keywords:
 image: /og-image.png
 ---
 
-*Repost / commentary by **Vitalik Buterin**. [Original post on X](https://x.com/VitalikButerin/status/2024106047460475063).*
-
-A strong post on the impact of surveillance in Iran is [worth reading](https://myprivacy.blog/the-digital-iron-curtain-how-iran-built-the-worlds-most-invasive-surveillance-state/). Below, Vitalik argues that framing surveillance as "dystopian" is a dead end — and that we need to be precise about *why* it's bad.
+Vitalik Buterin recently wrote a [thread on X](https://x.com/VitalikButerin/status/2024106047460475063) about why surveillance is bad — and why calling it "dystopian" isn't enough. He pointed to a [powerful article on Iran's surveillance state](https://myprivacy.blog/the-digital-iron-curtain-how-iran-built-the-worlds-most-invasive-surveillance-state/) and argued that we need to be precise about *why* this stuff matters. Below are reflections on his post, with a few reactions to the lines that stuck with me.
 
 <!-- truncate -->
 
@@ -30,60 +28,64 @@ A strong post on the impact of surveillance in Iran is [worth reading](https://m
 
 ## The Semantic Stop Sign Problem
 
-One mistake freedom advocates often make is talking about privacy violation and surveillance as **"dystopian"** — using the word as a **semantic stop sign**: we know it means "bad," we nod along, and don't really go further to clarify *why* it's bad.
+Vitalik's opener: freedom advocates often use **"dystopian"** as a **semantic stop sign**. We know it means "bad," we nod, and we don't go further. He put it like this:
 
 > When we criticize various companies and countries for being "dystopian" and stop there, then to someone who's not already in the same memeplex, it sounds like we're basically criticizing companies and countries for not complying with our culture's aesthetic preferences. Which is ... duh, companies and countries are *supposed* to not comply with each other's aesthetic preferences, that's the whole point of the "pluralism" thing.
 
-That approach is long-run unhealthy. We need to go beyond the label.
+**Reflection:** He's right. "Dystopian" shuts down the conversation instead of advancing it. If we don't spell out the *mechanism* — what surveillance actually does to power, to coalitions, to the possibility of dissent — we're just signaling to our in-group. I've caught myself using the word that way. The fix isn't to stop caring; it's to name the concrete harm.
 
 ---
 
 ## What Surveillance Actually Does
 
-[The Iran article](https://myprivacy.blog/the-digital-iron-curtain-how-iran-built-the-worlds-most-invasive-surveillance-state/) makes something clear: **"dystopian" surveillance is not bad because it's "dystopian" — it's bad because it makes a concrete property of the world worse: the power balance between individual and state.**
+The Iran piece, Vitalik says, makes the mechanism clear: the problem isn't the vibe, it's **the power balance between individual and state**. Surveillance lets a regime stay in power indefinitely by ensuring that **everyone other than police and security forces has no real chance to challenge the status quo without being punished** — and the guns (and drones) stay with the regime.
 
-Surveillance enables an outcome where basically **everyone other than police and security forces has no opportunity whatsoever to challenge the political status quo without being punished**. That means a political regime can remain in power forever, without satisfying more than a very small coalition of people who have the eyes and the guns (now drones).
+**Reflection:** Once you put it that way, "dystopian" feels like a euphemism. The harm is legible: fewer degrees of freedom, no credible exit from a small coalition's grip. That's why infrastructure that resists single-point surveillance isn't a lifestyle choice; it's a precondition for the possibility of political change in a lot of places.
 
 ---
 
 ## The Dictator's Handbook Logic
 
-*The Dictator's Handbook* talks about **"large coalition"** and **"small coalition"** governments: large-coalition governments are the ones that are more pro-human, because they have to keep a large coalition happy. Small-coalition ones are the really nasty ones.
+Vitalik brings in *The Dictator's Handbook*: large-coalition governments have to keep more people happy, so they tend to be less brutal. Small-coalition regimes are the nasty ones. Then he drops this:
 
 > Here is the near-term dark outcome of **dictatorship + automated warfare + surveillance**: a regime can literally survive with **a coalition of size 1**, because an army of all-seeing eyes and robots can defeat the entire populace in battle if needed.
 
-In Iran we see what *just* dictatorship with surveillance can do. Once you add automated police, you get to the **unholy trifecta**.
+In Iran we already see dictatorship + surveillance; add automated police and you get what he calls the **unholy trifecta**.
+
+**Reflection:** "Coalition of size 1" is the phrase I can't unsee. We're used to thinking of tyranny as needing at least an army, a party, a bureaucracy. The possibility that it could narrow to one actor plus machines plus total visibility is a different kind of threat. It makes privacy and censorship resistance feel less like preferences and more like structural constraints on whether opposition is even possible.
 
 ---
 
 ## Two Flavors of Surveillance
 
-One implicit frame in the Iran article is framing Iran, Russia, and China as the unique antagonists (both in surveillance they do internally and in the technology they export). **They do a lot of dystopian shit of both types.** However, Israeli and US tech companies, and undoubtedly tech companies from other Western nations, **also do a lot of dystopian shit.**
-
-A key difference:
+Vitalik pushes back on the Iran article's implicit frame: Iran, Russia, and China as the main antagonists. They do awful things. But, he says, **Israeli and other Western tech companies also do a lot of dystopian shit.** He distinguishes two patterns:
 
 | Flavor | Pattern |
 |--------|--------|
-| **Iran / Russia / China** | **Great control over a medium area**: you can see everything, but it requires active participation of the government of the territory being surveilled. |
-| **Israel / US / West** | **Medium control over a great area**: more limits to how much they can do, but their surveillance is **global** — they know what people are doing even in countries and territories they have no presence in. |
+| **Iran / Russia / China** | **Great control over a medium area**: you can see everything, but it requires the government of that territory to be in the game. |
+| **Israel / West** | **Medium control over a great area**: more limits on what they can do, but their surveillance is **global** — they can see activity in places they don't even operate. |
 
-The distinction is not absolute: **Israeli surveillance backstops a lot of its human rights abuse in Palestine;** US surveillance reinforces ICE abuses (e.g. Homeland Security demanding social media firms reveal names of anti-ICE protesters); and "transnational repression" is done by anti-Western countries too. **But on average, the above seems to be the pattern.**
+He's careful: the line isn't clean. Israeli surveillance enables abuse in Palestine; other Western surveillance has been used to target dissidents and protesters. Still, on average the pattern holds. The second flavor is scary in a different way — **global projection of power**: officials in one country can be blackmailed, droned, or targeted by another. Powerful states have gone after EU officials, ICC officials, and others. So we'll need to figure out what **"democratic accountability"** even means when a civil servant must answer to the public but not to foreign intelligence.
 
-The two are **differently scary**. The former for the reasons above. The latter because it allows **global projection of power**: a politician or civil servant in one country now has to worry about being blackmailed, droned, or otherwise attacked from other countries. The USA has shown willingness to go after individual EU officials, ICC officials, and others. Ultimately, even democratic governments may want more privacy to protect themselves — and we will have to have deep conversations about **what "democratic accountability" means**: how can a civil servant be accountable to the people, but not accountable to foreign spooks?
+**Reflection:** I hadn't framed it as "deep control, medium area" vs. "medium control, global area" before. Both are dangerous; they optimize for different kinds of dominance. The Western variant is easy to overlook when you live inside it, because the control feels less total day to day — but "we can see you everywhere, just not always act on it" is still a massive power gradient. Vitalik's point about democratic governments eventually wanting more privacy for themselves is sharp: even states that believe in oversight will want protection from *other* states' spooks.
 
 ---
 
 ## Privacy Helps the Weak
 
+Vitalik's closing thesis:
+
 > **Privacy generally helps whoever is weaker.** "Weaker" does not mean "moral": sometimes the weaker side is criminal. But in the 21st century we are at serious risk of stronger factions using modern technologies to establish **unbreakable lock-in to power**. And so on average, **reducing the gradient of power, giving the weak a fighting chance**, is something that the world desperately needs.
+
+**Reflection:** I'd sign that. Privacy isn't inherently good or bad; it rebalances. Criminals benefit too, and we have to live with that tradeoff. The question is whether we accept a world where the strong can lock in power with eyes and robots, or we build and protect ways for the weak to have a fighting chance. On average, I want the latter.
 
 ---
 
 ## What Can Be Done?
 
-I don't know of a good solution. **Privacy technology**, as well as more work on **censorship-resistant internet** — e.g. striving for at least basic-quality internet (1 Mbps) as a **global human right outside the domain of nation-state sovereignty** — can help somewhat to reduce the possibility of total government control.
+Vitalik is honest: he doesn't know of a full solution. **Privacy technology** and **censorship-resistant internet** — including something like a **1 Mbps floor as a global human right, outside pure nation-state sovereignty** — can reduce the possibility of total control. Then he asks: *But what else?*
 
-But what else? The question remains open.
+**Reflection:** I don't have a clean answer either. What I do know is that these concerns — power balance, surveillance-resistant communication, infrastructure that doesn't depend on a single state or company — are part of why we architected [Spritz](https://app.spritz.chat) the way we did: decentralized messaging without phone numbers, censorship-resistant protocols, and identity that doesn't hand a central party a ready-made graph of who talks to whom. No single product fixes the gradient of power, but we try to build in that direction.
 
 ---
 
